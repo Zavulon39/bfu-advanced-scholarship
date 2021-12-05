@@ -1,6 +1,7 @@
-const login = (fio: string, avatarUlr: string, role: Role) => {}
+const login = (id: number, fio: string, avatarUlr: string, role: Role) => {}
 
 export interface IAuthState {
+  id: number
   fio: string
   avatarUrl: string
   role: Role

@@ -97,6 +97,7 @@ export const RequestProvider = ({ children }: IProps) => {
       const requests: IRequest[] = [
         {
           id: 1,
+          studentId: 1,
           companyId: 1,
           company: 'Весна 2019',
           nomination: 'Учебная',
@@ -194,6 +195,7 @@ export const RequestProvider = ({ children }: IProps) => {
         },
         {
           id: 2,
+          studentId: 1,
           companyId: 1,
           company: 'Весна 2019',
           nomination: 'Учебная',

@@ -40,6 +40,7 @@ export interface IComment {
 export interface IRequest {
   id: number
   companyId: number
+  studentId: number
   company: string
   nomination: string
   status: string

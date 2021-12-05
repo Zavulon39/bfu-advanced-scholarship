@@ -2,7 +2,6 @@ import React, { FC, useContext, useEffect, useRef, useState } from 'react'
 import { AdminHeader } from '../../components/Header'
 import { CompanyContext } from '../../store/CompanyContext'
 import M from 'materialize-css'
-import { RequestContext } from '../../store/RequestContext'
 
 export const AdminCompanyListPage: FC = () => {
   const {
@@ -32,7 +31,6 @@ export const AdminCompanyListPage: FC = () => {
     startDate: undefined,
     endDate: undefined,
   })
-  const { nominations, fetchRequests } = useContext(RequestContext)
   const createModalRef = useRef(null)
   const editModalRef = useRef(null)
   const startCreateDatePickerRef = useRef(null)
@@ -123,7 +121,6 @@ export const AdminCompanyListPage: FC = () => {
 
   useEffect(() => {
     if (!companies.length) fetchCompanies()
-    if (!nominations.length) fetchRequests()
   }, [])
 
   useEffect(() => {
