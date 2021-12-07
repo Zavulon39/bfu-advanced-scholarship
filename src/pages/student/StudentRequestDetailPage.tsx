@@ -1,25 +1,27 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { AdminHeader } from '../../components/Header'
+import { useNavigate, useParams } from 'react-router-dom'
+import { StudentHeader } from '../../components/Header'
 import { RequestContext } from '../../store/RequestContext'
-import M from 'materialize-css'
 import { AuthContext } from '../../store/AuthContext'
+import M from 'materialize-css'
 
-export const AdminRequestDetailPage: FC = () => {
+export const StudentRequestDetailPage: FC = () => {
   const { id } = useParams()
   const pointRef = useRef(null)
   const messageRef = useRef(null)
   const {
     requests,
     fetchRequests,
-    setPoints,
-    setExamPoints,
     addComment,
-    setAward,
+    setStudentExamPoints,
+    setStudentData,
   } = useContext(RequestContext)
   const { fio, avatarUrl } = useContext(AuthContext)
   const request = requests.find(r => r.id === Number(id))
   const [message, setMessage] = useState('')
+  const navigate = useNavigate()
+
+  // if (request?.studentId !== id) navigate('/companies/')
 
   useEffect(() => {
     if (!requests.length) fetchRequests()
@@ -30,20 +32,6 @@ export const AdminRequestDetailPage: FC = () => {
     M.CharacterCounter.init(messageRef.current!)
   }, [requests.length])
 
-  const saveHandler = () => {
-    try {
-      // fetch
-      M.toast({
-        html: 'Данные были успешно сохранены!',
-        classes: 'light-blue darken-1',
-      })
-    } catch (e) {
-      M.toast({
-        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-        classes: 'red darken-4',
-      })
-    }
-  }
   const sendHandler = () => {
     try {
       // fetch
@@ -63,7 +51,7 @@ export const AdminRequestDetailPage: FC = () => {
 
   return (
     <>
-      <AdminHeader />
+      <StudentHeader />
       <div className='container'>
         <h3 className='mt-4'>Информация о заявлении</h3>
         <table>
@@ -116,21 +104,24 @@ export const AdminRequestDetailPage: FC = () => {
         <h3 className='mt-4'>Оценки</h3>
         <div>
           <small>Процент "{request?.percent}"</small>
-          <input type='text' value={request?.examPoints} />
+          <input
+            type='text'
+            value={request?.examPoints}
+            onKeyPress={event => {
+              if (!/[0-9]/.test(event.key)) {
+                event.preventDefault()
+              }
+            }}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setStudentExamPoints(request?.id!, Number(event.target.value))
+            }
+          />
           <div className='input-field'>
             <input
               type='text'
               id='point'
               ref={pointRef}
               value={request?.point}
-              onKeyPress={event => {
-                if (!/[0-9]/.test(event.key)) {
-                  event.preventDefault()
-                }
-              }}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                setExamPoints(request?.id!, Number(event.target.value))
-              }
               style={{ maxWidth: 'fit-content' }}
             />
             <label htmlFor='point'>Балл</label>
@@ -159,19 +150,56 @@ export const AdminRequestDetailPage: FC = () => {
                             new URL(b)
                             return (
                               <td key={bIdx}>
-                                <a
-                                  className='waves-effect waves-light btn light-blue darken-1'
-                                  href={b}
-                                  target='_blank'
-                                >
-                                  <i className='material-icons'>
-                                    insert_drive_file
-                                  </i>
-                                </a>
+                                <div className='file-field input-field'>
+                                  <div className='waves-effect waves-light btn light-blue darken-1'>
+                                    <span>
+                                      <i className='material-icons'>
+                                        insert_drive_file
+                                      </i>
+                                    </span>
+                                    <input
+                                      type='file'
+                                      onChange={(
+                                        event: React.ChangeEvent<HTMLInputElement>
+                                      ) => {
+                                        /*
+                                          send file to server and get path url from response
+                                          then se this url to data
+                                        */
+                                      }}
+                                    />
+                                  </div>
+                                  <div className='file-path-wrapper'>
+                                    <input
+                                      className='file-path validate'
+                                      style={{ maxWidth: 'fit-content' }}
+                                      type='text'
+                                    />
+                                  </div>
+                                </div>
                               </td>
                             )
                           } catch (e) {
-                            return <td key={bIdx}>{b}</td>
+                            return (
+                              <td key={bIdx}>
+                                <input
+                                  type='text'
+                                  style={{ maxWidth: 'fit-content' }}
+                                  value={b}
+                                  onChange={(
+                                    event: React.ChangeEvent<HTMLInputElement>
+                                  ) =>
+                                    setStudentData(
+                                      request.id,
+                                      tIdx,
+                                      rIdx,
+                                      bIdx,
+                                      event.target.value
+                                    )
+                                  }
+                                />
+                              </td>
+                            )
                           }
                         })}
                         <td>
@@ -180,16 +208,6 @@ export const AdminRequestDetailPage: FC = () => {
                             value={r.award}
                             style={{ maxWidth: 'fit-content' }}
                             key={'award' + tIdx}
-                            onChange={(
-                              event: React.ChangeEvent<HTMLInputElement>
-                            ) =>
-                              setAward(
-                                request.id,
-                                tIdx,
-                                rIdx,
-                                event.target.value
-                              )
-                            }
                           />
                         </td>
                         <td>
@@ -198,21 +216,6 @@ export const AdminRequestDetailPage: FC = () => {
                             value={r.points}
                             style={{ maxWidth: 'fit-content' }}
                             key={'input' + tIdx}
-                            onKeyPress={event => {
-                              if (!/[0-9]/.test(event.key)) {
-                                event.preventDefault()
-                              }
-                            }}
-                            onChange={(
-                              event: React.ChangeEvent<HTMLInputElement>
-                            ) =>
-                              setPoints(
-                                request.id,
-                                tIdx,
-                                rIdx,
-                                Number(event.target.value)
-                              )
-                            }
                           />
                         </td>
                       </tr>
@@ -223,14 +226,6 @@ export const AdminRequestDetailPage: FC = () => {
             </React.Fragment>
           )
         })}
-        <button
-          className='btn light-blue darken-2 waves-effect waves-light'
-          style={{ marginTop: 36, float: 'right' }}
-          onClick={saveHandler}
-        >
-          <i className='material-icons left'>save</i>
-          Сохранить
-        </button>
         <h3 className='mt-4'>Коментарии</h3>
         <div>
           {request?.comments.map((c, idx) => {

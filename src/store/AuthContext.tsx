@@ -7,6 +7,8 @@ const initialState: IAuthState = {
   fio: '',
   avatarUrl: 'https://place-hold.it/120x120/ff9d00/f5f5f5',
   role: 'anonymous',
+  learningPlans: [],
+
   login: () => {},
 }
 
@@ -31,7 +33,13 @@ export const AuthContext = createContext(initialState)
 export const AuthProvider = ({ children }: IProps) => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  const login = (id: number, fio: string, avatarUrl: string, role: Role) => {
+  const login = (
+    id: number,
+    fio: string,
+    avatarUrl: string,
+    role: Role,
+    learningPlans: string[]
+  ) => {
     dispatch({
       type: 'LOGIN',
       payload: {
@@ -39,6 +47,7 @@ export const AuthProvider = ({ children }: IProps) => {
         fio,
         avatarUrl,
         role,
+        learningPlans,
       },
     })
   }

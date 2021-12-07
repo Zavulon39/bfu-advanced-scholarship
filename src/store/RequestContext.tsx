@@ -1,6 +1,6 @@
 import React, { createContext, ReactElement, useReducer } from 'react'
 import { IAction } from '../types/companies'
-import { IRequestState, IRequest, IComment } from '../types/request'
+import { IRequestState, IRequest, IComment, ITable } from '../types/request'
 
 const initialState: IRequestState = {
   requests: [],
@@ -11,6 +11,10 @@ const initialState: IRequestState = {
   setPoints: () => {},
   setExamPoints: () => {},
   addComment: () => {},
+  addRequest: () => {},
+  setStudentExamPoints: () => {},
+  setStudentData: () => {},
+  setAward: () => {},
 }
 
 interface IProps {
@@ -41,12 +45,36 @@ const reducer = (
           return r
         }),
       }
+    case 'SET_AWARD':
+      return {
+        ...state,
+        requests: state.requests.map(r => {
+          if (r.id === payload.id) {
+            r.tables[payload.tableIdx].body[payload.rowIdx].award =
+              payload.award
+
+            return r
+          }
+
+          return r
+        }),
+      }
     case 'SET_EXAM_POINTS':
       return {
         ...state,
         requests: state.requests.map(r => {
           if (r.id === payload.id) {
             r.point = payload.points
+          }
+          return r
+        }),
+      }
+    case 'SET_STUDENT_EXAM_POINTS':
+      return {
+        ...state,
+        requests: state.requests.map(r => {
+          if (r.id === payload.id) {
+            r.examPoints = payload.points
           }
           return r
         }),
@@ -63,6 +91,32 @@ const reducer = (
               sendedDate: new Date(),
             })
           }
+          return r
+        }),
+      }
+    case 'ADD_REQUEST':
+      return {
+        ...state,
+        requests: [
+          ...state.requests,
+          {
+            id: Date.now(),
+            ...payload,
+          },
+        ],
+      }
+    case 'SET_STUDENT_DATA':
+      return {
+        ...state,
+        requests: state.requests.map(r => {
+          if (r.id === payload.id) {
+            r.tables[payload.tableIdx].body[payload.rowIdx].data[
+              payload.dataIdx
+            ] = payload.value
+
+            return r
+          }
+
           return r
         }),
       }
@@ -121,34 +175,27 @@ export const RequestProvider = ({ children }: IProps) => {
             {
               id: 1,
               title: 'Олимпиады и конкурсы',
-              header: [
-                'Название',
-                'Тип',
-                'Статус',
-                'Год',
-                'Награда',
-                'Документ',
-              ],
+              header: ['Название', 'Тип', 'Статус', 'Год', 'Документ'],
               body: [
                 {
                   points: 10,
+                  award: 'Призёр',
                   data: [
                     'test1',
                     'Другое',
                     'Другое',
                     '2000',
-                    'Призёр',
                     'https://jsonplaceholder.typicode.com/todos/1',
                   ],
                 },
                 {
+                  award: 'Призёр',
                   points: 0,
                   data: [
                     'test2',
                     'Другое',
                     'Другое',
                     '2000',
-                    'Призёр',
                     'https://jsonplaceholder.typicode.com/todos/1',
                   ],
                 },
@@ -157,34 +204,27 @@ export const RequestProvider = ({ children }: IProps) => {
             {
               id: 2,
               title: 'Доп. достижения',
-              header: [
-                'Название',
-                'Тип',
-                'Статус',
-                'Год',
-                'Награда',
-                'Документ',
-              ],
+              header: ['Название', 'Тип', 'Статус', 'Год', 'Документ'],
               body: [
                 {
+                  award: 'Призёр',
                   points: 10,
                   data: [
                     'test1',
                     'Другое',
                     'Другое',
                     '2000',
-                    'Призёр',
                     'https://jsonplaceholder.typicode.com/todos/1',
                   ],
                 },
                 {
+                  award: 'Призёр',
                   points: 0,
                   data: [
                     'test2',
                     'Другое',
                     'Другое',
                     '2000',
-                    'Призёр',
                     'https://jsonplaceholder.typicode.com/todos/1',
                   ],
                 },
@@ -219,7 +259,7 @@ export const RequestProvider = ({ children }: IProps) => {
           comments: [],
         },
       ]
-      const nominations = Array.from(new Set(['Учебная']))
+      const nominations = Array.from(new Set(['Учебная', 'Спортивная']))
       const statuses = Array.from(new Set(['Победитель', 'Черновик']))
       const companies = Array.from(
         new Set([
@@ -276,6 +316,7 @@ export const RequestProvider = ({ children }: IProps) => {
     rowIdx: number,
     points: number
   ) =>
+    // fetch
     dispatch({
       type: 'SET_POINTS',
       payload: {
@@ -287,8 +328,19 @@ export const RequestProvider = ({ children }: IProps) => {
     })
 
   const setExamPoints = (id: number, points: number) => {
+    // fetch
     dispatch({
       type: 'SET_EXAM_POINTS',
+      payload: {
+        id,
+        points,
+      },
+    })
+  }
+  const setStudentExamPoints = (id: number, points: number) => {
+    // fetch
+    dispatch({
+      type: 'SET_STUDENT_EXAM_POINTS',
       payload: {
         id,
         points,
@@ -312,6 +364,82 @@ export const RequestProvider = ({ children }: IProps) => {
       },
     })
   }
+  const addRequest = (
+    companyId: number,
+    studentId: number,
+    company: string,
+    nomination: string,
+    status: string,
+    createdDate: Date,
+    fio: string,
+    learningPlans: string
+  ) => {
+    // fetch
+    // get tables and id from fetch
+
+    dispatch({
+      type: 'ADD_REQUEST',
+      payload: {
+        companyId,
+        studentId,
+        company,
+        nomination,
+        status,
+        createdDate,
+        fio,
+
+        // get all this fields from fetch
+        educationForm: 'educationForm',
+        phone: 'phone',
+        financingSource: 'financingSource',
+        institute: 'institute',
+        level: 'level',
+        direction: 'direction',
+        course: 'course',
+        percent: '',
+        examPoints: 0,
+        point: 0,
+        tables: [],
+        comments: [],
+      },
+    })
+  }
+  const setStudentData = (
+    id: number,
+    tableIdx: number,
+    rowIdx: number,
+    dataIdx: number,
+    value: string
+  ) => {
+    // fetch
+    dispatch({
+      type: 'SET_STUDENT_DATA',
+      payload: {
+        id,
+        tableIdx,
+        rowIdx,
+        dataIdx,
+        value,
+      },
+    })
+  }
+  const setAward = (
+    id: number,
+    tableIdx: number,
+    rowIdx: number,
+    award: string
+  ) => {
+    // fetch
+    dispatch({
+      type: 'SET_AWARD',
+      payload: {
+        id,
+        tableIdx,
+        rowIdx,
+        award,
+      },
+    })
+  }
 
   return (
     <RequestContext.Provider
@@ -320,7 +448,11 @@ export const RequestProvider = ({ children }: IProps) => {
         fetchRequests,
         setPoints,
         setExamPoints,
+        setStudentExamPoints,
         addComment,
+        addRequest,
+        setStudentData,
+        setAward,
       }}
     >
       {children}

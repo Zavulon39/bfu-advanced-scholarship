@@ -103,6 +103,7 @@ export const CompanyProvider = ({ children }: IProps) => {
   }
   const createCompany = (name: string, startDate: Date, endDate: Date) => {
     // fetch
+    // get id from fetch
     dispatch({
       type: 'CREATE_COMPANY',
       payload: {

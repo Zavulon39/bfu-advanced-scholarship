@@ -5,6 +5,7 @@ import { AdminRequestDetailPage } from '../pages/admin/AdminRequestDetailPage'
 import { AdminRequestListPage } from '../pages/admin/AdminRequestListPage'
 import { AuthPage } from '../pages/AuthPage'
 import { StudentCompanyListPage } from '../pages/student/StudentCompanyListPage'
+import { StudentRequestDetailPage } from '../pages/student/StudentRequestDetailPage'
 import { AuthContext } from '../store/AuthContext'
 
 export const useRouter = () => {
@@ -29,6 +30,7 @@ export const useRouter = () => {
       <BrowserRouter>
         <Routes>
           <Route path='/companies/' element={<StudentCompanyListPage />} />
+          <Route path='/requests/:id' element={<StudentRequestDetailPage />} />
           <Route path='*' element={<Navigate to='/companies/' />} />
         </Routes>
       </BrowserRouter>

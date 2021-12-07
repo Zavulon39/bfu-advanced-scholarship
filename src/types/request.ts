@@ -6,11 +6,35 @@ const setPoints = (
 ) => {}
 const fetchRequests = () => {}
 const setExamPoints = (id: number, points: number) => {}
+const setAward = (
+  id: number,
+  tableIdx: number,
+  rowIdx: number,
+  award: string
+) => {}
+const setStudentExamPoints = (id: number, points: number) => {}
 const addComment = (
   id: number,
   name: string,
   imageUrl: string,
   text: string
+) => {}
+const addRequest = (
+  companyId: number,
+  studentId: number,
+  company: string,
+  nomination: string,
+  status: string,
+  createdDate: Date,
+  fio: string,
+  learningPlan: string
+) => {}
+const setStudentData = (
+  id: number,
+  tableIdx: number,
+  rowIdx: number,
+  dataIdx: number,
+  value: string
 ) => {}
 
 interface ICompany {
@@ -21,9 +45,10 @@ interface ICompany {
 interface ITableBodyRow {
   data: string[]
   points: number
+  award: string
 }
 
-interface ITable {
+export interface ITable {
   id: number
   title: string
   header: string[]
@@ -68,8 +93,13 @@ export interface IRequestState {
   nominations: []
   statuses: []
   companies: ICompany[]
+
   fetchRequests: typeof fetchRequests
   setPoints: typeof setPoints
   setExamPoints: typeof setExamPoints
   addComment: typeof addComment
+  addRequest: typeof addRequest
+  setStudentExamPoints: typeof setStudentExamPoints
+  setStudentData: typeof setStudentData
+  setAward: typeof setAward
 }

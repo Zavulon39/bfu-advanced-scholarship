@@ -14,8 +14,14 @@ export const AuthPage: FC = () => {
   const selectRed = useRef(null)
 
   const loginHandler = () => {
-    // @ts-ignore
-    login(1, authData.fio, authData.avatarUrl, selectRed.current!.value)
+    login(
+      1,
+      authData.fio,
+      authData.avatarUrl,
+      // @ts-ignore
+      selectRed.current!.value,
+      ['Матан', 'Высший матан']
+    )
   }
 
   useEffect(() => {

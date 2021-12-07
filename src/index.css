@@ -43,7 +43,6 @@ small {
 .comment .avatar {
   display: flex;
   flex-direction: column;
-  text-align: center;
 }
 
 .comment .avatar img {
@@ -73,4 +72,16 @@ small {
 
 .material-tooltip {
   background: #1565c0;
+}
+
+@media screen and (max-width: 800px) {
+  table {
+    table-layout: fixed;
+  }
+
+  thead,
+  tbody {
+    display: block;
+    overflow-x: auto;
+  }
 }
