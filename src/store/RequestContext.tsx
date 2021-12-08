@@ -36,8 +36,9 @@ const reducer = (
         ...state,
         requests: state.requests.map(r => {
           if (r.id === payload.id) {
-            r.tables[payload.tableIdx].body[payload.rowIdx].points =
-              payload.points
+            r.subRequests.find(sr => sr.id === payload.subRId)!.tables[
+              payload.tableIdx
+            ].body[payload.rowIdx].points = payload.points
 
             return r
           }
@@ -50,8 +51,9 @@ const reducer = (
         ...state,
         requests: state.requests.map(r => {
           if (r.id === payload.id) {
-            r.tables[payload.tableIdx].body[payload.rowIdx].award =
-              payload.award
+            r.subRequests.find(sr => sr.id === payload.subRId)!.tables[
+              payload.tableIdx
+            ].body[payload.rowIdx].award = payload.award
 
             return r
           }
@@ -64,7 +66,8 @@ const reducer = (
         ...state,
         requests: state.requests.map(r => {
           if (r.id === payload.id) {
-            r.point = payload.points
+            r.subRequests.find(sr => sr.id === payload.subRId)!.point =
+              payload.points
           }
           return r
         }),
@@ -74,7 +77,8 @@ const reducer = (
         ...state,
         requests: state.requests.map(r => {
           if (r.id === payload.id) {
-            r.examPoints = payload.points
+            r.subRequests.find(sr => sr.id === payload.subRId)!.examPoints =
+              payload.points
           }
           return r
         }),
@@ -84,12 +88,14 @@ const reducer = (
         ...state,
         requests: state.requests.map(r => {
           if (r.id === payload.id) {
-            r.comments.push({
-              name: payload.name,
-              imageUrl: payload.imageUrl,
-              text: payload.text,
-              sendedDate: new Date(),
-            })
+            r.subRequests
+              .find(sr => sr.id === payload.subRId)!
+              .comments.push({
+                name: payload.name,
+                imageUrl: payload.imageUrl,
+                text: payload.text,
+                sendedDate: new Date(),
+              })
           }
           return r
         }),
@@ -110,9 +116,9 @@ const reducer = (
         ...state,
         requests: state.requests.map(r => {
           if (r.id === payload.id) {
-            r.tables[payload.tableIdx].body[payload.rowIdx].data[
-              payload.dataIdx
-            ] = payload.value
+            r.subRequests.find(sr => sr.id === payload.subRId)!.tables[
+              payload.tableIdx
+            ].body[payload.rowIdx].data[payload.dataIdx] = payload.value
 
             return r
           }
@@ -154,109 +160,119 @@ export const RequestProvider = ({ children }: IProps) => {
           studentId: 1,
           companyId: 1,
           company: 'Весна 2019',
-          nomination: 'Учебная',
-          status: 'Черновик',
-          createdDate: new Date(),
-
           fio: 'Бенько Игорь Анатольевич',
-          educationForm: 'очное обучение',
-          phone: '8 800 555 3535',
-          financingSource: 'Бюджет',
-          institute: 'Институт высшего матана',
-          level: 'Аспирант',
-          direction: 'Высший матан',
-          course: 3,
-
-          percent: 'Отлично',
-          examPoints: 12,
-          point: 0,
-
-          tables: [
+          subRequests: [
             {
               id: 1,
-              title: 'Олимпиады и конкурсы',
-              header: ['Название', 'Тип', 'Статус', 'Год', 'Документ'],
-              body: [
+              nomination: 'Учебная',
+              status: 'Черновик',
+              createdDate: new Date(),
+
+              educationForm: 'очное обучение',
+              phone: '8 800 555 3535',
+              financingSource: 'Бюджет',
+              institute: 'Институт высшего матана',
+              level: 'Аспирант',
+              direction: 'Высший матан',
+              course: 3,
+
+              percent: 'Отлично',
+              examPoints: 12,
+              point: 0,
+
+              tables: [
                 {
-                  points: 10,
-                  award: 'Призёр',
-                  data: [
-                    'test1',
-                    'Другое',
-                    'Другое',
-                    '2000',
-                    'https://jsonplaceholder.typicode.com/todos/1',
+                  id: 1,
+                  title: 'Олимпиады и конкурсы',
+                  header: ['Название', 'Тип', 'Статус', 'Год', 'Документ'],
+                  body: [
+                    {
+                      points: 10,
+                      award: 'Призёр',
+                      data: [
+                        'test1',
+                        'Другое',
+                        'Другое',
+                        '2000',
+                        'https://jsonplaceholder.typicode.com/todos/1',
+                      ],
+                    },
+                    {
+                      award: 'Призёр',
+                      points: 0,
+                      data: [
+                        'test2',
+                        'Другое',
+                        'Другое',
+                        '2000',
+                        'https://jsonplaceholder.typicode.com/todos/1',
+                      ],
+                    },
                   ],
                 },
                 {
-                  award: 'Призёр',
-                  points: 0,
-                  data: [
-                    'test2',
-                    'Другое',
-                    'Другое',
-                    '2000',
-                    'https://jsonplaceholder.typicode.com/todos/1',
+                  id: 2,
+                  title: 'Доп. достижения',
+                  header: ['Название', 'Тип', 'Статус', 'Год', 'Документ'],
+                  body: [
+                    {
+                      award: 'Призёр',
+                      points: 10,
+                      data: [
+                        'test1',
+                        'Другое',
+                        'Другое',
+                        '2000',
+                        'https://jsonplaceholder.typicode.com/todos/1',
+                      ],
+                    },
+                    {
+                      award: 'Призёр',
+                      points: 0,
+                      data: [
+                        'test2',
+                        'Другое',
+                        'Другое',
+                        '2000',
+                        'https://jsonplaceholder.typicode.com/todos/1',
+                      ],
+                    },
                   ],
                 },
               ],
-            },
-            {
-              id: 2,
-              title: 'Доп. достижения',
-              header: ['Название', 'Тип', 'Статус', 'Год', 'Документ'],
-              body: [
-                {
-                  award: 'Призёр',
-                  points: 10,
-                  data: [
-                    'test1',
-                    'Другое',
-                    'Другое',
-                    '2000',
-                    'https://jsonplaceholder.typicode.com/todos/1',
-                  ],
-                },
-                {
-                  award: 'Призёр',
-                  points: 0,
-                  data: [
-                    'test2',
-                    'Другое',
-                    'Другое',
-                    '2000',
-                    'https://jsonplaceholder.typicode.com/todos/1',
-                  ],
-                },
-              ],
+              comments,
             },
           ],
-          comments,
         },
         {
           id: 2,
           studentId: 1,
           companyId: 1,
           company: 'Весна 2019',
-          nomination: 'Учебная',
-          status: 'Победитель',
-          createdDate: new Date(),
-
           fio: 'Кукушкина Алиса Андреевна',
-          educationForm: 'очное обучение',
-          phone: '8 800 555 7878',
-          financingSource: 'Бюджет',
-          institute: 'Институт высшего матана',
-          level: 'Бакалавр',
-          direction: 'Высший матан',
-          course: 2,
+          subRequests: [
+            {
+              id: 2,
+              nomination: 'Учебная',
+              status: 'Победитель',
+              createdDate: new Date(),
 
-          percent: 'Отлично',
-          examPoints: 12,
-          point: 0,
+              educationForm: 'очное обучение',
+              phone: '8 800 555 7878',
+              financingSource: 'Бюджет',
+              institute: 'Институт высшего матана',
+              level: 'Бакалавр',
+              direction: 'Высший матан',
+              course: 2,
 
-          tables: [],
-          comments: [],
+              percent: 'Отлично',
+              examPoints: 12,
+              point: 0,
+
+              tables: [],
+              comments: [],
+            },
+          ],
         },
       ]
       const nominations = Array.from(new Set(['Учебная', 'Спортивная']))
@@ -312,6 +328,7 @@ export const RequestProvider = ({ children }: IProps) => {
   }
   const setPoints = (
     id: number,
+    subRId: number,
     tableIdx: number,
     rowIdx: number,
     points: number
@@ -324,31 +341,35 @@ export const RequestProvider = ({ children }: IProps) => {
         tableIdx,
         rowIdx,
         points,
+        subRId,
       },
     })
 
-  const setExamPoints = (id: number, points: number) => {
+  const setExamPoints = (id: number, subRId: number, points: number) => {
     // fetch
     dispatch({
       type: 'SET_EXAM_POINTS',
       payload: {
         id,
         points,
+        subRId,
       },
     })
   }
-  const setStudentExamPoints = (id: number, points: number) => {
+  const setStudentExamPoints = (id: number, subRId: number, points: number) => {
     // fetch
     dispatch({
       type: 'SET_STUDENT_EXAM_POINTS',
       payload: {
         id,
         points,
+        subRId,
       },
     })
   }
   const addComment = (
     id: number,
+    subRId: number,
     name: string,
     imageUrl: string,
     text: string
@@ -358,6 +379,7 @@ export const RequestProvider = ({ children }: IProps) => {
       type: 'ADD_COMMENT',
       payload: {
         id,
+        subRId,
         name,
         imageUrl,
         text,
@@ -375,37 +397,25 @@ export const RequestProvider = ({ children }: IProps) => {
     learningPlans: string
   ) => {
     // fetch
-    // get tables and id from fetch
+    // get id and subRequests from fetch
+
+    const payload: IRequest = {
+      id: Date.now(),
+      studentId,
+      companyId,
+      company,
+      fio,
+      subRequests: [],
+    }
 
     dispatch({
       type: 'ADD_REQUEST',
-      payload: {
-        companyId,
-        studentId,
-        company,
-        nomination,
-        status,
-        createdDate,
-        fio,
-
-        // get all this fields from fetch
-        educationForm: 'educationForm',
-        phone: 'phone',
-        financingSource: 'financingSource',
-        institute: 'institute',
-        level: 'level',
-        direction: 'direction',
-        course: 'course',
-        percent: '',
-        examPoints: 0,
-        point: 0,
-        tables: [],
-        comments: [],
-      },
+      payload,
     })
   }
   const setStudentData = (
     id: number,
+    subRId: number,
     tableIdx: number,
     rowIdx: number,
     dataIdx: number,
@@ -416,6 +426,7 @@ export const RequestProvider = ({ children }: IProps) => {
       type: 'SET_STUDENT_DATA',
       payload: {
         id,
+        subRId,
         tableIdx,
         rowIdx,
         dataIdx,
@@ -425,6 +436,7 @@ export const RequestProvider = ({ children }: IProps) => {
   }
   const setAward = (
     id: number,
+    subRId: number,
     tableIdx: number,
     rowIdx: number,
     award: string
@@ -434,6 +446,7 @@ export const RequestProvider = ({ children }: IProps) => {
       type: 'SET_AWARD',
       payload: {
         id,
+        subRId,
         tableIdx,
         rowIdx,
         award,

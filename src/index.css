@@ -1,6 +1,10 @@
 @import url('../node_modules/materialize-css/dist/css/materialize.min');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
+body {
+  overflow: unset !important;
+}
+
 ::-webkit-scrollbar {
   width: 15px;
 }

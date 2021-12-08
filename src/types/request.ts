@@ -1,20 +1,23 @@
 const setPoints = (
   id: number,
+  subRId: number,
   tableIdx: number,
   rowIdx: number,
   points: number
 ) => {}
 const fetchRequests = () => {}
-const setExamPoints = (id: number, points: number) => {}
+const setExamPoints = (id: number, subRId: number, points: number) => {}
 const setAward = (
   id: number,
+  subRId: number,
   tableIdx: number,
   rowIdx: number,
   award: string
 ) => {}
-const setStudentExamPoints = (id: number, points: number) => {}
+const setStudentExamPoints = (id: number, subRId: number, points: number) => {}
 const addComment = (
   id: number,
+  subRId: number,
   name: string,
   imageUrl: string,
   text: string
@@ -23,7 +26,7 @@ const addRequest = (
   companyId: number,
   studentId: number,
   company: string,
-  nomination: string,
+  nomination: string, // []
   status: string,
   createdDate: Date,
   fio: string,
@@ -31,6 +34,7 @@ const addRequest = (
 ) => {}
 const setStudentData = (
   id: number,
+  subRId: number,
   tableIdx: number,
   rowIdx: number,
   dataIdx: number,
@@ -46,6 +50,29 @@ interface ITableBodyRow {
   data: string[]
   points: number
   award: string
+}
+
+interface ISubRequest {
+  id: number
+
+  nomination: string
+  status: string
+  createdDate: Date
+
+  educationForm: string
+  phone: string
+  financingSource: string
+  institute: string
+  level: string
+  direction: string
+  course: number
+
+  percent: string
+  examPoints: number
+  point: number
+
+  tables: ITable[]
+  comments: IComment[]
 }
 
 export interface ITable {
@@ -66,26 +93,9 @@ export interface IRequest {
   id: number
   companyId: number
   studentId: number
-  company: string
-  nomination: string
-  status: string
-  createdDate: Date
-
   fio: string
-  educationForm: string
-  phone: string
-  financingSource: string
-  institute: string
-  level: string
-  direction: string
-  course: number
-
-  percent: string
-  examPoints: number
-  point: number
-
-  tables: ITable[]
-  comments: IComment[]
+  company: string
+  subRequests: ISubRequest[]
 }
 
 export interface IRequestState {

@@ -6,7 +6,7 @@ import { AuthContext } from '../../store/AuthContext'
 import M from 'materialize-css'
 
 export const StudentRequestDetailPage: FC = () => {
-  const { id } = useParams()
+  const { id1, id2 } = useParams()
   const pointRef = useRef(null)
   const messageRef = useRef(null)
   const {
@@ -17,11 +17,14 @@ export const StudentRequestDetailPage: FC = () => {
     setStudentData,
   } = useContext(RequestContext)
   const { fio, avatarUrl } = useContext(AuthContext)
-  const request = requests.find(r => r.id === Number(id))
+  const request = requests.find(r => r.id === Number(id1))
+  const subRequest = requests
+    .find(r => r.id === Number(id1))
+    ?.subRequests.find(sb => sb.id === Number(id2))
   const [message, setMessage] = useState('')
   const navigate = useNavigate()
 
-  // if (request?.studentId !== id) navigate('/companies/')
+  if (request?.studentId !== Number(id1)) navigate('/companies/')
 
   useEffect(() => {
     if (!requests.length) fetchRequests()
@@ -35,7 +38,7 @@ export const StudentRequestDetailPage: FC = () => {
   const sendHandler = () => {
     try {
       // fetch
-      addComment(request?.id!, fio, avatarUrl, message)
+      addComment(request?.id!, subRequest?.id!, fio, avatarUrl, message)
       setMessage('')
       M.toast({
         html: 'Вы успешно оставили коментарий!',
@@ -57,7 +60,7 @@ export const StudentRequestDetailPage: FC = () => {
         <table>
           <thead>
             <tr>
-              <th>Компания</th>
+              <th>Кампания</th>
               <th>Наминация</th>
               <th>Статус</th>
               <th>Дата создания</th>
@@ -66,9 +69,9 @@ export const StudentRequestDetailPage: FC = () => {
           <tbody>
             <tr>
               <td>{request?.company}</td>
-              <td>{request?.nomination}</td>
-              <td>{request?.status}</td>
-              <td>{request?.createdDate.toLocaleDateString()}</td>
+              <td>{subRequest?.nomination}</td>
+              <td>{subRequest?.status}</td>
+              <td>{subRequest?.createdDate.toLocaleDateString()}</td>
             </tr>
           </tbody>
         </table>
@@ -90,30 +93,34 @@ export const StudentRequestDetailPage: FC = () => {
           <tbody>
             <tr>
               <td>{request?.fio}</td>
-              <td>{request?.phone}</td>
-              <td>{request?.status}</td>
-              <td>{request?.institute}</td>
-              <td>{request?.direction}</td>
-              <td>{request?.educationForm}</td>
-              <td>{request?.financingSource}</td>
-              <td>{request?.level}</td>
-              <td>{request?.course}</td>
+              <td>{subRequest?.phone}</td>
+              <td>{subRequest?.status}</td>
+              <td>{subRequest?.institute}</td>
+              <td>{subRequest?.direction}</td>
+              <td>{subRequest?.educationForm}</td>
+              <td>{subRequest?.financingSource}</td>
+              <td>{subRequest?.level}</td>
+              <td>{subRequest?.course}</td>
             </tr>
           </tbody>
         </table>
         <h3 className='mt-4'>Оценки</h3>
         <div>
-          <small>Процент "{request?.percent}"</small>
+          <small>Процент "{subRequest?.percent}"</small>
           <input
             type='text'
-            value={request?.examPoints}
+            value={subRequest?.examPoints}
             onKeyPress={event => {
               if (!/[0-9]/.test(event.key)) {
                 event.preventDefault()
               }
             }}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setStudentExamPoints(request?.id!, Number(event.target.value))
+              setStudentExamPoints(
+                request?.id!,
+                subRequest?.id!,
+                Number(event.target.value)
+              )
             }
           />
           <div className='input-field'>
@@ -121,13 +128,13 @@ export const StudentRequestDetailPage: FC = () => {
               type='text'
               id='point'
               ref={pointRef}
-              value={request?.point}
+              value={subRequest?.point}
               style={{ maxWidth: 'fit-content' }}
             />
             <label htmlFor='point'>Балл</label>
           </div>
         </div>
-        {request?.tables.map((t, tIdx) => {
+        {subRequest?.tables.map((t, tIdx) => {
           return (
             <React.Fragment key={t.id}>
               <h3 className='mt-4'>{t.title}</h3>
@@ -190,7 +197,8 @@ export const StudentRequestDetailPage: FC = () => {
                                     event: React.ChangeEvent<HTMLInputElement>
                                   ) =>
                                     setStudentData(
-                                      request.id,
+                                      request!.id,
+                                      subRequest.id,
                                       tIdx,
                                       rIdx,
                                       bIdx,
@@ -228,7 +236,7 @@ export const StudentRequestDetailPage: FC = () => {
         })}
         <h3 className='mt-4'>Коментарии</h3>
         <div>
-          {request?.comments.map((c, idx) => {
+          {subRequest?.comments.map((c, idx) => {
             return (
               <div key={idx} className='comment'>
                 <div className='avatar'>

@@ -122,7 +122,7 @@ export const StudentCompanyListPage: FC = () => {
                 </option>
               ))}
             </select>
-            <label>Номинация</label>
+            <label>Наминация</label>
           </div>
         </div>
         <div className='modal-footer'>

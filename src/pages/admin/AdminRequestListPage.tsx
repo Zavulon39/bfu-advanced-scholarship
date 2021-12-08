@@ -7,6 +7,7 @@ import M from 'materialize-css'
 export const AdminRequestListPage: FC = () => {
   const { requests, nominations, statuses, companies, fetchRequests } =
     useContext(RequestContext)
+
   const [qs, setQs] = useState(requests)
   const [fio, setFio] = useState('')
   const select1 = useRef(null)
@@ -27,28 +28,39 @@ export const AdminRequestListPage: FC = () => {
   const findClickHandler = () => {
     setQs(
       requests.filter(r => {
-        const fio_cond = r.fio.toLowerCase().indexOf(fio.toLowerCase()) + 1
-        const company_cond =
-          // @ts-ignore
-          select1.current.value != -1
-            ? // @ts-ignore
-              r.companyId == select1.current.value!
-            : true
-        const nomination_cond =
-          // @ts-ignore
-          select2.current.value! != -1
-            ? // @ts-ignore
-              r.nomination == select2.current.value!
-            : true
-        const status_cond =
-          // @ts-ignore
-          select3.current.value! != -1
-            ? // @ts-ignore
-              r.status == select3.current.value!
-            : true
-
-        return fio_cond && company_cond && nomination_cond && status_cond
+        return r.fio.toLowerCase().indexOf(fio.toLowerCase()) + 1
       })
+    )
+    setQs(
+      requests
+        .filter(r => {
+          return r.fio.toLowerCase().indexOf(fio.toLowerCase()) + 1
+        })
+        .map(r => ({
+          ...r,
+          subRequests: r.subRequests.filter(sr => {
+            const company_cond =
+              // @ts-ignore
+              select1.current.value != -1
+                ? // @ts-ignore
+                  sr.companyId == select1.current.value!
+                : true
+            const nomination_cond =
+              // @ts-ignore
+              select2.current.value! != -1
+                ? // @ts-ignore
+                  sr.nomination == select2.current.value!
+                : true
+            const status_cond =
+              // @ts-ignore
+              select3.current.value! != -1
+                ? // @ts-ignore
+                  sr.status == select3.current.value!
+                : true
+
+            return company_cond && nomination_cond && status_cond
+          }),
+        }))
     )
   }
 
@@ -132,19 +144,23 @@ export const AdminRequestListPage: FC = () => {
 
           <tbody>
             {qs.map(r => {
-              return (
-                <tr key={r.id}>
-                  <td>
-                    <Link to={`/admin/requests/${r.id}/`}>{r.fio}</Link>
-                  </td>
-                  <td>{r.nomination}</td>
-                  <td>{r.institute}</td>
-                  <td>{r.direction}</td>
-                  <td>{r.educationForm}</td>
-                  <td>{r.createdDate.toLocaleDateString()}</td>
-                  <td>{r.status}</td>
-                </tr>
-              )
+              return r.subRequests.map(sr => {
+                return (
+                  <tr key={sr.id}>
+                    <td>
+                      <Link to={`/admin/requests/${r.id}/${sr.id}/`}>
+                        {r.fio}
+                      </Link>
+                    </td>
+                    <td>{sr.nomination}</td>
+                    <td>{sr.institute}</td>
+                    <td>{sr.direction}</td>
+                    <td>{sr.educationForm}</td>
+                    <td>{sr.createdDate.toLocaleDateString()}</td>
+                    <td>{sr.status}</td>
+                  </tr>
+                )
+              })
             })}
           </tbody>
         </table>

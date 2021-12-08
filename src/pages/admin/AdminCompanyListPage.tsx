@@ -37,6 +37,7 @@ export const AdminCompanyListPage: FC = () => {
   const endCreateDatePickerRef = useRef(null)
   const startEditDatePickerRef = useRef(null)
   const endEditDatePickerRef = useRef(null)
+  const inputRef1 = useRef(null)
 
   const createClickHandler = () => {
     const i = M.Modal.getInstance(createModalRef.current!)
@@ -53,13 +54,21 @@ export const AdminCompanyListPage: FC = () => {
 
     const i = M.Modal.getInstance(editModalRef.current!)
     i.open()
-  }
 
+    setTimeout(() => {
+      // @ts-ignore
+      inputRef1!.current.focus()
+      // @ts-ignore
+      startEditDatePickerRef!.current.focus()
+      // @ts-ignore
+      endEditDatePickerRef!.current.focus()
+    }, 100)
+  }
   const deleteClickHandler = (id: number, name: string) => {
     try {
       deleteCompany(id)
       M.toast({
-        html: `<span>Компания <b>${name}</b> была успешна удалена!</span>`,
+        html: `<span>Кампания <b>${name}</b> была успешна удалена!</span>`,
         classes: 'light-blue darken-1',
       })
     } catch (e) {
@@ -75,7 +84,7 @@ export const AdminCompanyListPage: FC = () => {
         createCompany(createData.name, createData.startDate, createData.endDate)
 
         return M.toast({
-          html: `<span>Компания <b>${createData.name}</b> была успешна добавлена!</span>`,
+          html: `<span>Кампания <b>${createData.name}</b> была успешна добавлена!</span>`,
           classes: 'light-blue darken-1',
         })
       } catch (e) {
@@ -103,7 +112,7 @@ export const AdminCompanyListPage: FC = () => {
         i.close()
 
         return M.toast({
-          html: `<span>Компания <b>${editData.name}</b> была успешна изменена!</span>`,
+          html: `<span>Кампания <b>${editData.name}</b> была успешна изменена!</span>`,
           classes: 'light-blue darken-1',
         })
       } catch (e) {
@@ -263,6 +272,7 @@ export const AdminCompanyListPage: FC = () => {
               id='name'
               type='text'
               value={editData.name}
+              ref={inputRef1}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                 setEditData(prev => ({
                   ...prev,

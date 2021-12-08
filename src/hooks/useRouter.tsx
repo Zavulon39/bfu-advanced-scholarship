@@ -6,6 +6,7 @@ import { AdminRequestListPage } from '../pages/admin/AdminRequestListPage'
 import { AuthPage } from '../pages/AuthPage'
 import { StudentCompanyListPage } from '../pages/student/StudentCompanyListPage'
 import { StudentRequestDetailPage } from '../pages/student/StudentRequestDetailPage'
+import { StudentSubRequestDetailPage } from '../pages/student/StudentSubRequestDetailPage'
 import { AuthContext } from '../store/AuthContext'
 
 export const useRouter = () => {
@@ -18,7 +19,7 @@ export const useRouter = () => {
           <Route path='/admin/companies/' element={<AdminCompanyListPage />} />
           <Route path='/admin/requests/' element={<AdminRequestListPage />} />
           <Route
-            path='/admin/requests/:id/'
+            path='/admin/requests/:id1/:id2/'
             element={<AdminRequestDetailPage />}
           />
           <Route path='*' element={<Navigate to='/admin/companies/' />} />
@@ -30,7 +31,14 @@ export const useRouter = () => {
       <BrowserRouter>
         <Routes>
           <Route path='/companies/' element={<StudentCompanyListPage />} />
-          <Route path='/requests/:id' element={<StudentRequestDetailPage />} />
+          <Route
+            path='/requests/:id/'
+            element={<StudentSubRequestDetailPage />}
+          />
+          <Route
+            path='/requests/:id1/:id2/'
+            element={<StudentRequestDetailPage />}
+          />
           <Route path='*' element={<Navigate to='/companies/' />} />
         </Routes>
       </BrowserRouter>
