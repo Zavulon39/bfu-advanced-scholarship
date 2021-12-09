@@ -5,15 +5,9 @@ const setPoints = (
   rowIdx: number,
   points: number
 ) => {}
+const setStatus = (id: number, subRId: number, status: string) => {}
 const fetchRequests = () => {}
 const setExamPoints = (id: number, subRId: number, points: number) => {}
-const setAward = (
-  id: number,
-  subRId: number,
-  tableIdx: number,
-  rowIdx: number,
-  award: string
-) => {}
 const setStudentExamPoints = (id: number, subRId: number, points: number) => {}
 const addComment = (
   id: number,
@@ -49,7 +43,6 @@ interface ICompany {
 interface ITableBodyRow {
   data: string[]
   points: number
-  award: string
 }
 
 interface ISubRequest {
@@ -111,5 +104,5 @@ export interface IRequestState {
   addRequest: typeof addRequest
   setStudentExamPoints: typeof setStudentExamPoints
   setStudentData: typeof setStudentData
-  setAward: typeof setAward
+  setStatus: typeof setStatus
 }

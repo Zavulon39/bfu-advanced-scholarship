@@ -5,7 +5,8 @@ import { IAction } from '../types/companies'
 const initialState: IAuthState = {
   id: 0,
   fio: '',
-  avatarUrl: 'https://place-hold.it/120x120/ff9d00/f5f5f5',
+  avatarUrl:
+    'https://avatars.mds.yandex.net/get-ott/374297/2a000001616b87458162c9216ccd5144e94d/678x380',
   role: 'anonymous',
   learningPlans: [],
 

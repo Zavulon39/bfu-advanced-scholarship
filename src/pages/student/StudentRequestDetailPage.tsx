@@ -144,7 +144,6 @@ export const StudentRequestDetailPage: FC = () => {
                     {t.header.map((h, hIdx) => (
                       <th key={hIdx}>{h}</th>
                     ))}
-                    <th>Награда</th>
                     <th>Баллы</th>
                   </tr>
                 </thead>
@@ -154,7 +153,6 @@ export const StudentRequestDetailPage: FC = () => {
                       <tr key={rIdx}>
                         {r.data.map((b, bIdx) => {
                           try {
-                            new URL(b)
                             return (
                               <td key={bIdx}>
                                 <div className='file-field input-field'>
@@ -169,9 +167,10 @@ export const StudentRequestDetailPage: FC = () => {
                                       onChange={(
                                         event: React.ChangeEvent<HTMLInputElement>
                                       ) => {
+                                        // TODO: add setImage action and document preview string
                                         /*
                                           send file to server and get path url from response
-                                          then se this url to data
+                                          then set this url to data
                                         */
                                       }}
                                     />
@@ -210,14 +209,6 @@ export const StudentRequestDetailPage: FC = () => {
                             )
                           }
                         })}
-                        <td>
-                          <input
-                            type='text'
-                            value={r.award}
-                            style={{ maxWidth: 'fit-content' }}
-                            key={'award' + tIdx}
-                          />
-                        </td>
                         <td>
                           <input
                             type='text'

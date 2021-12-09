@@ -9,13 +9,14 @@ export const AdminRequestDetailPage: FC = () => {
   const { id1, id2 } = useParams()
   const pointRef = useRef(null)
   const messageRef = useRef(null)
+  const btnRef = useRef(null)
   const {
     requests,
     fetchRequests,
     setPoints,
     setExamPoints,
     addComment,
-    setAward,
+    setStatus,
   } = useContext(RequestContext)
   const { fio, avatarUrl } = useContext(AuthContext)
   const request = requests.find(r => r.id === Number(id1))
@@ -31,6 +32,17 @@ export const AdminRequestDetailPage: FC = () => {
     // @ts-ignore
     pointRef.current!.focus()
     M.CharacterCounter.init(messageRef.current!)
+
+    document.querySelectorAll('.tooltipped').forEach(el => {
+      const url = el.getAttribute('data-tooltip-img')
+      M.Tooltip.init(el, {
+        html: `<img src="${url}" class="tooltip-img" />`,
+      })
+    })
+
+    M.FloatingActionButton.init(btnRef.current!, {
+      toolbarEnabled: true,
+    })
   }, [requests.length])
 
   const saveHandler = () => {
@@ -153,7 +165,6 @@ export const AdminRequestDetailPage: FC = () => {
                     {t.header.map((h, hIdx) => (
                       <th key={hIdx}>{h}</th>
                     ))}
-                    <th>Награда</th>
                     <th>Баллы</th>
                   </tr>
                 </thead>
@@ -167,9 +178,11 @@ export const AdminRequestDetailPage: FC = () => {
                             return (
                               <td key={bIdx}>
                                 <a
-                                  className='waves-effect waves-light btn light-blue darken-1'
+                                  className='waves-effect waves-light btn light-blue darken-1 tooltipped'
                                   href={b}
                                   target='_blank'
+                                  data-position='top'
+                                  data-tooltip-img={b}
                                 >
                                   <i className='material-icons'>
                                     insert_drive_file
@@ -181,25 +194,6 @@ export const AdminRequestDetailPage: FC = () => {
                             return <td key={bIdx}>{b}</td>
                           }
                         })}
-                        <td>
-                          <input
-                            type='text'
-                            value={r.award}
-                            style={{ maxWidth: 'fit-content' }}
-                            key={'award' + tIdx}
-                            onChange={(
-                              event: React.ChangeEvent<HTMLInputElement>
-                            ) =>
-                              setAward(
-                                request!.id,
-                                subRequest.id,
-                                tIdx,
-                                rIdx,
-                                event.target.value
-                              )
-                            }
-                          />
-                        </td>
                         <td>
                           <input
                             type='text'
@@ -277,6 +271,138 @@ export const AdminRequestDetailPage: FC = () => {
           Отправить
         </button>
       </div>
+      {!(
+        subRequest?.status === 'Победитель' ||
+        subRequest?.status === 'Принято' ||
+        subRequest?.status === 'Удалено'
+      ) ? (
+        <div className='fixed-action-btn toolbar' ref={btnRef}>
+          <a className='btn-floating btn-large light-blue darken-4 pulse'>
+            <i className='large material-icons'>mode_edit</i>
+          </a>
+          <ul>
+            <li>
+              <a>
+                <button
+                  className='waves-effect waves-light grey darken-1 btn'
+                  onClick={() => {
+                    try {
+                      setStatus(request?.id!, subRequest?.id!, 'Черновик')
+                      M.toast({
+                        html: '<span>Вы успешно выставили статус <strong>Черновик</strong> !</span>',
+                        classes: 'light-blue darken-1',
+                      })
+                    } catch (e) {
+                      M.toast({
+                        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+                        classes: 'red darken-4',
+                      })
+                    }
+                  }}
+                >
+                  Черновик
+                </button>
+              </a>
+            </li>
+            <li>
+              <a>
+                <button
+                  className='waves-effect waves-light yellow darken-2 btn'
+                  onClick={() => {
+                    try {
+                      setStatus(
+                        request?.id!,
+                        subRequest?.id!,
+                        'Отправленно на доработку'
+                      )
+                      M.toast({
+                        html: '<span>Вы успешно выставили статус <strong>Отправленно на доработку</strong> !</span>',
+                        classes: 'light-blue darken-1',
+                      })
+                    } catch (e) {
+                      M.toast({
+                        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+                        classes: 'red darken-4',
+                      })
+                    }
+                  }}
+                >
+                  Отправленно на доработку
+                </button>
+              </a>
+            </li>
+            <li>
+              <a>
+                <button
+                  className='waves-effect waves-light light-blue darken-3 btn'
+                  onClick={() => {
+                    try {
+                      setStatus(request?.id!, subRequest?.id!, 'Принято')
+                      M.toast({
+                        html: '<span>Вы успешно выставили статус <strong>Принято</strong> !</span>',
+                        classes: 'light-blue darken-1',
+                      })
+                    } catch (e) {
+                      M.toast({
+                        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+                        classes: 'red darken-4',
+                      })
+                    }
+                  }}
+                >
+                  Принято
+                </button>
+              </a>
+            </li>
+            <li>
+              <a>
+                <button
+                  className='waves-effect waves-light teal darken-1 btn'
+                  onClick={() => {
+                    try {
+                      setStatus(request?.id!, subRequest?.id!, 'Победитель')
+                      M.toast({
+                        html: '<span>Вы успешно выставили статус <strong>Победитель</strong> !</span>',
+                        classes: 'light-blue darken-1',
+                      })
+                    } catch (e) {
+                      M.toast({
+                        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+                        classes: 'red darken-4',
+                      })
+                    }
+                  }}
+                >
+                  Победитель
+                </button>
+              </a>
+            </li>
+            <li>
+              <a>
+                <button
+                  className='waves-effect waves-light red btn'
+                  onClick={() => {
+                    try {
+                      setStatus(request?.id!, subRequest?.id!, 'Удалено')
+                      M.toast({
+                        html: '<span>Вы успешно выставили статус <strong>Удалено</strong> !</span>',
+                        classes: 'light-blue darken-1',
+                      })
+                    } catch (e) {
+                      M.toast({
+                        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+                        classes: 'red darken-4',
+                      })
+                    }
+                  }}
+                >
+                  Удалено
+                </button>
+              </a>
+            </li>
+          </ul>
+        </div>
+      ) : null}
       <div style={{ height: 100 }}></div>
     </>
   )
