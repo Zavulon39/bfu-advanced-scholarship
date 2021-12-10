@@ -96,6 +96,7 @@ export interface IRequestState {
   nominations: []
   statuses: []
   companies: ICompany[]
+  notifications: string[]
 
   fetchRequests: typeof fetchRequests
   setPoints: typeof setPoints

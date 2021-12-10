@@ -7,6 +7,7 @@ const initialState: IRequestState = {
   nominations: [],
   statuses: [],
   companies: [],
+  notifications: [],
   fetchRequests: () => {},
   setPoints: () => {},
   setExamPoints: () => {},
@@ -286,6 +287,10 @@ export const RequestProvider = ({ children }: IProps) => {
       ]
       const nominations = Array.from(new Set(['Учебная', 'Спортивная']))
       const statuses = Array.from(new Set(['Победитель', 'Черновик']))
+      const notifications = [
+        'Компания Весна 2021 начинает работу с апреля 2021 года!',
+        'Компания Весна 2021 начинает работу с апреля 2021 года!',
+      ]
       const companies = Array.from(
         new Set([
           {
@@ -306,6 +311,7 @@ export const RequestProvider = ({ children }: IProps) => {
           nominations,
           statuses,
           companies,
+          notifications,
         },
       })
     } catch (e) {

@@ -33,7 +33,14 @@ export const StudentRequestDetailPage: FC = () => {
     // @ts-ignore
     pointRef.current!.focus()
     M.CharacterCounter.init(messageRef.current!)
-  }, [requests.length])
+
+    document.querySelectorAll('.tooltipped').forEach(el => {
+      const url = el.getAttribute('data-tooltip-img')
+      M.Tooltip.init(el, {
+        html: `<img src="${url}" class="tooltip-img" />`,
+      })
+    })
+  }, [requests])
 
   const sendHandler = () => {
     try {
@@ -153,35 +160,67 @@ export const StudentRequestDetailPage: FC = () => {
                       <tr key={rIdx}>
                         {r.data.map((b, bIdx) => {
                           try {
+                            new URL(b)
                             return (
                               <td key={bIdx}>
-                                <div className='file-field input-field'>
-                                  <div className='waves-effect waves-light btn light-blue darken-1'>
-                                    <span>
-                                      <i className='material-icons'>
-                                        insert_drive_file
-                                      </i>
-                                    </span>
-                                    <input
-                                      type='file'
-                                      onChange={(
-                                        event: React.ChangeEvent<HTMLInputElement>
-                                      ) => {
-                                        // TODO: add setImage action and document preview string
-                                        /*
-                                          send file to server and get path url from response
-                                          then set this url to data
-                                        */
-                                      }}
-                                    />
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                  }}
+                                >
+                                  <div className='file-field input-field'>
+                                    <div className='waves-effect waves-light btn light-blue darken-1'>
+                                      <span>
+                                        <i className='material-icons'>
+                                          insert_drive_file
+                                        </i>
+                                      </span>
+                                      <input
+                                        type='file'
+                                        onChange={(
+                                          event: React.ChangeEvent<HTMLInputElement>
+                                        ) => {
+                                          try {
+                                            /*
+                                            send file to server and get path url from response
+                                            then set this url to data
+                                          */
+                                            setStudentData(
+                                              request!.id,
+                                              subRequest.id,
+                                              tIdx,
+                                              rIdx,
+                                              bIdx,
+                                              'https://купитьшахматы.рф/wa-data/public/shop/products/16/04/416/images/1565/gramota-shahmatnaja-2.970.jpg' // replace with server url
+                                            )
+                                          } catch (e) {
+                                            M.toast({
+                                              html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+                                              classes: 'red darken-4',
+                                            })
+                                          }
+                                        }}
+                                      />
+                                    </div>
+                                    <div className='file-path-wrapper'>
+                                      <input
+                                        className='file-path validate'
+                                        style={{ maxWidth: 'fit-content' }}
+                                        type='text'
+                                      />
+                                    </div>
                                   </div>
-                                  <div className='file-path-wrapper'>
-                                    <input
-                                      className='file-path validate'
-                                      style={{ maxWidth: 'fit-content' }}
-                                      type='text'
-                                    />
-                                  </div>
+                                  <a
+                                    href={b}
+                                    target='_blank'
+                                    className='tooltipped'
+                                    data-position='top'
+                                    data-tooltip-img={b}
+                                    style={{ width: 'fit-content' }}
+                                  >
+                                    Текущий документ
+                                  </a>
                                 </div>
                               </td>
                             )

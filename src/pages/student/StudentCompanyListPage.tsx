@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 
 export const StudentCompanyListPage: FC = () => {
   const { companies, fetchCompanies } = useContext(CompanyContext)
-  const { requests, nominations, fetchRequests, addRequest } =
+  const { requests, nominations, notifications, fetchRequests, addRequest } =
     useContext(RequestContext)
   const { id, fio, learningPlans } = useContext(AuthContext)
   const [companyData, setCompanyData] = useState<{
@@ -54,6 +54,10 @@ export const StudentCompanyListPage: FC = () => {
     <>
       <StudentHeader />
       <div className='container'>
+        {notifications.map(n => (
+          <div className='toast light-blue darken-1'>{n}</div>
+        ))}
+        <br />
         <h1>Компании</h1>
         <table className='mt-4 striped'>
           <thead>
@@ -97,7 +101,6 @@ export const StudentCompanyListPage: FC = () => {
           </tbody>
         </table>
       </div>
-
       {/* create modal */}
       <div ref={createModalRef} className='modal'>
         <div className='modal-content'>
