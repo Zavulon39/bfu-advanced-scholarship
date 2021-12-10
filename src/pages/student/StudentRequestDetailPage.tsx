@@ -30,8 +30,6 @@ export const StudentRequestDetailPage: FC = () => {
     if (!requests.length) fetchRequests()
   }, [])
   useEffect(() => {
-    // @ts-ignore
-    pointRef.current!.focus()
     M.CharacterCounter.init(messageRef.current!)
 
     document.querySelectorAll('.tooltipped').forEach(el => {
@@ -41,6 +39,10 @@ export const StudentRequestDetailPage: FC = () => {
       })
     })
   }, [requests])
+  useEffect(() => {
+    // @ts-ignore
+    pointRef.current!.focus()
+  }, [requests.length])
 
   const sendHandler = () => {
     try {
