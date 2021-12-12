@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "/bfu-advanced-scholarship/static/css/main.e550e5cf.chunk.css",
-    "main.js": "/bfu-advanced-scholarship/static/js/main.89ce48a5.chunk.js",
-    "main.js.map": "/bfu-advanced-scholarship/static/js/main.89ce48a5.chunk.js.map",
+    "main.js": "/bfu-advanced-scholarship/static/js/main.6042bdf5.chunk.js",
+    "main.js.map": "/bfu-advanced-scholarship/static/js/main.6042bdf5.chunk.js.map",
     "runtime-main.js": "/bfu-advanced-scholarship/static/js/runtime-main.f275f09f.js",
     "runtime-main.js.map": "/bfu-advanced-scholarship/static/js/runtime-main.f275f09f.js.map",
     "static/css/2.77b31a73.chunk.css": "/bfu-advanced-scholarship/static/css/2.77b31a73.chunk.css",
-    "static/js/2.2a54267c.chunk.js": "/bfu-advanced-scholarship/static/js/2.2a54267c.chunk.js",
-    "static/js/2.2a54267c.chunk.js.map": "/bfu-advanced-scholarship/static/js/2.2a54267c.chunk.js.map",
+    "static/js/2.c3a37129.chunk.js": "/bfu-advanced-scholarship/static/js/2.c3a37129.chunk.js",
+    "static/js/2.c3a37129.chunk.js.map": "/bfu-advanced-scholarship/static/js/2.c3a37129.chunk.js.map",
     "index.html": "/bfu-advanced-scholarship/index.html",
     "static/css/2.77b31a73.chunk.css.map": "/bfu-advanced-scholarship/static/css/2.77b31a73.chunk.css.map",
     "static/css/main.e550e5cf.chunk.css.map": "/bfu-advanced-scholarship/static/css/main.e550e5cf.chunk.css.map",
-    "static/js/2.2a54267c.chunk.js.LICENSE.txt": "/bfu-advanced-scholarship/static/js/2.2a54267c.chunk.js.LICENSE.txt"
+    "static/js/2.c3a37129.chunk.js.LICENSE.txt": "/bfu-advanced-scholarship/static/js/2.c3a37129.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.f275f09f.js",
     "static/css/2.77b31a73.chunk.css",
-    "static/js/2.2a54267c.chunk.js",
+    "static/js/2.c3a37129.chunk.js",
     "static/css/main.e550e5cf.chunk.css",
-    "static/js/main.89ce48a5.chunk.js"
+    "static/js/main.6042bdf5.chunk.js"
   ]
 }
