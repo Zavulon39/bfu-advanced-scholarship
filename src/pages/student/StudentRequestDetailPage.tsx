@@ -15,6 +15,7 @@ export const StudentRequestDetailPage: FC = () => {
     addComment,
     setStudentExamPoints,
     setStudentData,
+    addRow,
   } = useContext(RequestContext)
   const { fio, avatarUrl } = useContext(AuthContext)
   const request = requests.find(r => r.id === Number(id1))
@@ -51,6 +52,34 @@ export const StudentRequestDetailPage: FC = () => {
       setMessage('')
       M.toast({
         html: 'Вы успешно оставили коментарий!',
+        classes: 'light-blue darken-1',
+      })
+    } catch (e) {
+      M.toast({
+        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+        classes: 'red darken-4',
+      })
+    }
+  }
+  const reqSaveHandler = () => {
+    try {
+      // fetch
+      M.toast({
+        html: 'Вы успешно сохранили изменения!',
+        classes: 'light-blue darken-1',
+      })
+    } catch (e) {
+      M.toast({
+        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+        classes: 'red darken-4',
+      })
+    }
+  }
+  const reqSendHandler = () => {
+    try {
+      // fetch
+      M.toast({
+        html: 'Ваша заявка отправлена на рассмотрение!',
         classes: 'light-blue darken-1',
       })
     } catch (e) {
@@ -146,7 +175,16 @@ export const StudentRequestDetailPage: FC = () => {
         {subRequest?.tables.map((t, tIdx) => {
           return (
             <React.Fragment key={t.id}>
-              <h3 className='mt-4'>{t.title}</h3>
+              <h3 className='mt-4'>
+                {t.title}
+                <a
+                  className='btn-floating btn-large waves-effect waves-light red btn-small light-blue darken-1'
+                  style={{ float: 'right' }}
+                  onClick={() => addRow(request?.id!, subRequest.id, tIdx)}
+                >
+                  <i className='material-icons'>add</i>
+                </a>
+              </h3>
               <table>
                 <thead>
                   <tr>
@@ -162,7 +200,8 @@ export const StudentRequestDetailPage: FC = () => {
                       <tr key={rIdx}>
                         {r.data.map((b, bIdx) => {
                           try {
-                            new URL(b)
+                            if (b !== 'Документ') new URL(b)
+
                             return (
                               <td key={bIdx}>
                                 <div
@@ -266,6 +305,30 @@ export const StudentRequestDetailPage: FC = () => {
             </React.Fragment>
           )
         })}
+        <div
+          style={{
+            float: 'right',
+            display: 'flex',
+            flexDirection: 'row',
+            marginTop: 36,
+          }}
+        >
+          <button
+            className='btn light-blue darken-2 waves-effect waves-light'
+            onClick={reqSaveHandler}
+          >
+            <i className='material-icons left'>save</i>
+            Сохранить
+          </button>
+          <button
+            className='btn light-blue darken-2 waves-effect waves-light'
+            style={{ marginLeft: 12 }}
+            onClick={reqSendHandler}
+          >
+            <i className='material-icons left'>send</i>
+            Отправить
+          </button>
+        </div>
         <h3 className='mt-4'>Коментарии</h3>
         <div>
           {subRequest?.comments.map((c, idx) => {

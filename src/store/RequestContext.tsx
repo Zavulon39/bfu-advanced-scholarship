@@ -16,6 +16,9 @@ const initialState: IRequestState = {
   setStudentExamPoints: () => {},
   setStudentData: () => {},
   setStatus: () => {},
+  addRow: () => {},
+  addNotification: () => {},
+  removeNotification: () => {},
 }
 
 interface IProps {
@@ -121,6 +124,38 @@ const reducer = (
 
           return r
         }),
+      }
+    case 'ADD_ROW':
+      return {
+        ...state,
+        requests: state.requests.map(r => {
+          if (r.id === payload.id) {
+            const data = [
+              ...r.subRequests.find(sr => sr.id === payload.subRId)!.tables[
+                payload.tableIdx
+              ].header,
+            ]
+
+            r.subRequests
+              .find(sr => sr.id === payload.subRId)!
+              .tables[payload.tableIdx].body.push({
+                data,
+                points: 0,
+              })
+          }
+
+          return r
+        }),
+      }
+    case 'ADD_NOTIFICATION':
+      return {
+        ...state,
+        notifications: [...state.notifications, payload],
+      }
+    case 'REMOVE_NOTIFICATION':
+      return {
+        ...state,
+        notifications: state.notifications.filter(n => n.id !== payload.id),
       }
     default:
       return state
@@ -288,8 +323,14 @@ export const RequestProvider = ({ children }: IProps) => {
       const nominations = Array.from(new Set(['Учебная', 'Спортивная']))
       const statuses = Array.from(new Set(['Победитель', 'Черновик']))
       const notifications = [
-        'Компания Весна 2021 начинает работу с апреля 2021 года!',
-        'Компания Весна 2021 начинает работу с апреля 2021 года!',
+        {
+          id: 1,
+          text: 'Компания Весна 2021 начинает работу с апреля 2021 года!',
+        },
+        {
+          id: 2,
+          text: 'Компания Весна 2021 начинает работу с апреля 2021 года!',
+        },
       ]
       const companies = Array.from(
         new Set([
@@ -460,6 +501,38 @@ export const RequestProvider = ({ children }: IProps) => {
       },
     })
   }
+  const addRow = (id: number, subRId: number, tableIdx: number) =>
+    dispatch({
+      type: 'ADD_ROW',
+      payload: {
+        id,
+        subRId,
+        tableIdx,
+      },
+    })
+  const addNotification = (text: string) => {
+    // fetch
+    // get id from fetch
+
+    dispatch({
+      type: 'ADD_NOTIFICATION',
+      payload: {
+        id: Date.now(),
+        text,
+      },
+    })
+  }
+  const removeNotification = (id: number) => {
+    // fetch
+    // get id from fetch
+
+    dispatch({
+      type: 'REMOVE_NOTIFICATION',
+      payload: {
+        id,
+      },
+    })
+  }
 
   return (
     <RequestContext.Provider
@@ -473,6 +546,9 @@ export const RequestProvider = ({ children }: IProps) => {
         addRequest,
         setStudentData,
         setStatus,
+        addRow,
+        addNotification,
+        removeNotification,
       }}
     >
       {children}

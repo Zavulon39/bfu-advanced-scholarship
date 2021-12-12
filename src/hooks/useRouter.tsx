@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AdminCompanyListPage } from '../pages/admin/AdminCompanyListPage'
 import { AdminRequestDetailPage } from '../pages/admin/AdminRequestDetailPage'
 import { AdminRequestListPage } from '../pages/admin/AdminRequestListPage'
+import { NotificationListPage } from '../pages/admin/NotificationListPage'
 import { AuthPage } from '../pages/AuthPage'
 import { StudentCompanyListPage } from '../pages/student/StudentCompanyListPage'
 import { StudentRequestDetailPage } from '../pages/student/StudentRequestDetailPage'
@@ -16,6 +17,10 @@ export const useRouter = () => {
     return (
       <BrowserRouter>
         <Routes>
+          <Route
+            path='/admin/notifications/'
+            element={<NotificationListPage />}
+          />
           <Route path='/admin/companies/' element={<AdminCompanyListPage />} />
           <Route path='/admin/requests/' element={<AdminRequestListPage />} />
           <Route

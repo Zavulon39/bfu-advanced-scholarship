@@ -55,7 +55,9 @@ export const StudentCompanyListPage: FC = () => {
       <StudentHeader />
       <div className='container'>
         {notifications.map(n => (
-          <div className='toast light-blue darken-1'>{n}</div>
+          <div className='toast light-blue darken-1' key={n.id}>
+            {n.text}
+          </div>
         ))}
         <br />
         <h1>Компании</h1>

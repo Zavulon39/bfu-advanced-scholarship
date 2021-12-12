@@ -51,6 +51,9 @@ export const AdminHeader: FC = () => {
           </a>
           <ul className='right hide-on-med-and-down'>
             <li>
+              <NavLink to='/admin/notifications/'>Объявления</NavLink>
+            </li>
+            <li>
               <NavLink to='/admin/companies/'>Список компаний</NavLink>
             </li>
             <li>
@@ -107,6 +110,9 @@ export const AdminHeader: FC = () => {
             </a>
           </li>
         ) : null}
+        <li>
+          <NavLink to='/admin/notifications/'>Объявления</NavLink>
+        </li>
         <li>
           <NavLink to='/admin/companies/'>Список компаний</NavLink>
         </li>

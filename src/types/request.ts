@@ -34,6 +34,9 @@ const setStudentData = (
   dataIdx: number,
   value: string
 ) => {}
+const addRow = (id: number, subRId: number, tableIdx: number) => {}
+const addNotification = (text: string) => {}
+const removeNotification = (id: number) => {}
 
 interface ICompany {
   id: number
@@ -68,6 +71,11 @@ interface ISubRequest {
   comments: IComment[]
 }
 
+interface INotification {
+  id: number
+  text: string
+}
+
 export interface ITable {
   id: number
   title: string
@@ -96,7 +104,7 @@ export interface IRequestState {
   nominations: []
   statuses: []
   companies: ICompany[]
-  notifications: string[]
+  notifications: INotification[]
 
   fetchRequests: typeof fetchRequests
   setPoints: typeof setPoints
@@ -106,4 +114,7 @@ export interface IRequestState {
   setStudentExamPoints: typeof setStudentExamPoints
   setStudentData: typeof setStudentData
   setStatus: typeof setStatus
+  addRow: typeof addRow
+  addNotification: typeof addNotification
+  removeNotification: typeof removeNotification
 }

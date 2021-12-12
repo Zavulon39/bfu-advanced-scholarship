@@ -284,29 +284,6 @@ export const AdminRequestDetailPage: FC = () => {
             <li>
               <a>
                 <button
-                  className='waves-effect waves-light grey darken-1 btn'
-                  onClick={() => {
-                    try {
-                      setStatus(request?.id!, subRequest?.id!, 'Черновик')
-                      M.toast({
-                        html: '<span>Вы успешно выставили статус <strong>Черновик</strong> !</span>',
-                        classes: 'light-blue darken-1',
-                      })
-                    } catch (e) {
-                      M.toast({
-                        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-                        classes: 'red darken-4',
-                      })
-                    }
-                  }}
-                >
-                  Черновик
-                </button>
-              </a>
-            </li>
-            <li>
-              <a>
-                <button
                   className='waves-effect waves-light yellow darken-2 btn'
                   onClick={() => {
                     try {
@@ -374,29 +351,6 @@ export const AdminRequestDetailPage: FC = () => {
                   }}
                 >
                   Победитель
-                </button>
-              </a>
-            </li>
-            <li>
-              <a>
-                <button
-                  className='waves-effect waves-light red btn'
-                  onClick={() => {
-                    try {
-                      setStatus(request?.id!, subRequest?.id!, 'Удалено')
-                      M.toast({
-                        html: '<span>Вы успешно выставили статус <strong>Удалено</strong> !</span>',
-                        classes: 'light-blue darken-1',
-                      })
-                    } catch (e) {
-                      M.toast({
-                        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-                        classes: 'red darken-4',
-                      })
-                    }
-                  }}
-                >
-                  Удалено
                 </button>
               </a>
             </li>
