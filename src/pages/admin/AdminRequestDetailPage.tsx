@@ -82,7 +82,7 @@ export const AdminRequestDetailPage: FC = () => {
       <div className='container'>
         <h3 className='mt-4'>Информация о заявлении</h3>
         <table>
-          <thead>
+          <thead className='striped'>
             <tr>
               <th>Кампания</th>
               <th>Наминация</th>
@@ -159,7 +159,7 @@ export const AdminRequestDetailPage: FC = () => {
           return (
             <React.Fragment key={t.id}>
               <h3 className='mt-4'>{t.title}</h3>
-              <table>
+              <table className='striped responsive-table'>
                 <thead>
                   <tr>
                     {t.header.map((h, hIdx) => (

@@ -85,13 +85,15 @@ small {
 }
 
 @media screen and (max-width: 800px) {
-  table {
-    table-layout: fixed;
+  .btn-container {
+    float: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 24px;
   }
 
-  thead,
-  tbody {
-    display: block;
-    overflow-x: auto;
+  .btn-container:last-child {
+    height: 80px;
   }
 }

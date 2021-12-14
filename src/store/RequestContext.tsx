@@ -447,7 +447,6 @@ export const RequestProvider = ({ children }: IProps) => {
     studentId: number,
     company: string,
     nomination: string,
-    status: string,
     createdDate: Date,
     fio: string,
     learningPlans: string

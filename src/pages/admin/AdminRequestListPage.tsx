@@ -129,7 +129,7 @@ export const AdminRequestListPage: FC = () => {
             <i className='material-icons right'>search</i>Поиск
           </button>
         </div>
-        <table className='striped'>
+        <table className='striped responsive-table'>
           <thead>
             <tr>
               <th>ФИО</th>

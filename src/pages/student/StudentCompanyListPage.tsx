@@ -33,7 +33,6 @@ export const StudentCompanyListPage: FC = () => {
       id,
       companyData.company,
       n,
-      'Черновик',
       new Date(),
       fio,
       p

@@ -95,7 +95,7 @@ export const StudentRequestDetailPage: FC = () => {
       <StudentHeader />
       <div className='container'>
         <h3 className='mt-4'>Информация о заявлении</h3>
-        <table>
+        <table className='responsive-table'>
           <thead>
             <tr>
               <th>Кампания</th>
@@ -114,7 +114,7 @@ export const StudentRequestDetailPage: FC = () => {
           </tbody>
         </table>
         <h3 className='mt-4'>Информация о студенте</h3>
-        <table>
+        <table className='striped responsive-table'>
           <thead>
             <tr>
               <th>ФИО</th>
@@ -185,7 +185,7 @@ export const StudentRequestDetailPage: FC = () => {
                   <i className='material-icons'>add</i>
                 </a>
               </h3>
-              <table>
+              <table className='responsive-table striped'>
                 <thead>
                   <tr>
                     {t.header.map((h, hIdx) => (
@@ -313,21 +313,20 @@ export const StudentRequestDetailPage: FC = () => {
             marginTop: 36,
           }}
         >
-          <button
-            className='btn light-blue darken-2 waves-effect waves-light'
-            onClick={reqSaveHandler}
-          >
-            <i className='material-icons left'>save</i>
-            Сохранить
-          </button>
-          <button
-            className='btn light-blue darken-2 waves-effect waves-light'
-            style={{ marginLeft: 12 }}
-            onClick={reqSendHandler}
-          >
-            <i className='material-icons left'>send</i>
-            Отправить
-          </button>
+          <div className='btn-container'>
+            <button className='btn light-blue darken-2 waves-effect waves-light'>
+              <i className='material-icons left'>save</i>
+              Сохранить
+            </button>
+            <button
+              className='btn light-blue darken-2 waves-effect waves-light'
+              style={{ marginLeft: 12 }}
+              onClick={reqSendHandler}
+            >
+              <i className='material-icons left'>send</i>
+              Отправить
+            </button>
+          </div>
         </div>
         <h3 className='mt-4'>Коментарии</h3>
         <div>

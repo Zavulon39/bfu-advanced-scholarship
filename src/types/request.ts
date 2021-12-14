@@ -21,7 +21,6 @@ const addRequest = (
   studentId: number,
   company: string,
   nomination: string, // []
-  status: string,
   createdDate: Date,
   fio: string,
   learningPlan: string
@@ -102,7 +101,7 @@ export interface IRequest {
 export interface IRequestState {
   requests: IRequest[]
   nominations: []
-  statuses: []
+  statuses: string[]
   companies: ICompany[]
   notifications: INotification[]
 
