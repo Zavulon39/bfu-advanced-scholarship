@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/bfu-advanced-scholarship/static/css/main.45430ec5.chunk.css",
-    "main.js": "/bfu-advanced-scholarship/static/js/main.861b4086.chunk.js",
-    "main.js.map": "/bfu-advanced-scholarship/static/js/main.861b4086.chunk.js.map",
+    "main.js": "/bfu-advanced-scholarship/static/js/main.3194d6fb.chunk.js",
+    "main.js.map": "/bfu-advanced-scholarship/static/js/main.3194d6fb.chunk.js.map",
     "runtime-main.js": "/bfu-advanced-scholarship/static/js/runtime-main.f275f09f.js",
     "runtime-main.js.map": "/bfu-advanced-scholarship/static/js/runtime-main.f275f09f.js.map",
     "static/css/2.77b31a73.chunk.css": "/bfu-advanced-scholarship/static/css/2.77b31a73.chunk.css",
@@ -18,6 +18,6 @@
     "static/css/2.77b31a73.chunk.css",
     "static/js/2.c3a37129.chunk.js",
     "static/css/main.45430ec5.chunk.css",
-    "static/js/main.861b4086.chunk.js"
+    "static/js/main.3194d6fb.chunk.js"
   ]
 }
