@@ -155,77 +155,66 @@ export const AdminRequestDetailPage: FC = () => {
             <label htmlFor='point'>Балл</label>
           </div>
         </div>
-        {subRequest?.tables.map((t, tIdx) => {
-          return (
-            <React.Fragment key={t.id}>
-              <h3 className='mt-4'>{t.title}</h3>
-              <table className='striped responsive-table'>
-                <thead>
-                  <tr>
-                    {t.header.map((h, hIdx) => (
-                      <th key={hIdx}>{h}</th>
-                    ))}
-                    <th>Баллы</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {t.body.map((r, rIdx) => {
-                    return (
-                      <tr key={rIdx}>
-                        {r.data.map((b, bIdx) => {
-                          try {
-                            new URL(b)
-                            return (
-                              <td key={bIdx}>
-                                <a
-                                  className='waves-effect waves-light btn light-blue darken-1 tooltipped'
-                                  href={b}
-                                  target='_blank'
-                                  data-position='top'
-                                  data-tooltip-img={b}
-                                >
-                                  <i className='material-icons'>
-                                    insert_drive_file
-                                  </i>
-                                </a>
-                              </td>
-                            )
-                          } catch (e) {
-                            return <td key={bIdx}>{b}</td>
-                          }
-                        })}
-                        <td>
-                          <input
-                            type='text'
-                            value={r.points}
-                            style={{ maxWidth: 'fit-content' }}
-                            key={'input' + tIdx}
-                            onKeyPress={event => {
-                              if (!/[0-9]/.test(event.key)) {
-                                event.preventDefault()
-                              }
-                            }}
-                            onChange={(
-                              event: React.ChangeEvent<HTMLInputElement>
-                            ) =>
-                              setPoints(
-                                request!.id,
-                                subRequest.id,
-                                tIdx,
-                                rIdx,
-                                Number(event.target.value)
-                              )
-                            }
-                          />
+        <h3 className='mt-4'>Таблицы</h3>
+        <table className='responsive-table'>
+          <thead>
+            <tr>
+              {subRequest?.tables.header.map((h, hIdx) => (
+                <th key={hIdx}>{h}</th>
+              ))}
+              <th>Баллы</th>
+            </tr>
+          </thead>
+          <tbody>
+            {subRequest?.tables.body.map((r, rIdx) => {
+              return (
+                <tr key={rIdx}>
+                  {r.data.map((b, bIdx) => {
+                    try {
+                      new URL(b)
+                      return (
+                        <td key={bIdx}>
+                          <a
+                            className='waves-effect waves-light btn light-blue darken-1 tooltipped'
+                            href={b}
+                            target='_blank'
+                            data-position='top'
+                            data-tooltip-img={b}
+                          >
+                            <i className='material-icons'>insert_drive_file</i>
+                          </a>
                         </td>
-                      </tr>
-                    )
+                      )
+                    } catch (e) {
+                      return <td key={bIdx}>{b}</td>
+                    }
                   })}
-                </tbody>
-              </table>
-            </React.Fragment>
-          )
-        })}
+                  <td>
+                    <input
+                      type='text'
+                      value={r.points}
+                      style={{ maxWidth: 'fit-content' }}
+                      key={'input' + rIdx}
+                      onKeyPress={event => {
+                        if (!/[0-9]/.test(event.key)) {
+                          event.preventDefault()
+                        }
+                      }}
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        setPoints(
+                          request!.id,
+                          subRequest.id,
+                          rIdx,
+                          Number(event.target.value)
+                        )
+                      }
+                    />
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
         <button
           className='btn light-blue darken-2 waves-effect waves-light'
           style={{ marginTop: 36, float: 'right' }}

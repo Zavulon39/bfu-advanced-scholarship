@@ -1,7 +1,6 @@
 const setPoints = (
   id: number,
   subRId: number,
-  tableIdx: number,
   rowIdx: number,
   points: number
 ) => {}
@@ -20,7 +19,7 @@ const addRequest = (
   companyId: number,
   studentId: number,
   company: string,
-  nomination: string, // []
+  nomination: string,
   createdDate: Date,
   fio: string,
   learningPlan: string
@@ -28,12 +27,11 @@ const addRequest = (
 const setStudentData = (
   id: number,
   subRId: number,
-  tableIdx: number,
   rowIdx: number,
   dataIdx: number,
   value: string
 ) => {}
-const addRow = (id: number, subRId: number, tableIdx: number) => {}
+const addRow = (id: number, subRId: number) => {}
 const addNotification = (text: string) => {}
 const removeNotification = (id: number) => {}
 
@@ -66,7 +64,7 @@ interface ISubRequest {
   examPoints: number
   point: number
 
-  tables: ITable[]
+  tables: ITable
   comments: IComment[]
 }
 
@@ -76,8 +74,6 @@ interface INotification {
 }
 
 export interface ITable {
-  id: number
-  title: string
   header: string[]
   body: ITableBodyRow[]
 }

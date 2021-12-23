@@ -172,139 +172,133 @@ export const StudentRequestDetailPage: FC = () => {
             <label htmlFor='point'>Балл</label>
           </div>
         </div>
-        {subRequest?.tables.map((t, tIdx) => {
-          return (
-            <React.Fragment key={t.id}>
-              <h3 className='mt-4'>
-                {t.title}
-                <a
-                  className='btn-floating btn-large waves-effect waves-light red btn-small light-blue darken-1'
-                  style={{ float: 'right' }}
-                  onClick={() => addRow(request?.id!, subRequest.id, tIdx)}
-                >
-                  <i className='material-icons'>add</i>
-                </a>
-              </h3>
-              <table className='responsive-table striped'>
-                <thead>
-                  <tr>
-                    {t.header.map((h, hIdx) => (
-                      <th key={hIdx}>{h}</th>
-                    ))}
-                    <th>Баллы</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {t.body.map((r, rIdx) => {
-                    return (
-                      <tr key={rIdx}>
-                        {r.data.map((b, bIdx) => {
-                          try {
-                            if (b !== 'Документ') new URL(b)
+        <h3 className='mt-4'>
+          Таблицы
+          <a
+            className='btn-floating btn-large waves-effect waves-light red btn-small light-blue darken-1'
+            style={{ float: 'right' }}
+            onClick={() => addRow(request?.id!, subRequest!.id)}
+          >
+            <i className='material-icons'>add</i>
+          </a>
+        </h3>
+        <table className='responsive-table'>
+          <thead>
+            <tr>
+              {subRequest?.tables.header.map((h, hIdx) => (
+                <th key={hIdx}>{h}</th>
+              ))}
+              <th>Баллы</th>
+            </tr>
+          </thead>
+          <tbody>
+            {subRequest?.tables.body.map((r, rIdx) => {
+              return (
+                <tr key={rIdx}>
+                  {r.data.map((b, bIdx) => {
+                    try {
+                      if (b !== 'Документ') new URL(b)
 
-                            return (
-                              <td key={bIdx}>
-                                <div
-                                  style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                  }}
-                                >
-                                  <div className='file-field input-field'>
-                                    <div className='waves-effect waves-light btn light-blue darken-1'>
-                                      <span>
-                                        <i className='material-icons'>
-                                          insert_drive_file
-                                        </i>
-                                      </span>
-                                      <input
-                                        type='file'
-                                        onChange={(
-                                          event: React.ChangeEvent<HTMLInputElement>
-                                        ) => {
-                                          try {
-                                            /*
+                      return (
+                        <td key={bIdx}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                            }}
+                          >
+                            <div className='file-field input-field'>
+                              <div className='waves-effect waves-light btn light-blue darken-1'>
+                                <span>
+                                  <i className='material-icons'>
+                                    insert_drive_file
+                                  </i>
+                                </span>
+                                <input
+                                  type='file'
+                                  onChange={(
+                                    event: React.ChangeEvent<HTMLInputElement>
+                                  ) => {
+                                    try {
+                                      /*
                                             send file to server and get path url from response
                                             then set this url to data
                                           */
-                                            setStudentData(
-                                              request!.id,
-                                              subRequest.id,
-                                              tIdx,
-                                              rIdx,
-                                              bIdx,
-                                              'https://купитьшахматы.рф/wa-data/public/shop/products/16/04/416/images/1565/gramota-shahmatnaja-2.970.jpg' // replace with server url
-                                            )
-                                          } catch (e) {
-                                            M.toast({
-                                              html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-                                              classes: 'red darken-4',
-                                            })
-                                          }
-                                        }}
-                                      />
-                                    </div>
-                                    <div className='file-path-wrapper'>
-                                      <input
-                                        className='file-path validate'
-                                        style={{ maxWidth: 'fit-content' }}
-                                        type='text'
-                                      />
-                                    </div>
-                                  </div>
-                                  <a
-                                    href={b}
-                                    target='_blank'
-                                    className='tooltipped'
-                                    data-position='top'
-                                    data-tooltip-img={b}
-                                    style={{ width: 'fit-content' }}
-                                  >
-                                    Текущий документ
-                                  </a>
-                                </div>
-                              </td>
-                            )
-                          } catch (e) {
-                            return (
-                              <td key={bIdx}>
-                                <input
-                                  type='text'
-                                  style={{ maxWidth: 'fit-content' }}
-                                  value={b}
-                                  onChange={(
-                                    event: React.ChangeEvent<HTMLInputElement>
-                                  ) =>
-                                    setStudentData(
-                                      request!.id,
-                                      subRequest.id,
-                                      tIdx,
-                                      rIdx,
-                                      bIdx,
-                                      event.target.value
-                                    )
-                                  }
+                                      setStudentData(
+                                        request!.id,
+                                        subRequest.id,
+                                        rIdx,
+                                        bIdx,
+                                        'https://купитьшахматы.рф/wa-data/public/shop/products/16/04/416/images/1565/gramota-shahmatnaja-2.970.jpg' // replace with server url
+                                      )
+                                    } catch (e) {
+                                      M.toast({
+                                        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+                                        classes: 'red darken-4',
+                                      })
+                                    }
+                                  }}
                                 />
-                              </td>
-                            )
-                          }
-                        })}
-                        <td>
+                              </div>
+                              <div className='file-path-wrapper'>
+                                <input
+                                  className='file-path validate'
+                                  style={{ maxWidth: 'fit-content' }}
+                                  type='text'
+                                />
+                              </div>
+                            </div>
+                            <a
+                              href={b}
+                              target='_blank'
+                              className='tooltipped'
+                              data-position='top'
+                              data-tooltip-img={b}
+                              style={{ width: 'fit-content' }}
+                            >
+                              Текущий документ
+                            </a>
+                          </div>
+                        </td>
+                      )
+                    } catch (e) {
+                      return (
+                        <td key={bIdx}>
                           <input
                             type='text'
-                            value={r.points}
                             style={{ maxWidth: 'fit-content' }}
-                            key={'input' + tIdx}
+                            value={b}
+                            onChange={(
+                              event: React.ChangeEvent<HTMLInputElement>
+                            ) =>
+                              setStudentData(
+                                request!.id,
+                                subRequest.id,
+                                rIdx,
+                                bIdx,
+                                event.target.value
+                              )
+                            }
                           />
                         </td>
-                      </tr>
-                    )
+                      )
+                    }
                   })}
-                </tbody>
-              </table>
-            </React.Fragment>
-          )
-        })}
+                  <td>
+                    {/* <input
+                      type='text'
+                      value={r.points}
+                      style={{ maxWidth: 'fit-content' }}
+                      key={'input' + rIdx}
+                    /> */}
+                    <strong style={{ fontSize: 18 }}>{r.points}</strong>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+
         <div
           style={{
             float: 'right',
@@ -314,7 +308,10 @@ export const StudentRequestDetailPage: FC = () => {
           }}
         >
           <div className='btn-container'>
-            <button className='btn light-blue darken-2 waves-effect waves-light'>
+            <button
+              className='btn light-blue darken-2 waves-effect waves-light'
+              onClick={reqSaveHandler}
+            >
               <i className='material-icons left'>save</i>
               Сохранить
             </button>
