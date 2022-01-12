@@ -1,33 +1,26 @@
-import React, { FC, useState, useRef, useEffect, useContext } from 'react'
-import M from 'materialize-css'
-import { AuthContext } from '../store/AuthContext'
+import React, { FC, useState, useContext } from 'react'
+import { Link } from 'react-router-dom'
+import { AuthContext } from '../../store/AuthContext'
 
-export const AuthPage: FC = () => {
+export const StudentAuthPage: FC = () => {
   const { login } = useContext(AuthContext)
   const [authData, setAuthData] = useState<{
     fio: string
-    avatarUrl: string
+    password: string
   }>({
     fio: '',
-    avatarUrl:
-      'https://avatars.mds.yandex.net/get-ott/374297/2a000001616b87458162c9216ccd5144e94d/678x380',
+    password: '',
   })
-  const selectRed = useRef(null)
 
   const loginHandler = () => {
     login(
       1,
       authData.fio,
-      authData.avatarUrl,
-      // @ts-ignore
-      selectRed.current!.value,
+      'https://avatars.mds.yandex.net/get-ott/374297/2a000001616b87458162c9216ccd5144e94d/678x380',
+      'student',
       ['Матан', 'Высший матан']
     )
   }
-
-  useEffect(() => {
-    M.FormSelect.init(selectRed.current!)
-  }, [])
 
   return (
     <div className='container'>
@@ -43,14 +36,20 @@ export const AuthPage: FC = () => {
             }))
           }
         />
-        <label htmlFor='fio'>ФИО</label>
+        <label htmlFor='fio'>Логин</label>
       </div>
       <div className='input-field'>
-        <select ref={selectRed}>
-          <option value='student'>Student</option>
-          <option value='admin'>Admin</option>
-        </select>
-        <label>Роль</label>
+        <input
+          id='fio'
+          type='password'
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            setAuthData(prev => ({
+              ...prev,
+              password: event.target.value,
+            }))
+          }
+        />
+        <label htmlFor='fio'>Пароль</label>
       </div>
       <button
         className='btn light-blue darken-2 waves-effect waves-light'
@@ -60,6 +59,9 @@ export const AuthPage: FC = () => {
         <i className='material-icons left'>person</i>
         Войти
       </button>
+      <small>
+        <Link to='/admin/authentication/'>Я администратор</Link>
+      </small>
     </div>
   )
 }

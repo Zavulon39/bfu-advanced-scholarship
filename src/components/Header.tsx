@@ -9,17 +9,17 @@ import React, {
 import M from 'materialize-css'
 import { NavLink } from 'react-router-dom'
 import { AuthContext } from '../store/AuthContext'
-import { useNavigate } from 'react-router-dom'
 
 export const AdminHeader: FC = () => {
-  const navigate = useNavigate()
   const navbar = useRef(null)
   const tooltipRef1 = useRef(null)
   const tooltipRef2 = useRef(null)
   const [title, setTitle] = useState(
     'Повышенная государственная академическая стипендия'
   )
-  const { fio, avatarUrl, role } = useContext(AuthContext)
+  const { fio, avatarUrl, role, login } = useContext(AuthContext)
+
+  const logout = () => login(0, '', '', 'anonymous', [])
 
   useEffect(() => {
     M.Sidenav.init(navbar.current!)
@@ -70,6 +70,7 @@ export const AdminHeader: FC = () => {
                   style={{
                     marginBottom: 2,
                   }}
+                  onClick={logout}
                 >
                   <img
                     src={avatarUrl}
@@ -125,14 +126,15 @@ export const AdminHeader: FC = () => {
 }
 
 export const StudentHeader: FC = () => {
-  const navigate = useNavigate()
   const navbar = useRef(null)
   const tooltipRef1 = useRef(null)
   const tooltipRef2 = useRef(null)
   const [title, setTitle] = useState(
     'Повышенная государственная академическая стипендия'
   )
-  const { fio, avatarUrl, role } = useContext(AuthContext)
+  const { fio, avatarUrl, role, login } = useContext(AuthContext)
+
+  const logout = () => login(0, '', '', 'anonymous', [])
 
   useEffect(() => {
     M.Sidenav.init(navbar.current!)
@@ -177,6 +179,7 @@ export const StudentHeader: FC = () => {
                   style={{
                     marginBottom: 2,
                   }}
+                  onClick={logout}
                 >
                   <img
                     src={avatarUrl}
