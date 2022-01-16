@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { AdminHeader } from '../../components/Header'
 import { RequestContext } from '../../store/RequestContext'
 import M from 'materialize-css'
+import { useFormater } from '../../hooks/useFormater'
 
 export const AdminRequestListPage: FC = () => {
   const { requests, nominations, statuses, companies, fetchRequests } =
@@ -13,6 +14,7 @@ export const AdminRequestListPage: FC = () => {
   const select1 = useRef(null)
   const select2 = useRef(null)
   const select3 = useRef(null)
+  const _ = useFormater()
 
   useEffect(() => {
     if (!requests.length) fetchRequests()
@@ -39,11 +41,13 @@ export const AdminRequestListPage: FC = () => {
         .map(r => ({
           ...r,
           subRequests: r.subRequests.filter(sr => {
+            // @ts-ignore
+
             const company_cond =
               // @ts-ignore
               select1.current.value != -1
                 ? // @ts-ignore
-                  sr.companyId == select1.current.value!
+                  r.companyId == select1.current.value!
                 : true
             const nomination_cond =
               // @ts-ignore
@@ -97,7 +101,7 @@ export const AdminRequestListPage: FC = () => {
           </div>
           <div className='col s3 input-field'>
             <select ref={select2}>
-              <option value={-1}>Все наминации</option>
+              <option value={-1}>Все номинации</option>
               {nominations.map(n => {
                 return (
                   <option value={n} key={n}>
@@ -106,7 +110,7 @@ export const AdminRequestListPage: FC = () => {
                 )
               })}
             </select>
-            <label>Наминация</label>
+            <label>Номинация</label>
           </div>
           <div className='col s3 input-field'>
             <select ref={select3}>
@@ -133,7 +137,7 @@ export const AdminRequestListPage: FC = () => {
           <thead>
             <tr>
               <th>ФИО</th>
-              <th>Наминация</th>
+              <th>Номинация</th>
               <th>Институт</th>
               <th>Направление</th>
               <th>Обучение</th>
@@ -156,7 +160,7 @@ export const AdminRequestListPage: FC = () => {
                     <td>{sr.institute}</td>
                     <td>{sr.direction}</td>
                     <td>{sr.educationForm}</td>
-                    <td>{sr.createdDate.toLocaleDateString()}</td>
+                    <td>{_(sr.createdDate)}</td>
                     <td>{sr.status}</td>
                   </tr>
                 )

@@ -4,6 +4,7 @@ import { StudentHeader } from '../../components/Header'
 import { RequestContext } from '../../store/RequestContext'
 import { AuthContext } from '../../store/AuthContext'
 import M from 'materialize-css'
+import { useFormater } from '../../hooks/useFormater'
 
 export const StudentRequestDetailPage: FC = () => {
   const { id1, id2 } = useParams()
@@ -24,6 +25,7 @@ export const StudentRequestDetailPage: FC = () => {
     ?.subRequests.find(sb => sb.id === Number(id2))
   const [message, setMessage] = useState('')
   const navigate = useNavigate()
+  const _ = useFormater()
 
   if (request?.studentId !== Number(id1)) navigate('/companies/')
 
@@ -61,9 +63,23 @@ export const StudentRequestDetailPage: FC = () => {
       })
     }
   }
-  const reqSaveHandler = () => {
+  const reqSaveHandler = async () => {
     try {
       // fetch
+
+      const resp = await fetch('/api/requests/set-student-point/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: subRequest?.id,
+          point: subRequest?.examPoints,
+        }),
+      })
+
+      if (!resp.ok) throw Error()
+
       M.toast({
         html: 'Вы успешно сохранили изменения!',
         classes: 'light-blue darken-1',
@@ -75,20 +91,20 @@ export const StudentRequestDetailPage: FC = () => {
       })
     }
   }
-  const reqSendHandler = () => {
-    try {
-      // fetch
-      M.toast({
-        html: 'Ваша заявка отправлена на рассмотрение!',
-        classes: 'light-blue darken-1',
-      })
-    } catch (e) {
-      M.toast({
-        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-        classes: 'red darken-4',
-      })
-    }
-  }
+  // const reqSendHandler = () => {
+  //   try {
+  //     // fetch
+  //     M.toast({
+  //       html: 'Ваша заявка отправлена на рассмотрение!',
+  //       classes: 'light-blue darken-1',
+  //     })
+  //   } catch (e) {
+  //     M.toast({
+  //       html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+  //       classes: 'red darken-4',
+  //     })
+  //   }
+  // }
 
   return (
     <>
@@ -99,7 +115,7 @@ export const StudentRequestDetailPage: FC = () => {
           <thead>
             <tr>
               <th>Кампания</th>
-              <th>Наминация</th>
+              <th>Номинация</th>
               <th>Статус</th>
               <th>Дата создания</th>
             </tr>
@@ -109,7 +125,7 @@ export const StudentRequestDetailPage: FC = () => {
               <td>{request?.company}</td>
               <td>{subRequest?.nomination}</td>
               <td>{subRequest?.status}</td>
-              <td>{subRequest?.createdDate.toLocaleDateString()}</td>
+              <td>{_(subRequest?.createdDate)}</td>
             </tr>
           </tbody>
         </table>
@@ -221,9 +237,9 @@ export const StudentRequestDetailPage: FC = () => {
                                   ) => {
                                     try {
                                       /*
-                                            send file to server and get path url from response
-                                            then set this url to data
-                                          */
+                                        send file to server and get path url from response
+                                        then set this url to data
+                                      */
                                       setStudentData(
                                         request!.id,
                                         subRequest.id,
@@ -315,14 +331,14 @@ export const StudentRequestDetailPage: FC = () => {
               <i className='material-icons left'>save</i>
               Сохранить
             </button>
-            <button
+            {/* <button
               className='btn light-blue darken-2 waves-effect waves-light'
               style={{ marginLeft: 12 }}
               onClick={reqSendHandler}
             >
               <i className='material-icons left'>send</i>
               Отправить
-            </button>
+            </button> */}
           </div>
         </div>
         <h3 className='mt-4'>Коментарии</h3>
@@ -335,7 +351,7 @@ export const StudentRequestDetailPage: FC = () => {
                   <span>{c.name}</span>
                 </div>
                 <p>{c.text}</p>
-                <small>{c.sendedDate.toLocaleString()}</small>
+                <small>{_(c.sendedDate)}</small>
               </div>
             )
           })}

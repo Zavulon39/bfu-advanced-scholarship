@@ -22,7 +22,7 @@ export const StudentSubRequestDetailPage: FC = () => {
         <table className='mt-4 striped'>
           <thead>
             <tr>
-              <th>Наминация</th>
+              <th>Номинация</th>
               <th>Институт</th>
               <th>Направление</th>
               <th>Курс</th>

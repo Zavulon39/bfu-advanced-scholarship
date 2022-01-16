@@ -4,6 +4,7 @@ import { AdminHeader } from '../../components/Header'
 import { RequestContext } from '../../store/RequestContext'
 import M from 'materialize-css'
 import { AuthContext } from '../../store/AuthContext'
+import { useFormater } from '../../hooks/useFormater'
 
 export const AdminRequestDetailPage: FC = () => {
   const { id1, id2 } = useParams()
@@ -24,6 +25,7 @@ export const AdminRequestDetailPage: FC = () => {
     .find(r => r.id === Number(id1))
     ?.subRequests.find(sb => sb.id === Number(id2))
   const [message, setMessage] = useState('')
+  const _ = useFormater()
 
   useEffect(() => {
     if (!requests.length) fetchRequests()
@@ -45,9 +47,21 @@ export const AdminRequestDetailPage: FC = () => {
     })
   }, [requests.length])
 
-  const saveHandler = () => {
+  const saveHandler = async () => {
     try {
-      // fetch
+      const resp = await fetch('/api/requests/get/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: subRequest?.id,
+          point: subRequest?.point,
+        }),
+      })
+
+      if (!resp.ok) throw Error()
+
       M.toast({
         html: 'Данные были успешно сохранены!',
         classes: 'light-blue darken-1',
@@ -85,7 +99,7 @@ export const AdminRequestDetailPage: FC = () => {
           <thead className='striped'>
             <tr>
               <th>Кампания</th>
-              <th>Наминация</th>
+              <th>Номинация</th>
               <th>Статус</th>
               <th>Дата создания</th>
             </tr>
@@ -95,7 +109,7 @@ export const AdminRequestDetailPage: FC = () => {
               <td>{request?.company}</td>
               <td>{subRequest?.nomination}</td>
               <td>{subRequest?.status}</td>
-              <td>{subRequest?.createdDate.toLocaleDateString()}</td>
+              <td>{_(subRequest?.createdDate)}</td>
             </tr>
           </tbody>
         </table>
@@ -233,7 +247,7 @@ export const AdminRequestDetailPage: FC = () => {
                   <span>{c.name}</span>
                 </div>
                 <p>{c.text}</p>
-                <small>{c.sendedDate.toLocaleString()}</small>
+                <small>{_(c.sendedDate)}</small>
               </div>
             )
           })}
@@ -274,8 +288,21 @@ export const AdminRequestDetailPage: FC = () => {
               <a>
                 <button
                   className='waves-effect waves-light yellow darken-2 btn'
-                  onClick={() => {
+                  onClick={async () => {
                     try {
+                      const resp = await fetch('/api/requests/get/', {
+                        method: 'PUT',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                          id: subRequest?.id,
+                          status: 'Отправленно на доработку',
+                        }),
+                      })
+
+                      if (!resp.ok) throw Error()
+
                       setStatus(
                         request?.id!,
                         subRequest?.id!,
@@ -301,8 +328,21 @@ export const AdminRequestDetailPage: FC = () => {
               <a>
                 <button
                   className='waves-effect waves-light light-blue darken-3 btn'
-                  onClick={() => {
+                  onClick={async () => {
                     try {
+                      const resp = await fetch('/api/requests/get/', {
+                        method: 'PUT',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                          id: subRequest?.id,
+                          status: 'Принято',
+                        }),
+                      })
+
+                      if (!resp.ok) throw Error()
+
                       setStatus(request?.id!, subRequest?.id!, 'Принято')
                       M.toast({
                         html: '<span>Вы успешно выставили статус <strong>Принято</strong> !</span>',
@@ -324,8 +364,21 @@ export const AdminRequestDetailPage: FC = () => {
               <a>
                 <button
                   className='waves-effect waves-light teal darken-1 btn'
-                  onClick={() => {
+                  onClick={async () => {
                     try {
+                      const resp = await fetch('/api/requests/get/', {
+                        method: 'PUT',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                          id: subRequest?.id,
+                          status: 'Победитель',
+                        }),
+                      })
+
+                      if (!resp.ok) throw Error()
+
                       setStatus(request?.id!, subRequest?.id!, 'Победитель')
                       M.toast({
                         html: '<span>Вы успешно выставили статус <strong>Победитель</strong> !</span>',

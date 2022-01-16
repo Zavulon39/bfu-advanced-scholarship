@@ -23,7 +23,7 @@ const reducer = (state = initialState, action: IAction): ICompanyState => {
         companies: [
           ...state.companies,
           {
-            id: Date.now(),
+            id: action.payload.id,
             name: action.payload.name,
             startDate: action.payload.startDate,
             endDate: action.payload.endDate,
@@ -57,28 +57,23 @@ export const CompanyContext = createContext(initialState)
 export const CompanyProvider = ({ children }: IProps) => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  const fetchCompanies = () => {
+  const fetchCompanies = async () => {
     try {
       // fetch
 
-      const payload: ICompany[] = [
-        {
-          id: 1,
-          name: 'Весна 2019',
-          startDate: new Date(),
-          endDate: new Date(),
-        },
-        {
-          id: 2,
-          name: 'Весна 2020',
-          startDate: new Date(),
-          endDate: new Date(),
-        },
-      ]
+      const resp = await fetch('/api/companies/get/')
+
+      if (!resp.ok) throw Error()
+
+      const payload: ICompany[] = await resp.json()
 
       dispatch({
         type: 'SET_COMPANIES',
-        payload,
+        payload: payload.map(p => ({
+          ...p,
+          startDate: new Date(p.startDate),
+          endDate: new Date(p.endDate),
+        })),
       })
     } catch (e) {
       dispatch({
@@ -94,32 +89,83 @@ export const CompanyProvider = ({ children }: IProps) => {
       })
     }
   }
-  const deleteCompany = (id: number) => {
+  const deleteCompany = async (id: number) => {
     // fetch
+
+    const resp = await fetch('/api/companies/detail/', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id,
+      }),
+    })
+
+    if (!resp.ok) throw Error()
+
     dispatch({
       type: 'DELETE_COMPANY',
       payload: id,
     })
   }
-  const createCompany = (name: string, startDate: Date, endDate: Date) => {
+  const createCompany = async (
+    name: string,
+    startDate: Date,
+    endDate: Date
+  ) => {
     // fetch
     // get id from fetch
+
+    const resp = await fetch('/api/companies/create/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name,
+        date_start: startDate,
+        date_end: endDate,
+      }),
+    })
+
+    if (!resp.ok) throw Error()
+
+    const data = await resp.json()
+
     dispatch({
       type: 'CREATE_COMPANY',
       payload: {
+        id: data.id,
         name,
         startDate,
         endDate,
       },
     })
   }
-  const editCompany = (
+  const editCompany = async (
     id: number,
     name: string,
     startDate: Date,
     endDate: Date
   ) => {
     // fetch
+
+    const resp = await fetch('/api/companies/detail/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id,
+        name,
+        date_start: startDate,
+        date_end: endDate,
+      }),
+    })
+
+    if (!resp.ok) throw Error()
+
     dispatch({
       type: 'EDIT_COMPANY',
       payload: {

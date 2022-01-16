@@ -5,6 +5,7 @@ import { CompanyContext } from '../../store/CompanyContext'
 import { RequestContext } from '../../store/RequestContext'
 import M from 'materialize-css'
 import { Link } from 'react-router-dom'
+import { useFormater } from '../../hooks/useFormater'
 
 export const StudentCompanyListPage: FC = () => {
   const { companies, fetchCompanies } = useContext(CompanyContext)
@@ -18,6 +19,7 @@ export const StudentCompanyListPage: FC = () => {
   const createModalRef = useRef(null)
   const nominationRef = useRef(null)
   const planRef = useRef(null)
+  const _ = useFormater()
 
   const createClickHandler = (id: number, name: string) => {
     setCompanyData(prev => ({ companyId: id, company: name }))
@@ -73,8 +75,8 @@ export const StudentCompanyListPage: FC = () => {
               return (
                 <tr key={c.id}>
                   <td>{c.name}</td>
-                  <td>{c.startDate.toLocaleDateString()}</td>
-                  <td>{c.endDate.toLocaleDateString()}</td>
+                  <td>{_(c.startDate)}</td>
+                  <td>{_(c.endDate)}</td>
                   <td>
                     {requests.filter(r => r.companyId === c.id).length ? (
                       <Link
@@ -126,7 +128,7 @@ export const StudentCompanyListPage: FC = () => {
                 </option>
               ))}
             </select>
-            <label>Наминация</label>
+            <label>Номинация</label>
           </div>
         </div>
         <div className='modal-footer'>

@@ -2,6 +2,7 @@ import React, { FC, useContext, useEffect, useRef, useState } from 'react'
 import { AdminHeader } from '../../components/Header'
 import { CompanyContext } from '../../store/CompanyContext'
 import M from 'materialize-css'
+import { useFormater } from '../../hooks/useFormater'
 
 export const AdminCompanyListPage: FC = () => {
   const {
@@ -38,6 +39,7 @@ export const AdminCompanyListPage: FC = () => {
   const startEditDatePickerRef = useRef(null)
   const endEditDatePickerRef = useRef(null)
   const inputRef1 = useRef(null)
+  const _ = useFormater()
 
   const createClickHandler = () => {
     const i = M.Modal.getInstance(createModalRef.current!)
@@ -138,7 +140,7 @@ export const AdminCompanyListPage: FC = () => {
 
     M.Datepicker.init(startCreateDatePickerRef.current!, {
       container: document.querySelector('body'),
-      format: 'dd.mm.yyyy',
+      format: 'yyyy-mm-dd',
       onSelect: (selectedDate: Date) =>
         setCreateData(prev => ({
           ...prev,
@@ -147,7 +149,7 @@ export const AdminCompanyListPage: FC = () => {
     })
     M.Datepicker.init(endCreateDatePickerRef.current!, {
       container: document.querySelector('body'),
-      format: 'dd.mm.yyyy',
+      format: 'yyyy-mm-dd',
       onSelect: (selectedDate: Date) =>
         setCreateData(prev => ({
           ...prev,
@@ -157,7 +159,7 @@ export const AdminCompanyListPage: FC = () => {
 
     M.Datepicker.init(startEditDatePickerRef.current!, {
       container: document.querySelector('body'),
-      format: 'dd.mm.yyyy',
+      format: 'yyyy-mm-dd',
       onSelect: (selectedDate: Date) =>
         setEditData(prev => ({
           ...prev,
@@ -166,7 +168,7 @@ export const AdminCompanyListPage: FC = () => {
     })
     M.Datepicker.init(endEditDatePickerRef.current!, {
       container: document.querySelector('body'),
-      format: 'dd.mm.yyyy',
+      format: 'yyyy-mm-dd',
       onSelect: (selectedDate: Date) =>
         setEditData(prev => ({
           ...prev,
@@ -200,8 +202,8 @@ export const AdminCompanyListPage: FC = () => {
               return (
                 <tr key={c.id}>
                   <td>{c.name}</td>
-                  <td>{c.startDate.toLocaleDateString()}</td>
-                  <td>{c.endDate.toLocaleDateString()}</td>
+                  <td>{_(c.startDate)}</td>
+                  <td>{_(c.endDate)}</td>
                   <td>
                     <button
                       className='btn-floating waves-effect waves-light light-blue darken-1'
@@ -286,7 +288,7 @@ export const AdminCompanyListPage: FC = () => {
             <input
               type='text'
               id='date'
-              value={editData.startDate?.toLocaleDateString()}
+              value={_(editData.startDate)}
               ref={startEditDatePickerRef}
             />
             <label htmlFor='date'>Дата начала</label>
@@ -295,7 +297,7 @@ export const AdminCompanyListPage: FC = () => {
             <input
               type='text'
               id='date'
-              value={editData.startDate?.toLocaleDateString()}
+              value={_(editData.endDate)}
               ref={endEditDatePickerRef}
             />
             <label htmlFor='date'>Дата окончания</label>
