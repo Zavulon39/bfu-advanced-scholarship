@@ -134,7 +134,14 @@ export const StudentHeader: FC = () => {
   )
   const { fio, avatarUrl, role, login } = useContext(AuthContext)
 
-  const logout = () => login(0, '', '', 'anonymous', [])
+  const logout = () => {
+    localStorage.removeItem('access')
+    localStorage.removeItem('refresh')
+    localStorage.removeItem('role')
+    localStorage.removeItem('id')
+
+    window.location.reload()
+  }
 
   useEffect(() => {
     M.Sidenav.init(navbar.current!)

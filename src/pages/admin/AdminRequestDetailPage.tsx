@@ -5,6 +5,7 @@ import { RequestContext } from '../../store/RequestContext'
 import M from 'materialize-css'
 import { AuthContext } from '../../store/AuthContext'
 import { useFormater } from '../../hooks/useFormater'
+import $api from '../../http'
 
 export const AdminRequestDetailPage: FC = () => {
   const { id1, id2 } = useParams()
@@ -49,18 +50,10 @@ export const AdminRequestDetailPage: FC = () => {
 
   const saveHandler = async () => {
     try {
-      const resp = await fetch('/api/requests/get/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: subRequest?.id,
-          point: subRequest?.point,
-        }),
+      await $api.post('/api/requests/get/', {
+        id: subRequest?.id,
+        point: subRequest?.point,
       })
-
-      if (!resp.ok) throw Error()
 
       M.toast({
         html: 'Данные были успешно сохранены!',
@@ -290,18 +283,10 @@ export const AdminRequestDetailPage: FC = () => {
                   className='waves-effect waves-light yellow darken-2 btn'
                   onClick={async () => {
                     try {
-                      const resp = await fetch('/api/requests/get/', {
-                        method: 'PUT',
-                        headers: {
-                          'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                          id: subRequest?.id,
-                          status: 'Отправленно на доработку',
-                        }),
+                      await $api.put('/api/requests/get/', {
+                        id: subRequest?.id,
+                        status: 'Отправленно на доработку',
                       })
-
-                      if (!resp.ok) throw Error()
 
                       setStatus(
                         request?.id!,
@@ -330,18 +315,10 @@ export const AdminRequestDetailPage: FC = () => {
                   className='waves-effect waves-light light-blue darken-3 btn'
                   onClick={async () => {
                     try {
-                      const resp = await fetch('/api/requests/get/', {
-                        method: 'PUT',
-                        headers: {
-                          'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                          id: subRequest?.id,
-                          status: 'Принято',
-                        }),
+                      await $api.put('/api/requests/get/', {
+                        id: subRequest?.id,
+                        status: 'Принято',
                       })
-
-                      if (!resp.ok) throw Error()
 
                       setStatus(request?.id!, subRequest?.id!, 'Принято')
                       M.toast({
@@ -366,18 +343,10 @@ export const AdminRequestDetailPage: FC = () => {
                   className='waves-effect waves-light teal darken-1 btn'
                   onClick={async () => {
                     try {
-                      const resp = await fetch('/api/requests/get/', {
-                        method: 'PUT',
-                        headers: {
-                          'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                          id: subRequest?.id,
-                          status: 'Победитель',
-                        }),
+                      await $api.put('/api/requests/get/', {
+                        id: subRequest?.id,
+                        status: 'Победитель',
                       })
-
-                      if (!resp.ok) throw Error()
 
                       setStatus(request?.id!, subRequest?.id!, 'Победитель')
                       M.toast({

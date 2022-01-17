@@ -1,6 +1,7 @@
 import React, { FC, useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../store/AuthContext'
+import $api from '../../http'
 
 export const StudentAuthPage: FC = () => {
   const { login } = useContext(AuthContext)
@@ -12,14 +13,31 @@ export const StudentAuthPage: FC = () => {
     password: '',
   })
 
-  const loginHandler = () => {
-    login(
-      1,
-      authData.fio,
-      'https://avatars.mds.yandex.net/get-ott/374297/2a000001616b87458162c9216ccd5144e94d/678x380',
-      'student',
-      ['Матан', 'Высший матан']
-    )
+  const loginHandler = async () => {
+    try {
+      const resp = await $api.post('/api/auth/student/login/', {
+        login: authData.fio,
+        password: authData.password,
+      })
+
+      localStorage.setItem('access', resp.data['access_token'])
+      localStorage.setItem('refresh', resp.data['refresh_token'])
+      localStorage.setItem('role', 'student')
+      localStorage.setItem('id', `${resp.data['id']}`)
+
+      login(
+        resp.data['id'],
+        resp.data['fio'],
+        resp.data['avatarUrl'],
+        'student',
+        resp.data['learningPlans']
+      )
+    } catch (e) {
+      M.toast({
+        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+        classes: 'red darken-4',
+      })
+    }
   }
 
   return (

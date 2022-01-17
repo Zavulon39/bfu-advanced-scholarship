@@ -5,6 +5,7 @@ import { RequestContext } from '../../store/RequestContext'
 import { AuthContext } from '../../store/AuthContext'
 import M from 'materialize-css'
 import { useFormater } from '../../hooks/useFormater'
+import $api from '../../http'
 
 export const StudentRequestDetailPage: FC = () => {
   const { id1, id2 } = useParams()
@@ -67,18 +68,10 @@ export const StudentRequestDetailPage: FC = () => {
     try {
       // fetch
 
-      const resp = await fetch('/api/requests/set-student-point/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: subRequest?.id,
-          point: subRequest?.examPoints,
-        }),
+      const resp = await $api.post('/api/requests/set-student-point/', {
+        id: subRequest?.id,
+        point: subRequest?.examPoints,
       })
-
-      if (!resp.ok) throw Error()
 
       M.toast({
         html: 'Вы успешно сохранили изменения!',

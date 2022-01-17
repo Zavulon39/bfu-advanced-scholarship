@@ -1,4 +1,5 @@
 import React, { createContext, ReactElement, useReducer } from 'react'
+import $api from '../http'
 import { IAction } from '../types/companies'
 import { IRequestState, IRequest, IComment } from '../types/request'
 
@@ -170,25 +171,17 @@ export const RequestProvider = ({ children }: IProps) => {
     try {
       // fetch
 
-      let resp = await fetch('/api/requests/get/')
-      if (!resp.ok) throw Error()
+      let resp = await $api.get('/api/requests/get/')
+      const requests: IRequest[] = resp.data
 
-      const requests: IRequest[] = await resp.json()
+      resp = await $api.get('/api/companies/get/')
+      const companies = resp.data
 
-      resp = await fetch('/api/companies/get/')
-      if (!resp.ok) throw Error()
+      resp = await $api.get('/api/nominations/get/')
+      const nominations = resp.data
 
-      const companies = await resp.json()
-
-      resp = await fetch('/api/nominations/get/')
-      if (!resp.ok) throw Error()
-
-      const nominations = await resp.json()
-
-      resp = await fetch('/api/notifications/get/')
-      if (!resp.ok) throw Error()
-
-      const notifications = await resp.json()
+      resp = await $api.get('/api/notifications/get/')
+      const notifications = resp.data
 
       const statuses = [
         'Победитель',
@@ -250,7 +243,6 @@ export const RequestProvider = ({ children }: IProps) => {
     rowIdx: number,
     points: number
   ) =>
-    // fetch
     dispatch({
       type: 'SET_POINTS',
       payload: {
@@ -262,7 +254,6 @@ export const RequestProvider = ({ children }: IProps) => {
     })
 
   const setExamPoints = (id: number, subRId: number, points: number) => {
-    // fetch
     dispatch({
       type: 'SET_EXAM_POINTS',
       payload: {
@@ -273,7 +264,6 @@ export const RequestProvider = ({ children }: IProps) => {
     })
   }
   const setStudentExamPoints = (id: number, subRId: number, points: number) => {
-    // fetch
     dispatch({
       type: 'SET_STUDENT_EXAM_POINTS',
       payload: {
@@ -370,17 +360,9 @@ export const RequestProvider = ({ children }: IProps) => {
     // fetch
     // get id from fetch
 
-    const resp = await fetch('/api/notifications/detail/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text,
-      }),
+    await $api.post('/api/notifications/detail/', {
+      text,
     })
-
-    if (!resp.ok) throw Error()
 
     dispatch({
       type: 'ADD_NOTIFICATION',
@@ -394,17 +376,14 @@ export const RequestProvider = ({ children }: IProps) => {
     // fetch
     // get id from fetch
 
-    const resp = await fetch('/api/notifications/detail/', {
-      method: 'DELETE',
+    await $api.delete('/api/notifications/detail/', {
+      data: {
+        id,
+      },
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        id,
-      }),
     })
-
-    if (!resp.ok) throw Error()
 
     dispatch({
       type: 'REMOVE_NOTIFICATION',

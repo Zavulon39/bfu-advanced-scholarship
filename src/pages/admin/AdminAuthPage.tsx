@@ -1,5 +1,6 @@
 import React, { FC, useState, useContext } from 'react'
 import { AuthContext } from '../../store/AuthContext'
+import $api from '../../http'
 
 export const AdminAuthPage: FC = () => {
   const { login } = useContext(AuthContext)
@@ -11,14 +12,25 @@ export const AdminAuthPage: FC = () => {
     password: '',
   })
 
-  const loginHandler = () => {
-    login(
-      1,
-      authData.fio,
-      'https://avatars.mds.yandex.net/get-ott/374297/2a000001616b87458162c9216ccd5144e94d/678x380',
-      'admin',
-      []
-    )
+  const loginHandler = async () => {
+    try {
+      const resp = await $api.post('/api/auth/admin/login/', {
+        login: authData.fio,
+        password: authData.password,
+      })
+
+      localStorage.setItem('access', resp.data['access_token'])
+      localStorage.setItem('refresh', resp.data['refresh_token'])
+      localStorage.setItem('role', 'admin')
+      localStorage.setItem('id', `${resp.data['id']}`)
+
+      login(resp.data['id'], authData.fio, resp.data['avatarUrl'], 'admin', [])
+    } catch (e) {
+      M.toast({
+        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+        classes: 'red darken-4',
+      })
+    }
   }
 
   return (

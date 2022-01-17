@@ -1,5 +1,6 @@
 import React, { createContext, ReactElement, useReducer } from 'react'
 import { ICompanyState, IAction, ICompany } from '../types/companies'
+import $api from '../http'
 
 const initialState: ICompanyState = {
   companies: [],
@@ -61,11 +62,9 @@ export const CompanyProvider = ({ children }: IProps) => {
     try {
       // fetch
 
-      const resp = await fetch('/api/companies/get/')
+      const resp = await $api.get('/api/companies/get/')
 
-      if (!resp.ok) throw Error()
-
-      const payload: ICompany[] = await resp.json()
+      const payload: ICompany[] = resp.data
 
       dispatch({
         type: 'SET_COMPANIES',
@@ -92,17 +91,14 @@ export const CompanyProvider = ({ children }: IProps) => {
   const deleteCompany = async (id: number) => {
     // fetch
 
-    const resp = await fetch('/api/companies/detail/', {
-      method: 'DELETE',
+    await $api.delete('/api/companies/detail/', {
+      data: {
+        id,
+      },
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        id,
-      }),
     })
-
-    if (!resp.ok) throw Error()
 
     dispatch({
       type: 'DELETE_COMPANY',
@@ -117,21 +113,13 @@ export const CompanyProvider = ({ children }: IProps) => {
     // fetch
     // get id from fetch
 
-    const resp = await fetch('/api/companies/create/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name,
-        date_start: startDate,
-        date_end: endDate,
-      }),
+    const resp = await $api.post('/api/companies/create/', {
+      name,
+      date_start: startDate,
+      date_end: endDate,
     })
 
-    if (!resp.ok) throw Error()
-
-    const data = await resp.json()
+    const data = resp.data
 
     dispatch({
       type: 'CREATE_COMPANY',
@@ -151,20 +139,12 @@ export const CompanyProvider = ({ children }: IProps) => {
   ) => {
     // fetch
 
-    const resp = await fetch('/api/companies/detail/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id,
-        name,
-        date_start: startDate,
-        date_end: endDate,
-      }),
+    await $api.post('/api/companies/detail/', {
+      id,
+      name,
+      date_start: startDate,
+      date_end: endDate,
     })
-
-    if (!resp.ok) throw Error()
 
     dispatch({
       type: 'EDIT_COMPANY',
