@@ -88,7 +88,7 @@ export const AdminRequestListPage: FC = () => {
           </div>
           <div className='col s3 input-field'>
             <select ref={select1}>
-              <option value={-1}>Все компании</option>
+              <option value={-1}>Все Кампании</option>
               {companies.map(c => {
                 return (
                   <option value={c.id} key={c.id}>

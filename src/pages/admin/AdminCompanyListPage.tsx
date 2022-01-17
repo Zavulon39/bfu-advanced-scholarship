@@ -181,7 +181,7 @@ export const AdminCompanyListPage: FC = () => {
     <>
       <AdminHeader />
       <div className='container'>
-        <h1>Компании</h1>
+        <h1>Кампании</h1>
         <button
           className='btn light-blue darken-2 waves-effect waves-light'
           onClick={createClickHandler}

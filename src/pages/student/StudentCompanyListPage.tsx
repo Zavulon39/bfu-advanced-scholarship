@@ -61,7 +61,7 @@ export const StudentCompanyListPage: FC = () => {
           </div>
         ))}
         <br />
-        <h1>Компании</h1>
+        <h1>Кампании</h1>
         <table className='mt-4 striped'>
           <thead>
             <tr>

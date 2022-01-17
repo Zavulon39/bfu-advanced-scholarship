@@ -334,7 +334,7 @@ export const StudentRequestDetailPage: FC = () => {
             </button> */}
           </div>
         </div>
-        <h3 className='mt-4'>Коментарии</h3>
+        <h3 className='mt-4'>Комментарии</h3>
         <div>
           {subRequest?.comments.map((c, idx) => {
             return (
