@@ -1,5 +1,6 @@
 import React, { createContext, ReactElement, useReducer } from 'react'
 import $api from '../http'
+import { Role } from '../types/auth'
 import { IAction } from '../types/companies'
 import { IRequestState, IRequest, IComment } from '../types/request'
 
@@ -199,6 +200,10 @@ export const RequestProvider = ({ children }: IProps) => {
             subRequests: r.subRequests.map(sr => ({
               ...sr,
               createdDate: new Date(sr.createdDate),
+              comments: sr.comments.map(c => ({
+                ...c,
+                sendedDate: new Date(c.sendedDate),
+              })),
             })),
           })),
           nominations,
@@ -273,14 +278,24 @@ export const RequestProvider = ({ children }: IProps) => {
       },
     })
   }
-  const addComment = (
+  const addComment = async (
     id: number,
     subRId: number,
     name: string,
     imageUrl: string,
-    text: string
+    text: string,
+    role: Role,
+    userId: number
   ) => {
     // fetch
+
+    await $api.post('/api/comments/create/', {
+      role,
+      text,
+      id: subRId,
+      user_id: userId,
+    })
+
     dispatch({
       type: 'ADD_COMMENT',
       payload: {
@@ -292,7 +307,7 @@ export const RequestProvider = ({ children }: IProps) => {
       },
     })
   }
-  const addRequest = (
+  const addRequest = async (
     companyId: number,
     studentId: number,
     company: string,
@@ -304,13 +319,20 @@ export const RequestProvider = ({ children }: IProps) => {
     // fetch
     // get id and subRequests from fetch
 
+    const resp = await $api.post('/api/requests/create/', {
+      learningPlans,
+      id: studentId,
+      company_id: companyId,
+      nomination,
+    })
+
     const payload: IRequest = {
-      id: Date.now(),
+      id: resp.data.id,
       studentId,
       companyId,
       company,
       fio,
-      subRequests: [],
+      subRequests: resp.data.requests,
     }
 
     dispatch({

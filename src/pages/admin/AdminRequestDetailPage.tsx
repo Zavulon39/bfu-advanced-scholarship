@@ -20,7 +20,7 @@ export const AdminRequestDetailPage: FC = () => {
     addComment,
     setStatus,
   } = useContext(RequestContext)
-  const { fio, avatarUrl } = useContext(AuthContext)
+  const { fio, avatarUrl, role, id } = useContext(AuthContext)
   const request = requests.find(r => r.id === Number(id1))
   const subRequest = requests
     .find(r => r.id === Number(id1))
@@ -69,7 +69,15 @@ export const AdminRequestDetailPage: FC = () => {
   const sendHandler = () => {
     try {
       // fetch
-      addComment(request?.id!, subRequest?.id!, fio, avatarUrl, message)
+      addComment(
+        request?.id!,
+        subRequest?.id!,
+        fio,
+        avatarUrl,
+        message,
+        role,
+        id
+      )
       setMessage('')
       M.toast({
         html: 'Вы успешно оставили коментарий!',

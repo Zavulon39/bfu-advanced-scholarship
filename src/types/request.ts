@@ -1,3 +1,5 @@
+import { Role } from './auth'
+
 const setPoints = (
   id: number,
   subRId: number,
@@ -13,7 +15,9 @@ const addComment = (
   subRId: number,
   name: string,
   imageUrl: string,
-  text: string
+  text: string,
+  role: Role,
+  userId: number
 ) => {}
 const addRequest = (
   companyId: number,
