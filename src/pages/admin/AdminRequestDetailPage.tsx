@@ -54,6 +54,10 @@ export const AdminRequestDetailPage: FC = () => {
         id: subRequest?.id,
         point: subRequest?.point,
       })
+      await $api.post('/api/requests/set-admin-row-point/', {
+        id: subRequest?.id,
+        data: subRequest?.tables.body.map(b => b.points),
+      })
 
       M.toast({
         html: 'Данные были успешно сохранены!',
@@ -186,7 +190,8 @@ export const AdminRequestDetailPage: FC = () => {
                 <tr key={rIdx}>
                   {r.data.map((b, bIdx) => {
                     try {
-                      new URL(b)
+                      if (!(bIdx === 9 || bIdx === 2)) throw Error()
+
                       return (
                         <td key={bIdx}>
                           <a

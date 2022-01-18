@@ -47,6 +47,7 @@ interface ICompany {
 interface ITableBodyRow {
   data: string[]
   points: number
+  isNew: boolean
 }
 
 interface ISubRequest {

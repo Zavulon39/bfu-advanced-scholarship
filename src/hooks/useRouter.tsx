@@ -38,12 +38,12 @@ export const useRouter = () => {
         <Routes>
           <Route path='/companies/' element={<StudentCompanyListPage />} />
           <Route
-            path='/requests/:id/'
-            element={<StudentSubRequestDetailPage />}
-          />
-          <Route
             path='/requests/:id1/:id2/'
             element={<StudentRequestDetailPage />}
+          />
+          <Route
+            path='/requests/:id/'
+            element={<StudentSubRequestDetailPage />}
           />
           <Route path='*' element={<Navigate to='/companies/' />} />
         </Routes>

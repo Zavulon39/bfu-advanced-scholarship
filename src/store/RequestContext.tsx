@@ -142,6 +142,7 @@ const reducer = (
               .tables.body.push({
                 data,
                 points: 0,
+                isNew: true,
               })
           }
 
@@ -204,6 +205,13 @@ export const RequestProvider = ({ children }: IProps) => {
                 ...c,
                 sendedDate: new Date(c.sendedDate),
               })),
+              tables: {
+                ...sr.tables,
+                body: sr.tables.body.map(t => ({
+                  ...t,
+                  isNew: false,
+                })),
+              },
             })),
           })),
           nominations,
@@ -332,7 +340,13 @@ export const RequestProvider = ({ children }: IProps) => {
       companyId,
       company,
       fio,
-      subRequests: resp.data.requests,
+      subRequests: resp.data.requests.map((r: any) => ({
+        ...r,
+        subRequests: r.subRequests.map((sr: any) => ({
+          ...sr,
+          createdDate: new Date(sr.createdDate),
+        })),
+      })),
     }
 
     dispatch({

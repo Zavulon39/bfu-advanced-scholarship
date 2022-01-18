@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { StudentHeader } from '../../components/Header'
 import { RequestContext } from '../../store/RequestContext'
 import { AuthContext } from '../../store/AuthContext'
@@ -25,15 +25,15 @@ export const StudentRequestDetailPage: FC = () => {
     .find(r => r.id === Number(id1))
     ?.subRequests.find(sb => sb.id === Number(id2))
   const [message, setMessage] = useState('')
-  const navigate = useNavigate()
   const _ = useFormater()
-
-  if (request?.studentId !== Number(id1)) navigate('/companies/')
 
   useEffect(() => {
     if (!requests.length) fetchRequests()
   }, [])
   useEffect(() => {
+    // @ts-ignore
+    pointRef.current!.focus()
+
     M.CharacterCounter.init(messageRef.current!)
 
     document.querySelectorAll('.tooltipped').forEach(el => {
@@ -42,10 +42,6 @@ export const StudentRequestDetailPage: FC = () => {
         html: `<img src="${url}" class="tooltip-img" />`,
       })
     })
-  }, [requests])
-  useEffect(() => {
-    // @ts-ignore
-    pointRef.current!.focus()
   }, [requests.length])
 
   const sendHandler = () => {
@@ -76,9 +72,14 @@ export const StudentRequestDetailPage: FC = () => {
     try {
       // fetch
 
-      const resp = await $api.post('/api/requests/set-student-point/', {
+      await $api.post('/api/requests/set-student-point/', {
         id: subRequest?.id,
         point: subRequest?.examPoints,
+      })
+
+      await $api.post('/api/requests/save/', {
+        id: subRequest?.id,
+        data: subRequest?.tables.body,
       })
 
       M.toast({
@@ -92,20 +93,6 @@ export const StudentRequestDetailPage: FC = () => {
       })
     }
   }
-  // const reqSendHandler = () => {
-  //   try {
-  //     // fetch
-  //     M.toast({
-  //       html: 'Ваша заявка отправлена на рассмотрение!',
-  //       classes: 'light-blue darken-1',
-  //     })
-  //   } catch (e) {
-  //     M.toast({
-  //       html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-  //       classes: 'red darken-4',
-  //     })
-  //   }
-  // }
 
   return (
     <>
@@ -214,7 +201,7 @@ export const StudentRequestDetailPage: FC = () => {
                 <tr key={rIdx}>
                   {r.data.map((b, bIdx) => {
                     try {
-                      if (b !== 'Документ') new URL(b)
+                      if (!(bIdx === 9 || bIdx === 2)) throw Error()
 
                       return (
                         <td key={bIdx}>
@@ -233,7 +220,7 @@ export const StudentRequestDetailPage: FC = () => {
                                 </span>
                                 <input
                                   type='file'
-                                  onChange={(
+                                  onChange={async (
                                     event: React.ChangeEvent<HTMLInputElement>
                                   ) => {
                                     try {
@@ -241,12 +228,23 @@ export const StudentRequestDetailPage: FC = () => {
                                         send file to server and get path url from response
                                         then set this url to data
                                       */
+
+                                      const fd = new FormData()
+                                      const file = event.target.files![0]
+
+                                      fd.append('image', file, file.name)
+
+                                      const resp = await $api.post(
+                                        '/api/set-image/',
+                                        fd
+                                      )
+
                                       setStudentData(
                                         request!.id,
                                         subRequest.id,
                                         rIdx,
                                         bIdx,
-                                        'https://купитьшахматы.рф/wa-data/public/shop/products/16/04/416/images/1565/gramota-shahmatnaja-2.970.jpg' // replace with server url
+                                        resp.data.url
                                       )
                                     } catch (e) {
                                       M.toast({
@@ -262,6 +260,7 @@ export const StudentRequestDetailPage: FC = () => {
                                   className='file-path validate'
                                   style={{ maxWidth: 'fit-content' }}
                                   type='text'
+                                  value={b.split('/')[b.split('/').length - 1]}
                                 />
                               </div>
                             </div>
