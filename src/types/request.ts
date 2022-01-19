@@ -105,6 +105,10 @@ export interface IRequestState {
   statuses: string[]
   companies: ICompany[]
   notifications: INotification[]
+  dictTypeEvent: string[]
+  dictTypeWork: string[]
+  dictRoleStudentToWork: string[]
+  dictWinnerPlace: string[]
 
   fetchRequests: typeof fetchRequests
   setPoints: typeof setPoints

@@ -78,7 +78,9 @@ export const StudentCompanyListPage: FC = () => {
                   <td>{_(c.startDate)}</td>
                   <td>{_(c.endDate)}</td>
                   <td>
-                    {requests.filter(r => r.companyId === c.id).length ? (
+                    {requests.filter(
+                      r => r.companyId === c.id && r.studentId === id
+                    ).length ? (
                       <Link
                         className='btn-floating waves-effect waves-light light-blue darken-1'
                         to={`/requests/${

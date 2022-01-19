@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { StudentHeader } from '../../components/Header'
 import { RequestContext } from '../../store/RequestContext'
 import { AuthContext } from '../../store/AuthContext'
@@ -13,6 +13,11 @@ export const StudentRequestDetailPage: FC = () => {
   const messageRef = useRef(null)
   const {
     requests,
+    dictTypeEvent,
+    dictTypeWork,
+    dictRoleStudentToWork,
+    dictWinnerPlace,
+
     fetchRequests,
     addComment,
     setStudentExamPoints,
@@ -26,23 +31,29 @@ export const StudentRequestDetailPage: FC = () => {
     ?.subRequests.find(sb => sb.id === Number(id2))
   const [message, setMessage] = useState('')
   const _ = useFormater()
+  const navigate = useNavigate()
 
   useEffect(() => {
+    if (requests.filter(r => r.studentId === id).length === 0)
+      navigate('/companies/')
     if (!requests.length) fetchRequests()
   }, [])
   useEffect(() => {
     // @ts-ignore
-    pointRef.current!.focus()
-
+    if (pointRef.current) pointRef.current.focus()
     M.CharacterCounter.init(messageRef.current!)
-
+  }, [requests.length])
+  useEffect(() => {
     document.querySelectorAll('.tooltipped').forEach(el => {
       const url = el.getAttribute('data-tooltip-img')
       M.Tooltip.init(el, {
         html: `<img src="${url}" class="tooltip-img" />`,
       })
     })
-  }, [requests.length])
+
+    const elems = document.querySelectorAll('select')
+    M.FormSelect.init(elems)
+  }, [requests])
 
   const sendHandler = () => {
     try {
@@ -146,36 +157,40 @@ export const StudentRequestDetailPage: FC = () => {
             </tr>
           </tbody>
         </table>
-        <h3 className='mt-4'>Оценки</h3>
-        <div>
-          <small>Процент "{subRequest?.percent}"</small>
-          <input
-            type='text'
-            value={subRequest?.examPoints}
-            onKeyPress={event => {
-              if (!/[0-9]/.test(event.key)) {
-                event.preventDefault()
-              }
-            }}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setStudentExamPoints(
-                request?.id!,
-                subRequest?.id!,
-                Number(event.target.value)
-              )
-            }
-          />
-          <div className='input-field'>
-            <input
-              type='text'
-              id='point'
-              ref={pointRef}
-              value={subRequest?.point}
-              style={{ maxWidth: 'fit-content' }}
-            />
-            <label htmlFor='point'>Балл</label>
-          </div>
-        </div>
+        {subRequest?.nomination === 'Учебная' ? (
+          <>
+            <h3 className='mt-4'>Оценки</h3>
+            <div>
+              <small>Процент "{subRequest?.percent}"</small>
+              <input
+                type='text'
+                value={subRequest?.examPoints}
+                onKeyPress={event => {
+                  if (!/[0-9]/.test(event.key)) {
+                    event.preventDefault()
+                  }
+                }}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  setStudentExamPoints(
+                    request?.id!,
+                    subRequest?.id!,
+                    Number(event.target.value)
+                  )
+                }
+              />
+              <div className='input-field'>
+                <input
+                  type='text'
+                  id='point'
+                  ref={pointRef}
+                  value={subRequest?.point}
+                  style={{ maxWidth: 'fit-content' }}
+                />
+                <label htmlFor='point'>Балл</label>
+              </div>
+            </div>
+          </>
+        ) : null}
         <h3 className='mt-4'>
           Таблицы
           <a
@@ -192,7 +207,6 @@ export const StudentRequestDetailPage: FC = () => {
               {subRequest?.tables.header.map((h, hIdx) => (
                 <th key={hIdx}>{h}</th>
               ))}
-              <th>Баллы</th>
             </tr>
           </thead>
           <tbody>
@@ -201,7 +215,7 @@ export const StudentRequestDetailPage: FC = () => {
                 <tr key={rIdx}>
                   {r.data.map((b, bIdx) => {
                     try {
-                      if (!(bIdx === 9 || bIdx === 2)) throw Error()
+                      if (!(bIdx === 7)) throw Error()
 
                       return (
                         <td key={bIdx}>
@@ -246,6 +260,16 @@ export const StudentRequestDetailPage: FC = () => {
                                         bIdx,
                                         resp.data.url
                                       )
+
+                                      document
+                                        .querySelectorAll('.tooltipped')
+                                        .forEach(el => {
+                                          const url =
+                                            el.getAttribute('data-tooltip-img')
+                                          M.Tooltip.init(el, {
+                                            html: `<img src="${url}" class="tooltip-img" />`,
+                                          })
+                                        })
                                     } catch (e) {
                                       M.toast({
                                         html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
@@ -278,6 +302,98 @@ export const StudentRequestDetailPage: FC = () => {
                         </td>
                       )
                     } catch (e) {
+                      if (bIdx === 0) {
+                        return <td key={bIdx}>{b}</td>
+                      } else if (bIdx === 1) {
+                        return (
+                          <td key={bIdx}>
+                            <select
+                              onChange={event => {
+                                setStudentData(
+                                  request!.id,
+                                  subRequest.id,
+                                  rIdx,
+                                  bIdx,
+                                  event.target.value
+                                )
+                              }}
+                            >
+                              {dictTypeEvent.map(d => (
+                                <option value={d} selected={d === b}>
+                                  {d}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                        )
+                      } else if (bIdx === 2) {
+                        return (
+                          <td key={bIdx}>
+                            <select
+                              onChange={event => {
+                                setStudentData(
+                                  request!.id,
+                                  subRequest.id,
+                                  rIdx,
+                                  bIdx,
+                                  event.target.value
+                                )
+                              }}
+                            >
+                              {dictTypeWork.map(d => (
+                                <option value={d} selected={d === b}>
+                                  {d}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                        )
+                      } else if (bIdx === 5) {
+                        return (
+                          <td key={bIdx}>
+                            <select
+                              onChange={event => {
+                                setStudentData(
+                                  request!.id,
+                                  subRequest.id,
+                                  rIdx,
+                                  bIdx,
+                                  event.target.value
+                                )
+                              }}
+                            >
+                              {dictWinnerPlace.map(d => (
+                                <option value={d} selected={d === b}>
+                                  {d}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                        )
+                      } else if (bIdx === 6) {
+                        return (
+                          <td key={bIdx}>
+                            <select
+                              onChange={event => {
+                                setStudentData(
+                                  request!.id,
+                                  subRequest.id,
+                                  rIdx,
+                                  bIdx,
+                                  event.target.value
+                                )
+                              }}
+                            >
+                              {dictRoleStudentToWork.map(d => (
+                                <option value={d} selected={d === b}>
+                                  {d}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                        )
+                      }
+
                       return (
                         <td key={bIdx}>
                           <input
@@ -300,15 +416,6 @@ export const StudentRequestDetailPage: FC = () => {
                       )
                     }
                   })}
-                  <td>
-                    {/* <input
-                      type='text'
-                      value={r.points}
-                      style={{ maxWidth: 'fit-content' }}
-                      key={'input' + rIdx}
-                    /> */}
-                    <strong style={{ fontSize: 18 }}>{r.points}</strong>
-                  </td>
                 </tr>
               )
             })}

@@ -10,6 +10,26 @@ const initialState: IRequestState = {
   statuses: [],
   companies: [],
   notifications: [],
+  dictTypeEvent: [
+    'Вид мероприятия 1',
+    'Вид мероприятия 2',
+    'Вид мероприятия 3',
+    'Вид мероприятия 4',
+  ],
+  dictTypeWork: [
+    'Вид работает 1',
+    'Вид работает 2',
+    'Вид работает 3',
+    'Вид работает 4',
+  ],
+  dictRoleStudentToWork: [
+    'Вид роли студента 1',
+    'Вид роли студента 2',
+    'Вид роли студента 3',
+    'Вид роли студента 4',
+  ],
+  dictWinnerPlace: ['Вид места 1', 'Вид места 2', 'Вид места 3', 'Вид места 4'],
+
   fetchRequests: () => {},
   setPoints: () => {},
   setExamPoints: () => {},
@@ -136,6 +156,9 @@ const reducer = (
               ...r.subRequests.find(sr => sr.id === payload.subRId)!.tables
                 .header,
             ]
+            data[0] = r.subRequests.find(
+              sr => sr.id === payload.subRId
+            )?.nomination!
 
             r.subRequests
               .find(sr => sr.id === payload.subRId)!
@@ -340,12 +363,9 @@ export const RequestProvider = ({ children }: IProps) => {
       companyId,
       company,
       fio,
-      subRequests: resp.data.requests.map((r: any) => ({
-        ...r,
-        subRequests: r.subRequests.map((sr: any) => ({
-          ...sr,
-          createdDate: new Date(sr.createdDate),
-        })),
+      subRequests: resp.data.requests.map((sr: any) => ({
+        ...sr,
+        createdDate: new Date(sr.createdDate),
       })),
     }
 

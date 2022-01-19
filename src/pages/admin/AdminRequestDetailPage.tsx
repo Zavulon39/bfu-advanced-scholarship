@@ -147,33 +147,38 @@ export const AdminRequestDetailPage: FC = () => {
             </tr>
           </tbody>
         </table>
-        <h3 className='mt-4'>Оценки</h3>
-        <div>
-          <small>Процент "{subRequest?.percent}"</small>
-          <input type='text' value={subRequest?.examPoints} />
-          <div className='input-field'>
-            <input
-              type='text'
-              id='point'
-              ref={pointRef}
-              value={subRequest?.point}
-              onKeyPress={event => {
-                if (!/[0-9]/.test(event.key)) {
-                  event.preventDefault()
-                }
-              }}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                setExamPoints(
-                  request?.id!,
-                  subRequest?.id!,
-                  Number(event.target.value)
-                )
-              }
-              style={{ maxWidth: 'fit-content' }}
-            />
-            <label htmlFor='point'>Балл</label>
-          </div>
-        </div>
+        {subRequest?.nomination === 'Учебная' ? (
+          <>
+            <h3 className='mt-4'>Оценки</h3>
+            <div>
+              <small>Процент "{subRequest?.percent}"</small>
+              <input type='text' value={subRequest?.examPoints} />
+              <div className='input-field'>
+                <input
+                  type='text'
+                  id='point'
+                  ref={pointRef}
+                  value={subRequest?.point}
+                  onKeyPress={event => {
+                    if (!/[0-9]/.test(event.key)) {
+                      event.preventDefault()
+                    }
+                  }}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                    setExamPoints(
+                      request?.id!,
+                      subRequest?.id!,
+                      Number(event.target.value)
+                    )
+                  }
+                  style={{ maxWidth: 'fit-content' }}
+                />
+                <label htmlFor='point'>Балл</label>
+              </div>
+            </div>
+          </>
+        ) : null}
+
         <h3 className='mt-4'>Таблицы</h3>
         <table className='responsive-table'>
           <thead>
@@ -190,7 +195,7 @@ export const AdminRequestDetailPage: FC = () => {
                 <tr key={rIdx}>
                   {r.data.map((b, bIdx) => {
                     try {
-                      if (!(bIdx === 9 || bIdx === 2)) throw Error()
+                      if (!(bIdx === 7)) throw Error()
 
                       return (
                         <td key={bIdx}>
@@ -281,9 +286,9 @@ export const AdminRequestDetailPage: FC = () => {
         </button>
       </div>
       {!(
-        subRequest?.status === 'Победитель' ||
-        subRequest?.status === 'Принято' ||
-        subRequest?.status === 'Удалено'
+        // subRequest?.status === 'Победитель' ||
+        // subRequest?.status === 'Принято' ||
+        (subRequest?.status === 'Удалено')
       ) ? (
         <div className='fixed-action-btn toolbar' ref={btnRef}>
           <a className='btn-floating btn-large light-blue darken-4 pulse'>
