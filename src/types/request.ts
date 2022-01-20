@@ -9,7 +9,7 @@ const setPoints = (
 const setStatus = (id: number, subRId: number, status: string) => {}
 const fetchRequests = () => {}
 const setExamPoints = (id: number, subRId: number, points: number) => {}
-const setStudentExamPoints = (id: number, subRId: number, points: number) => {}
+const setPercent = (id: number, subRId: number, percent: number) => {}
 const addComment = (
   id: number,
   subRId: number,
@@ -38,6 +38,7 @@ const setStudentData = (
 const addRow = (id: number, subRId: number) => {}
 const addNotification = (text: string) => {}
 const removeNotification = (id: number) => {}
+const setLinkToGradebook = (id: number, subRId: number, link: string) => {}
 
 interface ICompany {
   id: number
@@ -65,9 +66,9 @@ interface ISubRequest {
   direction: string
   course: number
 
-  percent: string
-  examPoints: number
-  point: number
+  percent: number
+  point: number // from admin
+  linkToGradebook: string
 
   tables: ITable
   comments: IComment[]
@@ -105,20 +106,17 @@ export interface IRequestState {
   statuses: string[]
   companies: ICompany[]
   notifications: INotification[]
-  dictTypeEvent: string[]
-  dictTypeWork: string[]
-  dictRoleStudentToWork: string[]
-  dictWinnerPlace: string[]
 
   fetchRequests: typeof fetchRequests
   setPoints: typeof setPoints
   setExamPoints: typeof setExamPoints
   addComment: typeof addComment
   addRequest: typeof addRequest
-  setStudentExamPoints: typeof setStudentExamPoints
   setStudentData: typeof setStudentData
   setStatus: typeof setStatus
   addRow: typeof addRow
   addNotification: typeof addNotification
   removeNotification: typeof removeNotification
+  setLinkToGradebook: typeof setLinkToGradebook
+  setPercent: typeof setPercent
 }

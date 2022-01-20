@@ -10,37 +10,19 @@ const initialState: IRequestState = {
   statuses: [],
   companies: [],
   notifications: [],
-  dictTypeEvent: [
-    'Вид мероприятия 1',
-    'Вид мероприятия 2',
-    'Вид мероприятия 3',
-    'Вид мероприятия 4',
-  ],
-  dictTypeWork: [
-    'Вид работает 1',
-    'Вид работает 2',
-    'Вид работает 3',
-    'Вид работает 4',
-  ],
-  dictRoleStudentToWork: [
-    'Вид роли студента 1',
-    'Вид роли студента 2',
-    'Вид роли студента 3',
-    'Вид роли студента 4',
-  ],
-  dictWinnerPlace: ['Вид места 1', 'Вид места 2', 'Вид места 3', 'Вид места 4'],
 
   fetchRequests: () => {},
   setPoints: () => {},
   setExamPoints: () => {},
   addComment: () => {},
   addRequest: () => {},
-  setStudentExamPoints: () => {},
   setStudentData: () => {},
   setStatus: () => {},
   addRow: () => {},
   addNotification: () => {},
   removeNotification: () => {},
+  setLinkToGradebook: () => {},
+  setPercent: () => {},
 }
 
 interface IProps {
@@ -83,13 +65,13 @@ const reducer = (
           return r
         }),
       }
-    case 'SET_STUDENT_EXAM_POINTS':
+    case 'SET_PERCENT':
       return {
         ...state,
         requests: state.requests.map(r => {
           if (r.id === payload.id) {
-            r.subRequests.find(sr => sr.id === payload.subRId)!.examPoints =
-              payload.points
+            r.subRequests.find(sr => sr.id === payload.subRId)!.percent =
+              payload.percent
           }
           return r
         }),
@@ -159,7 +141,7 @@ const reducer = (
             data[0] = r.subRequests.find(
               sr => sr.id === payload.subRId
             )?.nomination!
-            data[3] = _(new Date())
+            data[2] = _(new Date())
 
             r.subRequests
               .find(sr => sr.id === payload.subRId)!
@@ -182,6 +164,19 @@ const reducer = (
       return {
         ...state,
         notifications: state.notifications.filter(n => n.id !== payload.id),
+      }
+    case 'SET_LINK':
+      return {
+        ...state,
+        requests: state.requests.map(r => {
+          if (r.id === payload.id) {
+            r.subRequests.find(
+              sr => sr.id === payload.subRId
+            )!.linkToGradebook = payload.link
+          }
+
+          return r
+        }),
       }
     default:
       return state
@@ -289,20 +284,18 @@ export const RequestProvider = ({ children }: IProps) => {
         subRId,
       },
     })
-
-  const setExamPoints = (id: number, subRId: number, points: number) => {
+  const setPercent = (id: number, subRId: number, percent: number) =>
     dispatch({
-      type: 'SET_EXAM_POINTS',
+      type: 'SET_PERCENT',
       payload: {
         id,
-        points,
+        percent,
         subRId,
       },
     })
-  }
-  const setStudentExamPoints = (id: number, subRId: number, points: number) => {
+  const setExamPoints = (id: number, subRId: number, points: number) => {
     dispatch({
-      type: 'SET_STUDENT_EXAM_POINTS',
+      type: 'SET_EXAM_POINTS',
       payload: {
         id,
         points,
@@ -449,6 +442,16 @@ export const RequestProvider = ({ children }: IProps) => {
       },
     })
   }
+  const setLinkToGradebook = (id: number, subRId: number, link: string) => {
+    dispatch({
+      type: 'SET_LINK',
+      payload: {
+        id,
+        subRId,
+        link,
+      },
+    })
+  }
 
   return (
     <RequestContext.Provider
@@ -457,7 +460,6 @@ export const RequestProvider = ({ children }: IProps) => {
         fetchRequests,
         setPoints,
         setExamPoints,
-        setStudentExamPoints,
         addComment,
         addRequest,
         setStudentData,
@@ -465,6 +467,8 @@ export const RequestProvider = ({ children }: IProps) => {
         addRow,
         addNotification,
         removeNotification,
+        setLinkToGradebook,
+        setPercent,
       }}
     >
       {children}

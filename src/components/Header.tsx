@@ -14,9 +14,7 @@ export const AdminHeader: FC = () => {
   const navbar = useRef(null)
   const tooltipRef1 = useRef(null)
   const tooltipRef2 = useRef(null)
-  const [title, setTitle] = useState(
-    'Повышенная государственная академическая стипендия'
-  )
+  const [title, setTitle] = useState('Государственная академическая стипендия')
   const { fio, avatarUrl, role, login } = useContext(AuthContext)
 
   const logout = () => login(0, '', '', 'anonymous', [])

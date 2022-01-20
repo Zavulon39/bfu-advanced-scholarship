@@ -49,7 +49,7 @@ export const StudentCompanyListPage: FC = () => {
     M.Modal.init(createModalRef.current!)
     M.FormSelect.init(nominationRef.current!)
     M.FormSelect.init(planRef.current!)
-  }, [companies.length, requests.length])
+  }, [companies, requests])
 
   return (
     <>

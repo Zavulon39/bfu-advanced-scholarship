@@ -11,18 +11,20 @@ export const StudentRequestDetailPage: FC = () => {
   const { id1, id2 } = useParams()
   const pointRef = useRef(null)
   const messageRef = useRef(null)
+  const [dict, setDict] = useState({
+    dictTypeEvent: [],
+    dictTypeWork: [],
+    dictRoleStudentToWork: [],
+    dictWinnerPlace: [],
+  })
   const {
     requests,
-    dictTypeEvent,
-    dictTypeWork,
-    dictRoleStudentToWork,
-    dictWinnerPlace,
 
     fetchRequests,
     addComment,
-    setStudentExamPoints,
     setStudentData,
     addRow,
+    setLinkToGradebook,
   } = useContext(RequestContext)
   const { fio, avatarUrl, role, id } = useContext(AuthContext)
   const request = requests.find(r => r.id === Number(id1))
@@ -34,6 +36,47 @@ export const StudentRequestDetailPage: FC = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
+    $api
+      .post('/api/winner-place/get/', {
+        nomination: subRequest?.nomination,
+      })
+      .then(r => {
+        setDict(d => ({
+          ...d,
+          dictWinnerPlace: r.data,
+        }))
+      })
+    $api
+      .post('/api/type-work/get/', {
+        nomination: subRequest?.nomination,
+      })
+      .then(r => {
+        setDict(d => ({
+          ...d,
+          dictTypeWork: r.data,
+        }))
+      })
+    $api
+      .post('/api/type-event/get/', {
+        nomination: subRequest?.nomination,
+      })
+      .then(r => {
+        setDict(d => ({
+          ...d,
+          dictTypeEvent: r.data,
+        }))
+      })
+    $api
+      .post('/api/student-role/get/', {
+        nomination: subRequest?.nomination,
+      })
+      .then(r => {
+        setDict(d => ({
+          ...d,
+          dictRoleStudentToWork: r.data,
+        }))
+      })
+
     if (requests.filter(r => r.studentId === id).length === 0)
       navigate('/companies/')
     if (!requests.length) fetchRequests()
@@ -53,7 +96,7 @@ export const StudentRequestDetailPage: FC = () => {
 
     const elems = document.querySelectorAll('select')
     M.FormSelect.init(elems)
-  }, [requests])
+  }, [requests, dict])
 
   useEffect(() => {
     const elems = document.querySelectorAll('.datepicker')
@@ -99,13 +142,21 @@ export const StudentRequestDetailPage: FC = () => {
 
       await $api.post('/api/requests/set-student-point/', {
         id: subRequest?.id,
-        point: subRequest?.examPoints,
       })
 
       await $api.post('/api/requests/save/', {
         id: subRequest?.id,
         data: subRequest?.tables.body,
       })
+
+      if (subRequest?.nomination === 'Учебная') {
+        await $api.post('/api/requests/learning/save/', {
+          id: subRequest?.id,
+          linkToGradebook: subRequest.linkToGradebook,
+          percent: subRequest.percent,
+          point: subRequest.point,
+        })
+      }
 
       M.toast({
         html: 'Вы успешно сохранили изменения!',
@@ -176,31 +227,69 @@ export const StudentRequestDetailPage: FC = () => {
             <h3 className='mt-4'>Оценки</h3>
             <div>
               <small>Процент "{subRequest?.percent}"</small>
-              <input
-                type='text'
-                value={subRequest?.examPoints}
-                onKeyPress={event => {
-                  if (!/[0-9]/.test(event.key)) {
-                    event.preventDefault()
-                  }
-                }}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  setStudentExamPoints(
-                    request?.id!,
-                    subRequest?.id!,
-                    Number(event.target.value)
-                  )
-                }
-              />
-              <div className='input-field'>
-                <input
-                  type='text'
-                  id='point'
-                  ref={pointRef}
-                  value={subRequest?.point}
-                  style={{ maxWidth: 'fit-content' }}
-                />
-                <label htmlFor='point'>Балл</label>
+              <br />
+              <small>Балл: "{subRequest?.point}"</small>
+              <div className='file-field input-field'>
+                <div className='waves-effect waves-light btn light-blue darken-1'>
+                  <span>
+                    <i className='material-icons'>insert_drive_file</i>
+                  </span>
+                  <input
+                    type='file'
+                    onChange={async (
+                      event: React.ChangeEvent<HTMLInputElement>
+                    ) => {
+                      try {
+                        const fd = new FormData()
+                        const file = event.target.files![0]
+
+                        fd.append('image', file, file.name)
+
+                        const resp = await $api.post('/api/set-image/', fd)
+
+                        setLinkToGradebook(
+                          request!.id,
+                          subRequest.id,
+                          resp.data.url
+                        )
+
+                        document.querySelectorAll('.tooltipped').forEach(el => {
+                          const url = el.getAttribute('data-tooltip-img')
+                          M.Tooltip.init(el, {
+                            html: `<img src="${url}" class="tooltip-img" />`,
+                          })
+                        })
+                      } catch (e) {
+                        M.toast({
+                          html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+                          classes: 'red darken-4',
+                        })
+                      }
+                    }}
+                  />
+                </div>
+                <div className='file-path-wrapper'>
+                  <input
+                    className='file-path validate'
+                    style={{ maxWidth: 'fit-content' }}
+                    type='text'
+                    value={
+                      subRequest.linkToGradebook.split('/')[
+                        subRequest.linkToGradebook.split('/').length - 1
+                      ]
+                    }
+                  />
+                </div>
+                <a
+                  href={subRequest.linkToGradebook}
+                  target='_blank'
+                  className='tooltipped'
+                  data-position='top'
+                  data-tooltip-img={subRequest.linkToGradebook}
+                  style={{ width: 'fit-content' }}
+                >
+                  Текущий документ
+                </a>
               </div>
             </div>
           </>
@@ -229,7 +318,7 @@ export const StudentRequestDetailPage: FC = () => {
                 <tr key={rIdx}>
                   {r.data.map((b, bIdx) => {
                     try {
-                      if (!(bIdx === 7)) throw Error()
+                      if (!(bIdx === 6)) throw Error()
 
                       return (
                         <td key={bIdx}>
@@ -317,7 +406,27 @@ export const StudentRequestDetailPage: FC = () => {
                       )
                     } catch (e) {
                       if (bIdx === 0) {
-                        return <td key={bIdx}>{b}</td>
+                        return (
+                          <td key={bIdx}>
+                            <select
+                              onChange={event => {
+                                setStudentData(
+                                  request!.id,
+                                  subRequest.id,
+                                  rIdx,
+                                  bIdx,
+                                  event.target.value
+                                )
+                              }}
+                            >
+                              {dict.dictTypeEvent.map(d => (
+                                <option value={d} selected={d === b}>
+                                  {d}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                        )
                       } else if (bIdx === 1) {
                         return (
                           <td key={bIdx}>
@@ -332,7 +441,7 @@ export const StudentRequestDetailPage: FC = () => {
                                 )
                               }}
                             >
-                              {dictTypeEvent.map(d => (
+                              {dict.dictTypeWork.map(d => (
                                 <option value={d} selected={d === b}>
                                   {d}
                                 </option>
@@ -341,6 +450,18 @@ export const StudentRequestDetailPage: FC = () => {
                           </td>
                         )
                       } else if (bIdx === 2) {
+                        return (
+                          <td>
+                            <input
+                              type='text'
+                              className='datepicker'
+                              value={b}
+                              data-rIdx={rIdx}
+                              data-bIdx={bIdx}
+                            ></input>
+                          </td>
+                        )
+                      } else if (bIdx === 4) {
                         return (
                           <td key={bIdx}>
                             <select
@@ -354,24 +475,12 @@ export const StudentRequestDetailPage: FC = () => {
                                 )
                               }}
                             >
-                              {dictTypeWork.map(d => (
+                              {dict.dictWinnerPlace.map(d => (
                                 <option value={d} selected={d === b}>
                                   {d}
                                 </option>
                               ))}
                             </select>
-                          </td>
-                        )
-                      } else if (bIdx === 3) {
-                        return (
-                          <td>
-                            <input
-                              type='text'
-                              className='datepicker'
-                              value={b}
-                              data-rIdx={rIdx}
-                              data-bIdx={bIdx}
-                            ></input>
                           </td>
                         )
                       } else if (bIdx === 5) {
@@ -388,29 +497,7 @@ export const StudentRequestDetailPage: FC = () => {
                                 )
                               }}
                             >
-                              {dictWinnerPlace.map(d => (
-                                <option value={d} selected={d === b}>
-                                  {d}
-                                </option>
-                              ))}
-                            </select>
-                          </td>
-                        )
-                      } else if (bIdx === 6) {
-                        return (
-                          <td key={bIdx}>
-                            <select
-                              onChange={event => {
-                                setStudentData(
-                                  request!.id,
-                                  subRequest.id,
-                                  rIdx,
-                                  bIdx,
-                                  event.target.value
-                                )
-                              }}
-                            >
-                              {dictRoleStudentToWork.map(d => (
+                              {dict.dictRoleStudentToWork.map(d => (
                                 <option value={d} selected={d === b}>
                                   {d}
                                 </option>

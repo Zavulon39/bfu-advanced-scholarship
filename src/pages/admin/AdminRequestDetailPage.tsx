@@ -10,6 +10,7 @@ import $api from '../../http'
 export const AdminRequestDetailPage: FC = () => {
   const { id1, id2 } = useParams()
   const pointRef = useRef(null)
+  const percentRef = useRef(null)
   const messageRef = useRef(null)
   const btnRef = useRef(null)
   const {
@@ -19,6 +20,7 @@ export const AdminRequestDetailPage: FC = () => {
     setExamPoints,
     addComment,
     setStatus,
+    setPercent,
   } = useContext(RequestContext)
   const { fio, avatarUrl, role, id } = useContext(AuthContext)
   const request = requests.find(r => r.id === Number(id1))
@@ -37,7 +39,8 @@ export const AdminRequestDetailPage: FC = () => {
   useEffect(() => {
     // @ts-ignore
     pointRef.current!.focus()
-    M.CharacterCounter.init(messageRef.current!)
+    // @ts-ignore
+    percentRef.current!.focus()
 
     document.querySelectorAll('.tooltipped').forEach(el => {
       const url = el.getAttribute('data-tooltip-img')
@@ -61,6 +64,15 @@ export const AdminRequestDetailPage: FC = () => {
         id: subRequest?.id,
         data: subRequest?.tables.body.map(b => b.points),
       })
+
+      if (subRequest?.nomination === 'Учебная') {
+        await $api.post('/api/requests/learning/save/', {
+          id: subRequest?.id,
+          linkToGradebook: subRequest.linkToGradebook,
+          percent: subRequest.percent,
+          point: subRequest.point,
+        })
+      }
 
       M.toast({
         html: 'Данные были успешно сохранены!',
@@ -154,8 +166,28 @@ export const AdminRequestDetailPage: FC = () => {
           <>
             <h3 className='mt-4'>Оценки</h3>
             <div>
-              <small>Процент "{subRequest?.percent}"</small>
-              <input type='text' value={subRequest?.examPoints} />
+              <div className='input-field'>
+                <input
+                  type='text'
+                  id='percent'
+                  ref={percentRef}
+                  value={subRequest?.percent}
+                  onKeyPress={event => {
+                    if (!/[0-9]/.test(event.key)) {
+                      event.preventDefault()
+                    }
+                  }}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                    setPercent(
+                      request?.id!,
+                      subRequest?.id!,
+                      Number(event.target.value)
+                    )
+                  }
+                  style={{ maxWidth: 'fit-content' }}
+                />
+                <label htmlFor='point'>Процент</label>
+              </div>
               <div className='input-field'>
                 <input
                   type='text'
@@ -179,6 +211,15 @@ export const AdminRequestDetailPage: FC = () => {
                 <label htmlFor='point'>Балл</label>
               </div>
             </div>
+            <a
+              className='waves-effect waves-light btn light-blue darken-1 tooltipped'
+              href={subRequest.linkToGradebook}
+              target='_blank'
+              data-position='top'
+              data-tooltip-img={subRequest.linkToGradebook}
+            >
+              <i className='material-icons'>insert_drive_file</i>
+            </a>
           </>
         ) : null}
 
@@ -198,7 +239,7 @@ export const AdminRequestDetailPage: FC = () => {
                 <tr key={rIdx}>
                   {r.data.map((b, bIdx) => {
                     try {
-                      if (!(bIdx === 7)) throw Error()
+                      if (!(bIdx === 6)) throw Error()
 
                       return (
                         <td key={bIdx}>
