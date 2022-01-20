@@ -27,8 +27,11 @@ export const AdminRequestDetailPage: FC = () => {
     ?.subRequests.find(sb => sb.id === Number(id2))
   const [message, setMessage] = useState('')
   const _ = useFormater()
+  const modalRef = useRef(null)
 
   useEffect(() => {
+    M.Modal.init(modalRef.current!)
+
     if (!requests.length) fetchRequests()
   }, [])
   useEffect(() => {
@@ -179,7 +182,7 @@ export const AdminRequestDetailPage: FC = () => {
           </>
         ) : null}
 
-        <h3 className='mt-4'>Таблицы</h3>
+        <h3 className='mt-4'>Достижения</h3>
         <table className='responsive-table'>
           <thead>
             <tr>
@@ -311,6 +314,10 @@ export const AdminRequestDetailPage: FC = () => {
                         subRequest?.id!,
                         'Отправленно на доработку'
                       )
+
+                      const i = M.Modal.getInstance(modalRef.current!)
+                      i.open()
+
                       M.toast({
                         html: '<span>Вы успешно выставили статус <strong>Отправленно на доработку</strong> !</span>',
                         classes: 'light-blue darken-1',
@@ -387,6 +394,35 @@ export const AdminRequestDetailPage: FC = () => {
         </div>
       ) : null}
       <div style={{ height: 100 }}></div>
+      {/* modal */}
+      <div ref={modalRef} className='modal'>
+        <div className='modal-content'>
+          <h4>Оставьте комментарии</h4>
+          <div style={{ height: 20 }} />
+          <div className='input-field'>
+            <textarea
+              id='message'
+              className='materialize-textarea mt-4'
+              data-length='1000'
+              value={message}
+              onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
+                if (message.length <= 1000) setMessage(event.target.value)
+              }}
+              ref={messageRef}
+            ></textarea>
+            <label className='message'>Сообщение</label>
+          </div>
+          <button
+            className='btn light-blue darken-2 waves-effect waves-light'
+            style={{ float: 'right' }}
+            onClick={sendHandler}
+          >
+            <i className='material-icons left'>send</i>
+            Отправить
+          </button>
+          <div style={{ height: 20 }} />
+        </div>
+      </div>
     </>
   )
 }

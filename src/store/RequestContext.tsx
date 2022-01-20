@@ -159,6 +159,7 @@ const reducer = (
             data[0] = r.subRequests.find(
               sr => sr.id === payload.subRId
             )?.nomination!
+            data[3] = _(new Date())
 
             r.subRequests
               .find(sr => sr.id === payload.subRId)!
@@ -469,4 +470,15 @@ export const RequestProvider = ({ children }: IProps) => {
       {children}
     </RequestContext.Provider>
   )
+}
+
+function _(date?: Date) {
+  if (date === undefined) return ''
+
+  const m = date.getMonth() + 1
+  const d = date.getDate()
+
+  return `${date.getFullYear()}-${m >= 10 ? m : '0' + m}-${
+    d >= 10 ? d : '0' + d
+  }`
 }

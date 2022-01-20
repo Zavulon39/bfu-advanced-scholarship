@@ -55,6 +55,20 @@ export const StudentRequestDetailPage: FC = () => {
     M.FormSelect.init(elems)
   }, [requests])
 
+  useEffect(() => {
+    const elems = document.querySelectorAll('.datepicker')
+    M.Datepicker.init(elems, {
+      container: document.querySelector('body'),
+      format: 'yyyy-mm-dd',
+      onSelect(selectedDate: Date) {
+        const rIdx = Number(this.el.getAttribute('data-rIdx')!)
+        const bIdx = Number(this.el.getAttribute('data-bIdx')!)
+
+        setStudentData(request!.id, subRequest!.id, rIdx, bIdx, _(selectedDate))
+      },
+    })
+  }, [subRequest?.tables.body.length])
+
   const sendHandler = () => {
     try {
       // fetch
@@ -192,7 +206,7 @@ export const StudentRequestDetailPage: FC = () => {
           </>
         ) : null}
         <h3 className='mt-4'>
-          Таблицы
+          Достижения
           <a
             className='btn-floating btn-large waves-effect waves-light red btn-small light-blue darken-1'
             style={{ float: 'right' }}
@@ -346,6 +360,18 @@ export const StudentRequestDetailPage: FC = () => {
                                 </option>
                               ))}
                             </select>
+                          </td>
+                        )
+                      } else if (bIdx === 3) {
+                        return (
+                          <td>
+                            <input
+                              type='text'
+                              className='datepicker'
+                              value={b}
+                              data-rIdx={rIdx}
+                              data-bIdx={bIdx}
+                            ></input>
                           </td>
                         )
                       } else if (bIdx === 5) {
