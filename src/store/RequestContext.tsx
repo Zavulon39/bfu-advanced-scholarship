@@ -2,7 +2,12 @@ import React, { createContext, ReactElement, useReducer } from 'react'
 import $api from '../http'
 import { Role } from '../types/auth'
 import { IAction } from '../types/companies'
-import { IRequestState, IRequest, IComment } from '../types/request'
+import {
+  IRequestState,
+  IRequest,
+  IComment,
+  ISubRequest,
+} from '../types/request'
 
 const initialState: IRequestState = {
   requests: [],
@@ -23,6 +28,7 @@ const initialState: IRequestState = {
   removeNotification: () => {},
   setLinkToGradebook: () => {},
   setPercent: () => {},
+  extendSubRequests: () => {},
 }
 
 interface IProps {
@@ -173,6 +179,17 @@ const reducer = (
             r.subRequests.find(
               sr => sr.id === payload.subRId
             )!.linkToGradebook = payload.link
+          }
+
+          return r
+        }),
+      }
+    case 'EXTEND_SUB_REQUESTS':
+      return {
+        ...state,
+        requests: state.requests.map(r => {
+          if (r.id === payload.id) {
+            r.subRequests = [...r.subRequests, ...payload.subRequests]
           }
 
           return r
@@ -357,7 +374,7 @@ export const RequestProvider = ({ children }: IProps) => {
       companyId,
       company,
       fio,
-      subRequests: resp.data.requests.map((sr: any) => ({
+      subRequests: resp.data.requests.map((sr: ISubRequest) => ({
         ...sr,
         createdDate: new Date(sr.createdDate),
       })),
@@ -452,6 +469,15 @@ export const RequestProvider = ({ children }: IProps) => {
       },
     })
   }
+  const extendSubRequests = (id: number, subRequests: ISubRequest[]) => {
+    dispatch({
+      type: 'EXTEND_SUB_REQUESTS',
+      payload: {
+        id,
+        subRequests,
+      },
+    })
+  }
 
   return (
     <RequestContext.Provider
@@ -469,6 +495,7 @@ export const RequestProvider = ({ children }: IProps) => {
         removeNotification,
         setLinkToGradebook,
         setPercent,
+        extendSubRequests,
       }}
     >
       {children}

@@ -39,6 +39,7 @@ const addRow = (id: number, subRId: number) => {}
 const addNotification = (text: string) => {}
 const removeNotification = (id: number) => {}
 const setLinkToGradebook = (id: number, subRId: number, link: string) => {}
+const extendSubRequests = (id: number, subRequests: ISubRequest[]) => {}
 
 interface ICompany {
   id: number
@@ -51,7 +52,7 @@ interface ITableBodyRow {
   isNew: boolean
 }
 
-interface ISubRequest {
+export interface ISubRequest {
   id: number
 
   nomination: string
@@ -119,4 +120,5 @@ export interface IRequestState {
   removeNotification: typeof removeNotification
   setLinkToGradebook: typeof setLinkToGradebook
   setPercent: typeof setPercent
+  extendSubRequests: typeof extendSubRequests
 }

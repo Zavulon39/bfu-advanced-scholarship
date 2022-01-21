@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { AdminHeader } from '../../components/Header'
 import { RequestContext } from '../../store/RequestContext'
 import M from 'materialize-css'
@@ -30,6 +30,7 @@ export const AdminRequestDetailPage: FC = () => {
   const [message, setMessage] = useState('')
   const _ = useFormater()
   const modalRef = useRef(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     M.Modal.init(modalRef.current!)
@@ -456,7 +457,10 @@ export const AdminRequestDetailPage: FC = () => {
           <button
             className='btn light-blue darken-2 waves-effect waves-light'
             style={{ float: 'right' }}
-            onClick={sendHandler}
+            onClick={() => {
+              sendHandler()
+              navigate('/admin/requests/')
+            }}
           >
             <i className='material-icons left'>send</i>
             Отправить

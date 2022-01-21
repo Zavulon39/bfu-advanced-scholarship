@@ -25,6 +25,7 @@ export const StudentRequestDetailPage: FC = () => {
     setStudentData,
     addRow,
     setLinkToGradebook,
+    setStatus,
   } = useContext(RequestContext)
   const { fio, avatarUrl, role, id } = useContext(AuthContext)
   const request = requests.find(r => r.id === Number(id1))
@@ -157,6 +158,8 @@ export const StudentRequestDetailPage: FC = () => {
           point: subRequest.point,
         })
       }
+
+      setStatus(request!.id, subRequest!.id, 'На проверке')
 
       M.toast({
         html: 'Вы успешно сохранили изменения!',
