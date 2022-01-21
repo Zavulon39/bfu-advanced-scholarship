@@ -56,6 +56,7 @@ export interface ISubRequest {
   id: number
 
   nomination: string
+  learningPlan: string
   status: string
   createdDate: Date
 

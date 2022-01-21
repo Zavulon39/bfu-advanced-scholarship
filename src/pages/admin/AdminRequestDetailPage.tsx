@@ -123,6 +123,7 @@ export const AdminRequestDetailPage: FC = () => {
             <tr>
               <th>Кампания</th>
               <th>Номинация</th>
+              <th>Учебный план</th>
               <th>Статус</th>
               <th>Дата создания</th>
             </tr>
@@ -131,6 +132,8 @@ export const AdminRequestDetailPage: FC = () => {
             <tr>
               <td>{request?.company}</td>
               <td>{subRequest?.nomination}</td>
+              <td>{subRequest?.learningPlan}</td>
+
               <td>{subRequest?.status}</td>
               <td>{_(subRequest?.createdDate)}</td>
             </tr>
@@ -226,7 +229,25 @@ export const AdminRequestDetailPage: FC = () => {
           </>
         ) : null}
 
-        <h3 className='mt-4'>Достижения</h3>
+        <h3 className='mt-4'>
+          Достижения
+          <small
+            style={{
+              float: 'right',
+              // fontSize: 12,
+            }}
+          >
+            Всего:{' '}
+            <b>
+              {
+                subRequest?.tables.body.reduce(
+                  // @ts-ignore
+                  (prev, cur) => prev.points + cur.points
+                ).points
+              }
+            </b>
+          </small>
+        </h3>
         <table className='responsive-table'>
           <thead>
             <tr>

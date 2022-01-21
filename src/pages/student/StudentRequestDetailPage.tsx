@@ -159,10 +159,23 @@ export const StudentRequestDetailPage: FC = () => {
         })
       }
 
-      setStatus(request!.id, subRequest!.id, 'На проверке')
-
       M.toast({
         html: 'Вы успешно сохранили изменения!',
+        classes: 'light-blue darken-1',
+      })
+    } catch (e) {
+      M.toast({
+        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+        classes: 'red darken-4',
+      })
+    }
+  }
+  const reqSendHandler = async () => {
+    try {
+      setStatus(request!.id, subRequest!.id, 'На рассмотрении')
+
+      M.toast({
+        html: 'Ваша заявка отправлена на рассмотрение!',
         classes: 'light-blue darken-1',
       })
     } catch (e) {
@@ -183,6 +196,7 @@ export const StudentRequestDetailPage: FC = () => {
             <tr>
               <th>Кампания</th>
               <th>Номинация</th>
+              <th>Учебный план</th>
               <th>Статус</th>
               <th>Дата создания</th>
             </tr>
@@ -191,6 +205,7 @@ export const StudentRequestDetailPage: FC = () => {
             <tr>
               <td>{request?.company}</td>
               <td>{subRequest?.nomination}</td>
+              <td>{subRequest?.learningPlan}</td>
               <td>{subRequest?.status}</td>
               <td>{_(subRequest?.createdDate)}</td>
             </tr>
@@ -390,7 +405,11 @@ export const StudentRequestDetailPage: FC = () => {
                                   className='file-path validate'
                                   style={{ maxWidth: 'fit-content' }}
                                   type='text'
-                                  value={b.split('/')[b.split('/').length - 1]}
+                                  value={
+                                    b
+                                      ? b.split('/')[b.split('/').length - 1]
+                                      : ''
+                                  }
                                 />
                               </div>
                             </div>
@@ -554,14 +573,14 @@ export const StudentRequestDetailPage: FC = () => {
               <i className='material-icons left'>save</i>
               Сохранить
             </button>
-            {/* <button
+            <button
               className='btn light-blue darken-2 waves-effect waves-light'
               style={{ marginLeft: 12 }}
               onClick={reqSendHandler}
             >
               <i className='material-icons left'>send</i>
               Отправить
-            </button> */}
+            </button>
           </div>
         </div>
         <h3 className='mt-4'>Комментарии</h3>

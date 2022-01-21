@@ -11,9 +11,10 @@ export const StudentSubRequestDetailPage: FC = () => {
   const { requests, nominations, fetchRequests, extendSubRequests } =
     useContext(RequestContext)
   const request = requests.find(r => r.id === Number(params.id))
-  const { id } = useContext(AuthContext)
+  const { id, learningPlans } = useContext(AuthContext)
   const navigate = useNavigate()
   const nominationRef = useRef(null)
+  const planRef = useRef(null)
 
   useEffect(() => {
     if (requests.filter(r => r.studentId === id).length === 0)
@@ -22,6 +23,7 @@ export const StudentSubRequestDetailPage: FC = () => {
   }, [])
   useEffect(() => {
     M.FormSelect.init(nominationRef.current!)
+    M.FormSelect.init(planRef.current!)
   }, [requests])
   const createClickHandler = async () => {
     try {
@@ -29,7 +31,8 @@ export const StudentSubRequestDetailPage: FC = () => {
       const n = getSelectValues(nominationRef.current!).join(' | ')
 
       const resp = await $api.post('/api/requests/create/', {
-        learningPlans: [],
+        // @ts-ignore
+        learningPlans: planRef.current!.value,
         id,
         company_id: request?.companyId,
         nomination: n,
@@ -90,7 +93,7 @@ export const StudentSubRequestDetailPage: FC = () => {
           </tbody>
         </table>
         <h4 className='mt-4'>Добавить номинацию</h4>
-        {/* <div className='input-field' style={{ marginTop: 16 }}>
+        <div className='input-field' style={{ marginTop: 16 }}>
           <select ref={planRef}>
             {learningPlans.map(p => (
               <option value={p} key={p}>
@@ -99,7 +102,7 @@ export const StudentSubRequestDetailPage: FC = () => {
             ))}
           </select>
           <label>Учебный план</label>
-        </div> */}
+        </div>
         <div className='input-field'>
           <select multiple ref={nominationRef}>
             {nominations
