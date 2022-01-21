@@ -38,10 +38,12 @@ export const AdminRequestDetailPage: FC = () => {
     if (!requests.length) fetchRequests()
   }, [])
   useEffect(() => {
-    // @ts-ignore
-    pointRef.current!.focus()
-    // @ts-ignore
-    percentRef.current!.focus()
+    if (pointRef.current && percentRef.current!) {
+      // @ts-ignore
+      pointRef.current!.focus()
+      // @ts-ignore
+      percentRef.current!.focus()
+    }
 
     document.querySelectorAll('.tooltipped').forEach(el => {
       const url = el.getAttribute('data-tooltip-img')
@@ -66,7 +68,7 @@ export const AdminRequestDetailPage: FC = () => {
         data: subRequest?.tables.body.map(b => b.points),
       })
 
-      if (subRequest?.nomination === 'Учебная') {
+      if (subRequest?.nomination === 'Учебная деятельность') {
         await $api.post('/api/requests/learning/save/', {
           id: subRequest?.id,
           linkToGradebook: subRequest.linkToGradebook,
@@ -163,7 +165,7 @@ export const AdminRequestDetailPage: FC = () => {
             </tr>
           </tbody>
         </table>
-        {subRequest?.nomination === 'Учебная' ? (
+        {subRequest?.nomination === 'Учебная деятельность' ? (
           <>
             <h3 className='mt-4'>Оценки</h3>
             <div>

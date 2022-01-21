@@ -150,7 +150,7 @@ export const StudentRequestDetailPage: FC = () => {
         data: subRequest?.tables.body,
       })
 
-      if (subRequest?.nomination === 'Учебная') {
+      if (subRequest?.nomination === 'Учебная деятельность') {
         await $api.post('/api/requests/learning/save/', {
           id: subRequest?.id,
           linkToGradebook: subRequest.linkToGradebook,
@@ -225,7 +225,7 @@ export const StudentRequestDetailPage: FC = () => {
             </tr>
           </tbody>
         </table>
-        {subRequest?.nomination === 'Учебная' ? (
+        {subRequest?.nomination === 'Учебная деятельность' ? (
           <>
             <h3 className='mt-4'>Оценки</h3>
             <div>
