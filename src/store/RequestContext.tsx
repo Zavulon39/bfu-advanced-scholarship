@@ -138,9 +138,9 @@ const reducer = (
     case 'ADD_ROW':
       return {
         ...state,
-        requests: state.requests.map(r => {
-          if (r.id === payload.id) {
-            const sr = r.subRequests.find(sr => sr.id === payload.subRId)
+        requests: state.requests.map(req => {
+          if (req.id === payload.id) {
+            const sr = req.subRequests.find(sr => sr.id === payload.subRId)
             const data = [...sr!.tables.header]
 
             data[0] = sr?.nomination!
@@ -175,25 +175,25 @@ const reducer = (
                             nomination: sr?.nomination,
                             progress: data[1],
                             viewprogress: data[2],
-                            status: data[3],
+                            statusprogress: data[3],
                           })
                           .then(r => {
                             data[4] = r.data[0]
+
+                            req.subRequests
+                              .find(sr => sr.id === payload.subRId)!
+                              .tables.body.push({
+                                data,
+                                points: 0,
+                                isNew: true,
+                              })
                           })
                       })
                   })
               })
-
-            r.subRequests
-              .find(sr => sr.id === payload.subRId)!
-              .tables.body.push({
-                data,
-                points: 0,
-                isNew: true,
-              })
           }
 
-          return r
+          return req
         }),
       }
     case 'ADD_NOTIFICATION':

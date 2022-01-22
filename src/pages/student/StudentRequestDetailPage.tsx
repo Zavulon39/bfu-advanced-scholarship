@@ -11,12 +11,18 @@ export const StudentRequestDetailPage: FC = () => {
   const { id1, id2 } = useParams()
   const pointRef = useRef(null)
   const messageRef = useRef(null)
-  const [dict, setDict] = useState({
-    progress: [],
-    viewprogress: [],
-    statusprogress: [],
-    levelprogress: [],
-  })
+  const [dict, setDict] = useState<
+    Array<{
+      name: string
+      viewprogress: Array<{
+        name: string
+        statusprogress: Array<{
+          name: string
+          levelprogress: string[]
+        }>
+      }>
+    }>
+  >([])
   const {
     requests,
 
@@ -38,54 +44,8 @@ export const StudentRequestDetailPage: FC = () => {
 
   useEffect(() => {
     $api
-      .post('/api/progress/get/', {
-        nomination: subRequest?.nomination,
-      })
-      .then(r1 => {
-        setDict(dict => ({
-          ...dict,
-          progress: r1.data,
-        }))
-
-        $api
-          .post('/api/view-progress/get/', {
-            nomination: subRequest?.nomination,
-            progress: r1.data[0],
-          })
-          .then(r2 => {
-            setDict(dict => ({
-              ...dict,
-              viewprogress: r2.data,
-            }))
-
-            $api
-              .post('/api/status-progress/get/', {
-                nomination: subRequest?.nomination,
-                progress: r1.data[0],
-                viewprogress: r2.data[0],
-              })
-              .then(r3 => {
-                setDict(dict => ({
-                  ...dict,
-                  statusprogress: r3.data,
-                }))
-
-                $api
-                  .post('/api/level-progress/get/', {
-                    nomination: subRequest?.nomination,
-                    progress: r1.data[0],
-                    viewprogress: r2.data[0],
-                    statusprogress: r3.data[0],
-                  })
-                  .then(r4 => {
-                    setDict(dict => ({
-                      ...dict,
-                      levelprogress: r4.data,
-                    }))
-                  })
-              })
-          })
-      })
+      .post('/api/table/get/', { nomination: subRequest?.nomination })
+      .then(r => setDict(r.data))
 
     if (requests.filter(r => r.studentId === id).length === 0)
       navigate('/companies/')
@@ -441,20 +401,6 @@ export const StudentRequestDetailPage: FC = () => {
                           <td key={bIdx}>
                             <select
                               onChange={event => {
-                                $api
-                                  .get('/api/view-progress/get/', {
-                                    params: {
-                                      nomination: subRequest!.nomination,
-                                      progress: event.target.value,
-                                    },
-                                  })
-                                  .then(r =>
-                                    setDict(dict => ({
-                                      ...dict,
-                                      viewprogres: r.data,
-                                    }))
-                                  )
-
                                 setStudentData(
                                   request!.id,
                                   subRequest.id,
@@ -462,11 +408,19 @@ export const StudentRequestDetailPage: FC = () => {
                                   bIdx,
                                   event.target.value
                                 )
+                                setStudentData(
+                                  request!.id,
+                                  subRequest.id,
+                                  rIdx,
+                                  bIdx + 1,
+                                  dict.find(p => p.name === event.target.value)
+                                    ?.viewprogress[0].name!
+                                )
                               }}
                             >
-                              {dict.progress.map(d => (
-                                <option value={d} selected={d === b}>
-                                  {d}
+                              {dict.map(p => (
+                                <option value={p.name} selected={p.name === b}>
+                                  {p.name}
                                 </option>
                               ))}
                             </select>
@@ -477,21 +431,6 @@ export const StudentRequestDetailPage: FC = () => {
                           <td key={bIdx}>
                             <select
                               onChange={event => {
-                                $api
-                                  .post('/api/status-progress/get/', {
-                                    nomination: subRequest?.nomination,
-                                    progress: subRequest.tables.body.find(
-                                      (_, index) => index === rIdx
-                                    )?.data[1],
-                                    viewprogress: event.target.value,
-                                  })
-                                  .then(r3 => {
-                                    setDict(dict => ({
-                                      ...dict,
-                                      statusprogress: r3.data,
-                                    }))
-                                  })
-
                                 setStudentData(
                                   request!.id,
                                   subRequest.id,
@@ -499,16 +438,37 @@ export const StudentRequestDetailPage: FC = () => {
                                   bIdx,
                                   event.target.value
                                 )
+                                setStudentData(
+                                  request!.id,
+                                  subRequest.id,
+                                  rIdx,
+                                  bIdx + 1,
+                                  dict
+                                    .find(
+                                      p =>
+                                        p.name ===
+                                        subRequest.tables.body[rIdx].data[1]
+                                    )
+                                    ?.viewprogress.find(
+                                      v => v.name === event.target.value
+                                    )?.statusprogress[0].name!
+                                )
                               }}
                             >
-                              {dict.viewprogress.map((d, dIdx) => (
-                                <option
-                                  value={d}
-                                  selected={d === b || dIdx === 0}
-                                >
-                                  {d}
-                                </option>
-                              ))}
+                              {dict
+                                .find(
+                                  p =>
+                                    p.name ===
+                                    subRequest.tables.body[rIdx].data[1]
+                                )
+                                ?.viewprogress.map(v => (
+                                  <option
+                                    value={v.name}
+                                    selected={v.name === b}
+                                  >
+                                    {v.name}
+                                  </option>
+                                ))}
                             </select>
                           </td>
                         )
@@ -517,24 +477,6 @@ export const StudentRequestDetailPage: FC = () => {
                           <td key={bIdx}>
                             <select
                               onChange={event => {
-                                $api
-                                  .post('/api/level-progress/get/', {
-                                    nomination: subRequest?.nomination,
-                                    progress: subRequest.tables.body.find(
-                                      (_, index) => index === rIdx
-                                    )?.data[1],
-                                    viewprogress: subRequest.tables.body.find(
-                                      (_, index) => index === rIdx
-                                    )?.data[2],
-                                    statusprogress: event.target.value,
-                                  })
-                                  .then(r4 => {
-                                    setDict(dict => ({
-                                      ...dict,
-                                      levelprogress: r4.data,
-                                    }))
-                                  })
-
                                 setStudentData(
                                   request!.id,
                                   subRequest.id,
@@ -542,16 +484,47 @@ export const StudentRequestDetailPage: FC = () => {
                                   bIdx,
                                   event.target.value
                                 )
+                                setStudentData(
+                                  request!.id,
+                                  subRequest.id,
+                                  rIdx,
+                                  bIdx + 1,
+                                  dict
+                                    .find(
+                                      p =>
+                                        p.name ===
+                                        subRequest.tables.body[rIdx].data[1]
+                                    )
+                                    ?.viewprogress.find(
+                                      v =>
+                                        v.name ===
+                                        subRequest.tables.body[rIdx].data[2]
+                                    )
+                                    ?.statusprogress.find(
+                                      s => s.name === event.target.value
+                                    )?.levelprogress[0]!
+                                )
                               }}
                             >
-                              {dict.statusprogress.map((d, dIdx) => (
-                                <option
-                                  value={d}
-                                  selected={d === b || dIdx === 0}
-                                >
-                                  {d}
-                                </option>
-                              ))}
+                              {dict
+                                .find(
+                                  p =>
+                                    p.name ===
+                                    subRequest.tables.body[rIdx].data[1]
+                                )
+                                ?.viewprogress.find(
+                                  v =>
+                                    v.name ===
+                                    subRequest.tables.body[rIdx].data[2]
+                                )
+                                ?.statusprogress.map(s => (
+                                  <option
+                                    value={s.name}
+                                    selected={s.name === b}
+                                  >
+                                    {s.name}
+                                  </option>
+                                ))}
                             </select>
                           </td>
                         )
@@ -569,11 +542,27 @@ export const StudentRequestDetailPage: FC = () => {
                                 )
                               }}
                             >
-                              {dict.levelprogress.map(d => (
-                                <option value={d} selected={d === b}>
-                                  {d}
-                                </option>
-                              ))}
+                              {dict
+                                .find(
+                                  p =>
+                                    p.name ===
+                                    subRequest.tables.body[rIdx].data[1]
+                                )
+                                ?.viewprogress.find(
+                                  v =>
+                                    v.name ===
+                                    subRequest.tables.body[rIdx].data[2]
+                                )
+                                ?.statusprogress.find(
+                                  s =>
+                                    s.name ===
+                                    subRequest.tables.body[rIdx].data[3]
+                                )
+                                ?.levelprogress.map(l => (
+                                  <option value={l} selected={l === b}>
+                                    {l}
+                                  </option>
+                                ))}
                             </select>
                           </td>
                         )
