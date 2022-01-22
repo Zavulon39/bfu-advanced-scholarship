@@ -12,10 +12,10 @@ export const StudentRequestDetailPage: FC = () => {
   const pointRef = useRef(null)
   const messageRef = useRef(null)
   const [dict, setDict] = useState({
-    dictTypeEvent: [],
-    dictTypeWork: [],
-    dictRoleStudentToWork: [],
-    dictWinnerPlace: [],
+    progress: [],
+    viewprogress: [],
+    statusprogress: [],
+    levelprogress: [],
   })
   const {
     requests,
@@ -38,44 +38,53 @@ export const StudentRequestDetailPage: FC = () => {
 
   useEffect(() => {
     $api
-      .post('/api/winner-place/get/', {
+      .post('/api/progress/get/', {
         nomination: subRequest?.nomination,
       })
-      .then(r => {
-        setDict(d => ({
-          ...d,
-          dictWinnerPlace: r.data,
+      .then(r1 => {
+        setDict(dict => ({
+          ...dict,
+          progress: r1.data,
         }))
-      })
-    $api
-      .post('/api/type-work/get/', {
-        nomination: subRequest?.nomination,
-      })
-      .then(r => {
-        setDict(d => ({
-          ...d,
-          dictTypeWork: r.data,
-        }))
-      })
-    $api
-      .post('/api/type-event/get/', {
-        nomination: subRequest?.nomination,
-      })
-      .then(r => {
-        setDict(d => ({
-          ...d,
-          dictTypeEvent: r.data,
-        }))
-      })
-    $api
-      .post('/api/student-role/get/', {
-        nomination: subRequest?.nomination,
-      })
-      .then(r => {
-        setDict(d => ({
-          ...d,
-          dictRoleStudentToWork: r.data,
-        }))
+
+        $api
+          .post('/api/view-progress/get/', {
+            nomination: subRequest?.nomination,
+            progress: r1.data[0],
+          })
+          .then(r2 => {
+            setDict(dict => ({
+              ...dict,
+              viewprogress: r2.data,
+            }))
+
+            $api
+              .post('/api/status-progress/get/', {
+                nomination: subRequest?.nomination,
+                progress: r1.data[0],
+                viewprogress: r2.data[0],
+              })
+              .then(r3 => {
+                setDict(dict => ({
+                  ...dict,
+                  statusprogress: r3.data,
+                }))
+
+                $api
+                  .post('/api/level-progress/get/', {
+                    nomination: subRequest?.nomination,
+                    progress: r1.data[0],
+                    viewprogress: r2.data[0],
+                    statusprogress: r3.data[0],
+                  })
+                  .then(r4 => {
+                    setDict(dict => ({
+                      ...dict,
+                      levelprogress: r4.data,
+                    }))
+                  })
+              })
+          })
       })
 
     if (requests.filter(r => r.studentId === id).length === 0)
@@ -336,7 +345,7 @@ export const StudentRequestDetailPage: FC = () => {
                 <tr key={rIdx}>
                   {r.data.map((b, bIdx) => {
                     try {
-                      if (!(bIdx === 6)) throw Error()
+                      if (!(bIdx === 7)) throw Error()
 
                       return (
                         <td key={bIdx}>
@@ -427,11 +436,25 @@ export const StudentRequestDetailPage: FC = () => {
                         </td>
                       )
                     } catch (e) {
-                      if (bIdx === 0) {
+                      if (bIdx === 1) {
                         return (
                           <td key={bIdx}>
                             <select
                               onChange={event => {
+                                $api
+                                  .get('/api/view-progress/get/', {
+                                    params: {
+                                      nomination: subRequest!.nomination,
+                                      progress: event.target.value,
+                                    },
+                                  })
+                                  .then(r =>
+                                    setDict(dict => ({
+                                      ...dict,
+                                      viewprogres: r.data,
+                                    }))
+                                  )
+
                                 setStudentData(
                                   request!.id,
                                   subRequest.id,
@@ -441,29 +464,7 @@ export const StudentRequestDetailPage: FC = () => {
                                 )
                               }}
                             >
-                              {dict.dictTypeEvent.map(d => (
-                                <option value={d} selected={d === b}>
-                                  {d}
-                                </option>
-                              ))}
-                            </select>
-                          </td>
-                        )
-                      } else if (bIdx === 1) {
-                        return (
-                          <td key={bIdx}>
-                            <select
-                              onChange={event => {
-                                setStudentData(
-                                  request!.id,
-                                  subRequest.id,
-                                  rIdx,
-                                  bIdx,
-                                  event.target.value
-                                )
-                              }}
-                            >
-                              {dict.dictTypeWork.map(d => (
+                              {dict.progress.map(d => (
                                 <option value={d} selected={d === b}>
                                   {d}
                                 </option>
@@ -473,14 +474,85 @@ export const StudentRequestDetailPage: FC = () => {
                         )
                       } else if (bIdx === 2) {
                         return (
-                          <td>
-                            <input
-                              type='text'
-                              className='datepicker'
-                              value={b}
-                              data-rIdx={rIdx}
-                              data-bIdx={bIdx}
-                            ></input>
+                          <td key={bIdx}>
+                            <select
+                              onChange={event => {
+                                $api
+                                  .post('/api/status-progress/get/', {
+                                    nomination: subRequest?.nomination,
+                                    progress: subRequest.tables.body.find(
+                                      (_, index) => index === rIdx
+                                    )?.data[1],
+                                    viewprogress: event.target.value,
+                                  })
+                                  .then(r3 => {
+                                    setDict(dict => ({
+                                      ...dict,
+                                      statusprogress: r3.data,
+                                    }))
+                                  })
+
+                                setStudentData(
+                                  request!.id,
+                                  subRequest.id,
+                                  rIdx,
+                                  bIdx,
+                                  event.target.value
+                                )
+                              }}
+                            >
+                              {dict.viewprogress.map((d, dIdx) => (
+                                <option
+                                  value={d}
+                                  selected={d === b || dIdx === 0}
+                                >
+                                  {d}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                        )
+                      } else if (bIdx === 3) {
+                        return (
+                          <td key={bIdx}>
+                            <select
+                              onChange={event => {
+                                $api
+                                  .post('/api/level-progress/get/', {
+                                    nomination: subRequest?.nomination,
+                                    progress: subRequest.tables.body.find(
+                                      (_, index) => index === rIdx
+                                    )?.data[1],
+                                    viewprogress: subRequest.tables.body.find(
+                                      (_, index) => index === rIdx
+                                    )?.data[2],
+                                    statusprogress: event.target.value,
+                                  })
+                                  .then(r4 => {
+                                    setDict(dict => ({
+                                      ...dict,
+                                      levelprogress: r4.data,
+                                    }))
+                                  })
+
+                                setStudentData(
+                                  request!.id,
+                                  subRequest.id,
+                                  rIdx,
+                                  bIdx,
+                                  event.target.value
+                                )
+                              }}
+                            >
+                              {dict.statusprogress.map((d, dIdx) => (
+                                <option
+                                  value={d}
+                                  selected={d === b || dIdx === 0}
+                                >
+                                  {d}
+                                </option>
+                              ))}
+                            </select>
                           </td>
                         )
                       } else if (bIdx === 4) {
@@ -497,7 +569,7 @@ export const StudentRequestDetailPage: FC = () => {
                                 )
                               }}
                             >
-                              {dict.dictWinnerPlace.map(d => (
+                              {dict.levelprogress.map(d => (
                                 <option value={d} selected={d === b}>
                                   {d}
                                 </option>
@@ -507,24 +579,14 @@ export const StudentRequestDetailPage: FC = () => {
                         )
                       } else if (bIdx === 5) {
                         return (
-                          <td key={bIdx}>
-                            <select
-                              onChange={event => {
-                                setStudentData(
-                                  request!.id,
-                                  subRequest.id,
-                                  rIdx,
-                                  bIdx,
-                                  event.target.value
-                                )
-                              }}
-                            >
-                              {dict.dictRoleStudentToWork.map(d => (
-                                <option value={d} selected={d === b}>
-                                  {d}
-                                </option>
-                              ))}
-                            </select>
+                          <td>
+                            <input
+                              type='text'
+                              className='datepicker'
+                              value={b}
+                              data-rIdx={rIdx}
+                              data-bIdx={bIdx}
+                            ></input>
                           </td>
                         )
                       }

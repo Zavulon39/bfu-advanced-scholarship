@@ -263,7 +263,7 @@ export const AdminRequestDetailPage: FC = () => {
                 <tr key={rIdx}>
                   {r.data.map((b, bIdx) => {
                     try {
-                      if (!(bIdx === 6)) throw Error()
+                      if (!(bIdx === 7)) throw Error()
 
                       return (
                         <td key={bIdx}>

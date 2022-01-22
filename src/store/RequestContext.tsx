@@ -140,14 +140,49 @@ const reducer = (
         ...state,
         requests: state.requests.map(r => {
           if (r.id === payload.id) {
-            const data = [
-              ...r.subRequests.find(sr => sr.id === payload.subRId)!.tables
-                .header,
-            ]
-            data[0] = r.subRequests.find(
-              sr => sr.id === payload.subRId
-            )?.nomination!
-            data[2] = _(new Date())
+            const sr = r.subRequests.find(sr => sr.id === payload.subRId)
+            const data = [...sr!.tables.header]
+
+            data[0] = sr?.nomination!
+            data[5] = _(new Date())
+
+            $api
+              .post('/api/progress/get/', {
+                nomination: sr?.nomination,
+              })
+              .then(r => {
+                data[1] = r.data[0]
+
+                $api
+                  .post('/api/view-progress/get/', {
+                    nomination: sr?.nomination,
+                    progress: data[1],
+                  })
+                  .then(r => {
+                    data[2] = r.data[0]
+
+                    $api
+                      .post('/api/status-progress/get/', {
+                        nomination: sr?.nomination,
+                        progress: data[1],
+                        viewprogress: data[2],
+                      })
+                      .then(r => {
+                        data[3] = r.data[0]
+
+                        $api
+                          .post('/api/level-progress/get/', {
+                            nomination: sr?.nomination,
+                            progress: data[1],
+                            viewprogress: data[2],
+                            status: data[3],
+                          })
+                          .then(r => {
+                            data[4] = r.data[0]
+                          })
+                      })
+                  })
+              })
 
             r.subRequests
               .find(sr => sr.id === payload.subRId)!
