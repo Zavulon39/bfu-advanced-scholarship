@@ -17,7 +17,14 @@ export const AdminHeader: FC = () => {
   const [title, setTitle] = useState('Государственная академическая стипендия')
   const { fio, avatarUrl, role, login } = useContext(AuthContext)
 
-  const logout = () => login(0, '', '', 'anonymous', [])
+  const logout = () => {
+    localStorage.removeItem('access')
+    localStorage.removeItem('refresh')
+    localStorage.removeItem('role')
+    localStorage.removeItem('id')
+
+    window.location.reload()
+  }
 
   useEffect(() => {
     M.Sidenav.init(navbar.current!)
@@ -57,58 +64,79 @@ export const AdminHeader: FC = () => {
             <li>
               <NavLink to='/admin/requests/'>Список заявок</NavLink>
             </li>
-            {role !== 'anonymous' ? (
-              <li>
-                <a
-                  href='#'
-                  className='btn-floating btn-large tooltipped waves-effect'
-                  data-position='bottom'
-                  data-tooltip={fio}
-                  ref={tooltipRef1}
+            <li>
+              <a
+                href='#'
+                className='btn-floating btn-large tooltipped waves-effect'
+                data-position='bottom'
+                data-tooltip={fio}
+                ref={tooltipRef1}
+                style={{
+                  marginBottom: 2,
+                }}
+                onClick={logout}
+              >
+                <img
+                  src={avatarUrl}
                   style={{
-                    marginBottom: 2,
+                    objectFit: 'cover',
+                    width: 56,
+                    height: 56,
                   }}
-                  onClick={logout}
-                >
-                  <img
-                    src={avatarUrl}
-                    style={{
-                      objectFit: 'cover',
-                      width: 56,
-                      height: 56,
-                    }}
-                  />
-                </a>
-              </li>
-            ) : null}
+                />
+              </a>
+            </li>
+            <li>
+              <a
+                href='#'
+                className='waves-effect waves-light btn red darken-4'
+                style={{
+                  marginBottom: 2,
+                }}
+                onClick={logout}
+              >
+                Выйти
+              </a>
+            </li>
           </ul>
         </div>
       </nav>
 
       <ul className='sidenav' id='mobile-demo' ref={navbar}>
-        {role !== 'anonymous' ? (
-          <li>
-            <a
-              href='#'
-              className='btn-floating btn-large tooltipped waves-effect'
-              data-position='bottom'
-              data-tooltip={fio}
-              ref={tooltipRef2}
+        <li>
+          <a
+            href='#'
+            className='btn-floating btn-large tooltipped waves-effect'
+            data-position='bottom'
+            data-tooltip={fio}
+            ref={tooltipRef1}
+            style={{
+              marginBottom: 2,
+            }}
+            onClick={logout}
+          >
+            <img
+              src={avatarUrl}
               style={{
-                marginBottom: 2,
+                objectFit: 'cover',
+                width: 56,
+                height: 56,
               }}
-            >
-              <img
-                src={avatarUrl}
-                style={{
-                  objectFit: 'cover',
-                  width: 56,
-                  height: 56,
-                }}
-              />
-            </a>
-          </li>
-        ) : null}
+            />
+          </a>
+        </li>
+        <li>
+          <a
+            href='#'
+            className='waves-effect waves-light btn red darken-4'
+            style={{
+              marginBottom: 2,
+            }}
+            onClick={logout}
+          >
+            Выйти
+          </a>
+        </li>
         <li>
           <NavLink to='/admin/notifications/'>Объявления</NavLink>
         </li>
@@ -173,58 +201,79 @@ export const StudentHeader: FC = () => {
             <li>
               <NavLink to='/companies/'>Список компаний</NavLink>
             </li>
-            {role !== 'anonymous' ? (
-              <li>
-                <a
-                  href='#'
-                  className='btn-floating btn-large tooltipped waves-effect'
-                  data-position='bottom'
-                  data-tooltip={fio}
-                  ref={tooltipRef1}
+            <li>
+              <a
+                href='#'
+                className='btn-floating btn-large tooltipped waves-effect'
+                data-position='bottom'
+                data-tooltip={fio}
+                ref={tooltipRef1}
+                style={{
+                  marginBottom: 2,
+                }}
+                onClick={logout}
+              >
+                <img
+                  src={avatarUrl}
                   style={{
-                    marginBottom: 2,
+                    objectFit: 'cover',
+                    width: 56,
+                    height: 56,
                   }}
-                  onClick={logout}
-                >
-                  <img
-                    src={avatarUrl}
-                    style={{
-                      objectFit: 'cover',
-                      width: 56,
-                      height: 56,
-                    }}
-                  />
-                </a>
-              </li>
-            ) : null}
+                />
+              </a>
+            </li>
+            <li>
+              <a
+                href='#'
+                className='waves-effect waves-light btn red darken-4'
+                style={{
+                  marginBottom: 2,
+                }}
+                onClick={logout}
+              >
+                Выйти
+              </a>
+            </li>
           </ul>
         </div>
       </nav>
 
       <ul className='sidenav' id='mobile-demo' ref={navbar}>
-        {role !== 'anonymous' ? (
-          <li>
-            <a
-              href='#'
-              className='btn-floating btn-large tooltipped waves-effect'
-              data-position='bottom'
-              data-tooltip={fio}
-              ref={tooltipRef2}
+        <li>
+          <a
+            href='#'
+            className='btn-floating btn-large tooltipped waves-effect'
+            data-position='bottom'
+            data-tooltip={fio}
+            ref={tooltipRef1}
+            style={{
+              marginBottom: 2,
+            }}
+            onClick={logout}
+          >
+            <img
+              src={avatarUrl}
               style={{
-                marginBottom: 2,
+                objectFit: 'cover',
+                width: 56,
+                height: 56,
               }}
-            >
-              <img
-                src={avatarUrl}
-                style={{
-                  objectFit: 'cover',
-                  width: 56,
-                  height: 56,
-                }}
-              />
-            </a>
-          </li>
-        ) : null}
+            />
+          </a>
+        </li>
+        <li>
+          <a
+            href='#'
+            className='waves-effect waves-light btn red darken-4'
+            style={{
+              marginBottom: 2,
+            }}
+            onClick={logout}
+          >
+            Выйти
+          </a>
+        </li>
         <li>
           <NavLink to='/companies/'>Список компаний</NavLink>
         </li>

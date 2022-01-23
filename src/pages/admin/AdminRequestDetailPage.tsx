@@ -234,17 +234,13 @@ export const AdminRequestDetailPage: FC = () => {
           <small
             style={{
               float: 'right',
-              // fontSize: 12,
             }}
           >
-            Всего:{' '}
+            Всего:
             <b>
-              {
-                subRequest?.tables.body.reduce(
-                  // @ts-ignore
-                  (prev, cur) => prev.points + cur.points
-                ).points
-              }
+              {subRequest?.tables.body
+                .map(b => b.points)
+                .reduce((p, c) => p + c, 0)}
             </b>
           </small>
         </h3>
