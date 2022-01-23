@@ -367,13 +367,8 @@ export const AdminRequestDetailPage: FC = () => {
               <a>
                 <button
                   className='waves-effect waves-light yellow darken-2 btn'
-                  onClick={async () => {
+                  onClick={() => {
                     try {
-                      await $api.put('/api/requests/get/', {
-                        id: subRequest?.id,
-                        status: 'Отправленно на доработку',
-                      })
-
                       setStatus(
                         request?.id!,
                         subRequest?.id!,
@@ -403,13 +398,8 @@ export const AdminRequestDetailPage: FC = () => {
               <a>
                 <button
                   className='waves-effect waves-light light-blue darken-3 btn'
-                  onClick={async () => {
+                  onClick={() => {
                     try {
-                      await $api.put('/api/requests/get/', {
-                        id: subRequest?.id,
-                        status: 'Принято',
-                      })
-
                       setStatus(request?.id!, subRequest?.id!, 'Принято')
                       M.toast({
                         html: '<span>Вы успешно выставили статус <strong>Принято</strong> !</span>',
@@ -431,13 +421,8 @@ export const AdminRequestDetailPage: FC = () => {
               <a>
                 <button
                   className='waves-effect waves-light teal darken-1 btn'
-                  onClick={async () => {
+                  onClick={() => {
                     try {
-                      await $api.put('/api/requests/get/', {
-                        id: subRequest?.id,
-                        status: 'Победитель',
-                      })
-
                       setStatus(request?.id!, subRequest?.id!, 'Победитель')
                       M.toast({
                         html: '<span>Вы успешно выставили статус <strong>Победитель</strong> !</span>',

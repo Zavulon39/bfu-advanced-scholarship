@@ -108,6 +108,19 @@ export interface IRequestState {
   statuses: string[]
   companies: ICompany[]
   notifications: INotification[]
+  tables: Array<{
+    name: string
+    progress: Array<{
+      name: string
+      viewprogress: Array<{
+        name: string
+        statusprogress: Array<{
+          name: string
+          levelprogress: string[]
+        }>
+      }>
+    }>
+  }>
 
   fetchRequests: typeof fetchRequests
   setPoints: typeof setPoints

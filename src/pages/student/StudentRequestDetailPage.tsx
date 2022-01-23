@@ -11,20 +11,9 @@ export const StudentRequestDetailPage: FC = () => {
   const { id1, id2 } = useParams()
   const pointRef = useRef(null)
   const messageRef = useRef(null)
-  const [dict, setDict] = useState<
-    Array<{
-      name: string
-      viewprogress: Array<{
-        name: string
-        statusprogress: Array<{
-          name: string
-          levelprogress: string[]
-        }>
-      }>
-    }>
-  >([])
   const {
     requests,
+    tables,
 
     fetchRequests,
     addComment,
@@ -41,12 +30,9 @@ export const StudentRequestDetailPage: FC = () => {
   const [message, setMessage] = useState('')
   const _ = useFormater()
   const navigate = useNavigate()
+  const dict = tables.find(t => t.name === subRequest?.nomination)?.progress!
 
   useEffect(() => {
-    $api
-      .post('/api/table/get/', { nomination: subRequest?.nomination })
-      .then(r => setDict(r.data))
-
     if (requests.filter(r => r.studentId === id).length === 0)
       navigate('/companies/')
     if (!requests.length) fetchRequests()
@@ -66,7 +52,7 @@ export const StudentRequestDetailPage: FC = () => {
 
     const elems = document.querySelectorAll('select')
     M.FormSelect.init(elems)
-  }, [requests, dict])
+  }, [requests])
 
   useEffect(() => {
     const elems = document.querySelectorAll('.datepicker')

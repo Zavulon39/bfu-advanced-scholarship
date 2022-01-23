@@ -15,6 +15,7 @@ const initialState: IRequestState = {
   statuses: [],
   companies: [],
   notifications: [],
+  tables: [],
 
   fetchRequests: () => {},
   setPoints: () => {},
@@ -142,54 +143,23 @@ const reducer = (
           if (req.id === payload.id) {
             const sr = req.subRequests.find(sr => sr.id === payload.subRId)
             const data = [...sr!.tables.header]
+            const dict = state.tables.find(t => t.name === sr?.nomination)!
 
             data[0] = sr?.nomination!
             data[5] = _(new Date())
 
-            $api
-              .post('/api/progress/get/', {
-                nomination: sr?.nomination,
-              })
-              .then(r => {
-                data[1] = r.data[0]
+            data[1] = dict.progress[0].name
+            data[2] = dict.progress[0].viewprogress[0].name
+            data[3] = dict.progress[0].viewprogress[0].statusprogress[0].name
+            data[4] =
+              dict.progress[0].viewprogress[0].statusprogress[0].levelprogress[0]
 
-                $api
-                  .post('/api/view-progress/get/', {
-                    nomination: sr?.nomination,
-                    progress: data[1],
-                  })
-                  .then(r => {
-                    data[2] = r.data[0]
-
-                    $api
-                      .post('/api/status-progress/get/', {
-                        nomination: sr?.nomination,
-                        progress: data[1],
-                        viewprogress: data[2],
-                      })
-                      .then(r => {
-                        data[3] = r.data[0]
-
-                        $api
-                          .post('/api/level-progress/get/', {
-                            nomination: sr?.nomination,
-                            progress: data[1],
-                            viewprogress: data[2],
-                            statusprogress: data[3],
-                          })
-                          .then(r => {
-                            data[4] = r.data[0]
-
-                            req.subRequests
-                              .find(sr => sr.id === payload.subRId)!
-                              .tables.body.push({
-                                data,
-                                points: 0,
-                                isNew: true,
-                              })
-                          })
-                      })
-                  })
+            req.subRequests
+              .find(sr => sr.id === payload.subRId)!
+              .tables.body.push({
+                data,
+                points: 0,
+                isNew: true,
               })
           }
 
@@ -256,6 +226,9 @@ export const RequestProvider = ({ children }: IProps) => {
       resp = await $api.get('/api/notifications/get/')
       const notifications = resp.data
 
+      resp = await $api.get('/api/table/get/')
+      const tables = resp.data
+
       const statuses = [
         'Победитель',
         'Черновик',
@@ -292,6 +265,7 @@ export const RequestProvider = ({ children }: IProps) => {
             name: c.name,
           })),
           notifications,
+          tables,
         },
       })
     } catch (e) {
@@ -439,8 +413,14 @@ export const RequestProvider = ({ children }: IProps) => {
       },
     })
   }
-  const setStatus = (id: number, subRId: number, status: string) => {
+  const setStatus = async (id: number, subRId: number, status: string) => {
     // fetch
+
+    await $api.put('/api/requests/get/', {
+      id: subRId,
+      status: status,
+    })
+
     dispatch({
       type: 'SET_STATUS',
       payload: {

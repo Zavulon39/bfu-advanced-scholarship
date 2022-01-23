@@ -106,11 +106,11 @@ export const StudentSubRequestDetailPage: FC = () => {
         <div className='input-field'>
           <select multiple ref={nominationRef}>
             {nominations
-              .filter(
-                n =>
-                  !!request?.subRequests.filter(sr => sr.nomination !== n)
-                    .length
-              )
+              .filter(n => {
+                return !(
+                  request?.subRequests.map(sr => sr.nomination).indexOf(n)! + 1
+                )
+              })
               .map(n => (
                 <option value={n} key={n}>
                   {n}
