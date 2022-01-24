@@ -59,6 +59,7 @@ export interface ISubRequest {
   learningPlan: string
   status: string
   createdDate: Date
+  changedDate: Date
 
   educationForm: string
   phone: string

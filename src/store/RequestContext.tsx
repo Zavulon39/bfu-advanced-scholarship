@@ -145,8 +145,9 @@ const reducer = (
             const data = [...sr!.tables.header]
             const dict = state.tables.find(t => t.name === sr?.nomination)!
 
-            data[0] = sr?.nomination!
+            data[0] = ''
             data[5] = _(new Date())
+            data[6] = ''
 
             data[1] = dict.progress[0].name
             data[2] = dict.progress[0].viewprogress[0].name
@@ -245,6 +246,7 @@ export const RequestProvider = ({ children }: IProps) => {
             subRequests: r.subRequests.map(sr => ({
               ...sr,
               createdDate: new Date(sr.createdDate),
+              changedDate: new Date(sr.changedDate),
               comments: sr.comments.map(c => ({
                 ...c,
                 sendedDate: new Date(c.sendedDate),

@@ -66,6 +66,7 @@ export const StudentSubRequestDetailPage: FC = () => {
           <thead>
             <tr>
               <th>Номинация</th>
+              <th>Статус</th>
               <th>Институт</th>
               <th>Направление</th>
               <th>Курс</th>
@@ -76,6 +77,7 @@ export const StudentSubRequestDetailPage: FC = () => {
               return (
                 <tr key={sr.id}>
                   <td>{sr.nomination}</td>
+                  <td>{sr.status}</td>
                   <td>{sr.institute}</td>
                   <td>{sr.direction}</td>
                   <td>{sr.course}</td>

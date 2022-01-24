@@ -152,6 +152,7 @@ export const AdminRequestDetailPage: FC = () => {
               <th>Источник финансирования</th>
               <th>Уровень</th>
               <th>Курс</th>
+              <th>Дата последнего изменения</th>
             </tr>
           </thead>
           <tbody>
@@ -165,6 +166,7 @@ export const AdminRequestDetailPage: FC = () => {
               <td>{subRequest?.financingSource}</td>
               <td>{subRequest?.level}</td>
               <td>{subRequest?.course}</td>
+              <td>{_(subRequest?.changedDate)}</td>
             </tr>
           </tbody>
         </table>
@@ -236,7 +238,7 @@ export const AdminRequestDetailPage: FC = () => {
               float: 'right',
             }}
           >
-            Всего:
+            Всего:{' '}
             <b>
               {subRequest?.tables.body
                 .map(b => b.points)

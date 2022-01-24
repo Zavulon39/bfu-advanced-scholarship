@@ -73,7 +73,11 @@ export const AdminRequestListPage: FC = () => {
       <AdminHeader />
       <div className='container'>
         <h1 className='space-between'>
-          Заявки <small>{requests.length} записи(ей)</small>
+          Заявки
+          <small>
+            {qs.map(r => r.subRequests.length).reduce((c, p) => c + p, 0)}{' '}
+            записи(ей)
+          </small>
         </h1>
         <div className='row'>
           <div className='input-field col s3'>

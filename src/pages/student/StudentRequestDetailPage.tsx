@@ -264,6 +264,9 @@ export const StudentRequestDetailPage: FC = () => {
                   Текущий документ
                 </a>
               </div>
+              <small>
+                * прикрепите копию зачетной книжки или справку об успеваемости
+              </small>
             </div>
           </>
         ) : null}
