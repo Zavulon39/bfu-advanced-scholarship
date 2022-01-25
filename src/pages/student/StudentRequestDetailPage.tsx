@@ -70,7 +70,12 @@ export const StudentRequestDetailPage: FC = () => {
 
   const sendHandler = () => {
     try {
-      // fetch
+      if (message.trim().length === 0)
+        return M.toast({
+          html: `<span>Что-то пошло не так: <b>Комментрий не должен быть пустым!</b></span>`,
+          classes: 'red darken-4',
+        })
+
       addComment(
         request?.id!,
         subRequest?.id!,
@@ -142,7 +147,31 @@ export const StudentRequestDetailPage: FC = () => {
   }
   const reqSendHandler = async () => {
     try {
+      for (const body of subRequest?.tables.body!) {
+        if (body.data[0].trim() === '')
+          return M.toast({
+            html: `<span>Название не должно быть пустым!</span>`,
+            classes: 'red darken-4',
+          })
+        console.log(body.data[7].trim() === 'Документ')
+
+        if (body.data[7].trim() === 'Документ')
+          return M.toast({
+            html: `<span>Документ должен быть прикреплён!</span>`,
+            classes: 'red darken-4',
+          })
+      }
+
       setStatus(request!.id, subRequest!.id, 'На рассмотрении')
+      addComment(
+        request?.id!,
+        subRequest?.id!,
+        fio,
+        avatarUrl,
+        'Статус изменён на "На рассмотрении"',
+        role,
+        id
+      )
 
       M.toast({
         html: 'Ваша заявка отправлена на рассмотрение!',
@@ -640,7 +669,7 @@ export const StudentRequestDetailPage: FC = () => {
                 onClick={reqSaveHandler}
               >
                 <i className='material-icons left'>save</i>
-                Сохранить
+                Сохранить изменения
               </button>
               <button
                 className='btn light-blue darken-2 waves-effect waves-light'
@@ -648,7 +677,7 @@ export const StudentRequestDetailPage: FC = () => {
                 onClick={reqSendHandler}
               >
                 <i className='material-icons left'>send</i>
-                Отправить
+                Отправить изменения
               </button>
             </div>
           </div>
@@ -663,7 +692,7 @@ export const StudentRequestDetailPage: FC = () => {
                   <span>{c.name}</span>
                 </div>
                 <p>{c.text}</p>
-                <small>{_(c.sendedDate)}</small>
+                <small>{c.sendedDate.toLocaleString()}</small>
               </div>
             )
           })}
@@ -687,7 +716,7 @@ export const StudentRequestDetailPage: FC = () => {
           onClick={sendHandler}
         >
           <i className='material-icons left'>send</i>
-          Отправить
+          Отправить коментарий
         </button>
       </div>
       <div style={{ height: 100 }}></div>

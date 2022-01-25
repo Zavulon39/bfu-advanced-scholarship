@@ -90,7 +90,12 @@ export const AdminRequestDetailPage: FC = () => {
   }
   const sendHandler = () => {
     try {
-      // fetch
+      if (message.trim().length === 0)
+        return M.toast({
+          html: `<span>Что-то пошло не так: <b>Комментрий не должен быть пустым!</b></span>`,
+          classes: 'red darken-4',
+        })
+
       addComment(
         request?.id!,
         subRequest?.id!,
@@ -312,7 +317,7 @@ export const AdminRequestDetailPage: FC = () => {
           onClick={saveHandler}
         >
           <i className='material-icons left'>save</i>
-          Сохранить
+          Сохранить изменения
         </button>
         <h3 className='mt-4'>Комментарии</h3>
         <div>
@@ -324,7 +329,7 @@ export const AdminRequestDetailPage: FC = () => {
                   <span>{c.name}</span>
                 </div>
                 <p>{c.text}</p>
-                <small>{_(c.sendedDate)}</small>
+                <small>{c.sendedDate.toLocaleString()}</small>
               </div>
             )
           })}
@@ -348,7 +353,7 @@ export const AdminRequestDetailPage: FC = () => {
           onClick={sendHandler}
         >
           <i className='material-icons left'>send</i>
-          Отправить
+          Отправить коментарий
         </button>
       </div>
       {!(
@@ -371,6 +376,15 @@ export const AdminRequestDetailPage: FC = () => {
                         request?.id!,
                         subRequest?.id!,
                         'Отправлено на доработку'
+                      )
+                      addComment(
+                        request?.id!,
+                        subRequest?.id!,
+                        fio,
+                        avatarUrl,
+                        'Статус изменён на "Отправлено на доработку"',
+                        role,
+                        id
                       )
 
                       const i = M.Modal.getInstance(modalRef.current!)
@@ -399,6 +413,15 @@ export const AdminRequestDetailPage: FC = () => {
                   onClick={() => {
                     try {
                       setStatus(request?.id!, subRequest?.id!, 'Принято')
+                      addComment(
+                        request?.id!,
+                        subRequest?.id!,
+                        fio,
+                        avatarUrl,
+                        'Статус изменён на "Принято"',
+                        role,
+                        id
+                      )
                       M.toast({
                         html: '<span>Вы успешно выставили статус <strong>Принято</strong> !</span>',
                         classes: 'light-blue darken-1',
@@ -422,6 +445,15 @@ export const AdminRequestDetailPage: FC = () => {
                   onClick={() => {
                     try {
                       setStatus(request?.id!, subRequest?.id!, 'Победитель')
+                      addComment(
+                        request?.id!,
+                        subRequest?.id!,
+                        fio,
+                        avatarUrl,
+                        'Статус изменён на "Победитель"',
+                        role,
+                        id
+                      )
                       M.toast({
                         html: '<span>Вы успешно выставили статус <strong>Победитель</strong> !</span>',
                         classes: 'light-blue darken-1',
@@ -469,7 +501,7 @@ export const AdminRequestDetailPage: FC = () => {
             }}
           >
             <i className='material-icons left'>send</i>
-            Отправить
+            Отправить коментарий
           </button>
           <div style={{ height: 20 }} />
         </div>
