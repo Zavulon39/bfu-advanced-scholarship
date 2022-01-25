@@ -92,6 +92,7 @@ export const AdminRequestListPage: FC = () => {
             записи(ей)
           </small>
         </h1>
+        <a href='/api/get-csv/'>Скачать заявки в CSV</a>
         <div className='row'>
           <div className='input-field col s3'>
             <input
