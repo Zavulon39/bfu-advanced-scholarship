@@ -44,6 +44,10 @@ $api.interceptors.response.use(
         })
       }
     }
+    M.toast({
+      html: `<span>Что-то пошло не так: <b>${error.response?.data.detail}</b></span>`,
+      classes: 'red darken-4',
+    })
 
     throw error
   }

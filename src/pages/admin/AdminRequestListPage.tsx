@@ -27,16 +27,13 @@ export const AdminRequestListPage: FC = () => {
     setQs(requests)
   }, [requests.length])
 
-  const findClickHandler = () => {
-    setQs(
-      requests.filter(r => {
-        return r.fio.toLowerCase().indexOf(fio.toLowerCase()) + 1
-      })
-    )
+  const findClickHandler = (clearFio = false) => {
     setQs(
       requests
         .filter(r => {
-          return r.fio.toLowerCase().indexOf(fio.toLowerCase()) + 1
+          if (!clearFio)
+            return r.fio.toLowerCase().indexOf(fio.toLowerCase()) + 1
+          else return true
         })
         .map(r => ({
           ...r,
@@ -67,6 +64,22 @@ export const AdminRequestListPage: FC = () => {
         }))
     )
   }
+  const resetClickHanlder = () => {
+    // @ts-ignore
+    select1.current!.value = -1
+    // @ts-ignore
+    select2.current!.value = -1
+    // @ts-ignore
+    select3.current!.value = -1
+
+    M.FormSelect.init(select1.current!)
+    M.FormSelect.init(select2.current!)
+    M.FormSelect.init(select3.current!)
+
+    setFio('')
+
+    findClickHandler(true)
+  }
 
   return (
     <>
@@ -84,6 +97,7 @@ export const AdminRequestListPage: FC = () => {
             <input
               id='fio'
               type='text'
+              value={fio}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                 setFio(event.target.value)
               }
@@ -129,13 +143,31 @@ export const AdminRequestListPage: FC = () => {
             </select>
             <label>Статус</label>
           </div>
-          <button
-            className='waves-effect waves-light btn light-blue darken-2'
-            style={{ float: 'right' }}
-            onClick={findClickHandler}
+
+          <div
+            style={{
+              float: 'right',
+              display: 'flex',
+              flexDirection: 'row',
+              marginTop: 36,
+            }}
           >
-            <i className='material-icons right'>search</i>Поиск
-          </button>
+            <div className='btn-container'>
+              <button
+                className='waves-effect waves-light btn light-blue darken-2'
+                onClick={() => findClickHandler()}
+              >
+                <i className='material-icons right'>search</i>Поиск
+              </button>
+              <button
+                className='waves-effect waves-light btn red darken-4'
+                style={{ marginLeft: 12 }}
+                onClick={resetClickHanlder}
+              >
+                <i className='material-icons right'>block</i>Сбросить
+              </button>
+            </div>
+          </div>
         </div>
         <table className='striped responsive-table'>
           <thead>

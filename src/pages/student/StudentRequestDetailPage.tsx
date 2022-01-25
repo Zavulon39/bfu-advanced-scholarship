@@ -86,15 +86,29 @@ export const StudentRequestDetailPage: FC = () => {
         classes: 'light-blue darken-1',
       })
     } catch (e) {
-      M.toast({
-        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-        classes: 'red darken-4',
-      })
+      // M.toast({
+      //   html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+      //   classes: 'red darken-4',
+      // })
     }
   }
   const reqSaveHandler = async () => {
     try {
       // fetch
+
+      for (const body of subRequest?.tables.body!) {
+        if (body.data[0].trim() === '')
+          return M.toast({
+            html: `<span>Название не должно быть пустым!</span>`,
+            classes: 'red darken-4',
+          })
+        if (body.data[7].trim() === 'Документ')
+          if (body.data[0].trim() === '')
+            return M.toast({
+              html: `<span>Документ должен быть прикреплён!</span>`,
+              classes: 'red darken-4',
+            })
+      }
 
       await $api.post('/api/requests/set-student-point/', {
         id: subRequest?.id,
@@ -119,10 +133,10 @@ export const StudentRequestDetailPage: FC = () => {
         classes: 'light-blue darken-1',
       })
     } catch (e) {
-      M.toast({
-        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-        classes: 'red darken-4',
-      })
+      // M.toast({
+      //   html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+      //   classes: 'red darken-4',
+      // })
     }
   }
   const reqSendHandler = async () => {
@@ -134,10 +148,10 @@ export const StudentRequestDetailPage: FC = () => {
         classes: 'light-blue darken-1',
       })
     } catch (e) {
-      M.toast({
-        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-        classes: 'red darken-4',
-      })
+      // M.toast({
+      //   html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+      //   classes: 'red darken-4',
+      // })
     }
   }
 
@@ -597,32 +611,35 @@ export const StudentRequestDetailPage: FC = () => {
           </tbody>
         </table>
 
-        <div
-          style={{
-            float: 'right',
-            display: 'flex',
-            flexDirection: 'row',
-            marginTop: 36,
-          }}
-        >
-          <div className='btn-container'>
-            <button
-              className='btn light-blue darken-2 waves-effect waves-light'
-              onClick={reqSaveHandler}
-            >
-              <i className='material-icons left'>save</i>
-              Сохранить
-            </button>
-            <button
-              className='btn light-blue darken-2 waves-effect waves-light'
-              style={{ marginLeft: 12 }}
-              onClick={reqSendHandler}
-            >
-              <i className='material-icons left'>send</i>
-              Отправить
-            </button>
+        {subRequest?.status === 'Черновик' ||
+        subRequest?.status === 'Отправленно на доработку' ? (
+          <div
+            style={{
+              float: 'right',
+              display: 'flex',
+              flexDirection: 'row',
+              marginTop: 36,
+            }}
+          >
+            <div className='btn-container'>
+              <button
+                className='btn light-blue darken-2 waves-effect waves-light'
+                onClick={reqSaveHandler}
+              >
+                <i className='material-icons left'>save</i>
+                Сохранить
+              </button>
+              <button
+                className='btn light-blue darken-2 waves-effect waves-light'
+                style={{ marginLeft: 12 }}
+                onClick={reqSendHandler}
+              >
+                <i className='material-icons left'>send</i>
+                Отправить
+              </button>
+            </div>
           </div>
-        </div>
+        ) : null}
         <h3 className='mt-4'>Комментарии</h3>
         <div>
           {subRequest?.comments.map((c, idx) => {

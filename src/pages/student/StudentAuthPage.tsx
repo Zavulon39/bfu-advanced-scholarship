@@ -33,10 +33,10 @@ export const StudentAuthPage: FC = () => {
         resp.data['learningPlans']
       )
     } catch (e) {
-      M.toast({
-        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-        classes: 'red darken-4',
-      })
+      // M.toast({
+      //   html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+      //   classes: 'red darken-4',
+      // })
     }
   }
 

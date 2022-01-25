@@ -110,7 +110,7 @@ export const StudentCompanyListPage: FC = () => {
       <div ref={createModalRef} className='modal'>
         <div className='modal-content'>
           <h4>
-            Создать заявку на компанию "<strong>{companyData.company}</strong>"
+            Создать заявку на кампанию "<strong>{companyData.company}</strong>"
           </h4>
           <div className='input-field' style={{ marginTop: 16 }}>
             <select ref={planRef}>

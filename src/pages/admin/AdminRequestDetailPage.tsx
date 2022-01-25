@@ -82,10 +82,10 @@ export const AdminRequestDetailPage: FC = () => {
         classes: 'light-blue darken-1',
       })
     } catch (e) {
-      M.toast({
-        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-        classes: 'red darken-4',
-      })
+      // M.toast({
+      //   html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+      //   classes: 'red darken-4',
+      // })
     }
   }
   const sendHandler = () => {
@@ -106,10 +106,10 @@ export const AdminRequestDetailPage: FC = () => {
         classes: 'light-blue darken-1',
       })
     } catch (e) {
-      M.toast({
-        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-        classes: 'red darken-4',
-      })
+      // M.toast({
+      //   html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+      //   classes: 'red darken-4',
+      // })
     }
   }
 

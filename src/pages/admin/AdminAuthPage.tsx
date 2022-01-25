@@ -26,10 +26,10 @@ export const AdminAuthPage: FC = () => {
 
       login(resp.data['id'], authData.fio, resp.data['avatarUrl'], 'admin', [])
     } catch (e) {
-      M.toast({
-        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-        classes: 'red darken-4',
-      })
+      // M.toast({
+      //   html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+      //   classes: 'red darken-4',
+      // })
     }
   }
 
