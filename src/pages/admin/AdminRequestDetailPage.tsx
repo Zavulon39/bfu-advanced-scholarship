@@ -247,7 +247,7 @@ export const AdminRequestDetailPage: FC = () => {
             <b>
               {subRequest?.tables.body
                 .map(b => b.points)
-                .reduce((p, c) => p + c, 0)}
+                .reduce((p, c) => p + c, 0)! + subRequest?.point!}
             </b>
           </small>
         </h3>

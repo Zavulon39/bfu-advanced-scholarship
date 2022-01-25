@@ -342,6 +342,10 @@ export const StudentRequestDetailPage: FC = () => {
               {subRequest?.tables.header.map((h, hIdx) => (
                 <th key={hIdx}>{h}</th>
               ))}
+              {subRequest?.status === 'Принято' ||
+              subRequest?.status === 'Победитель' ? (
+                <th>Баллы</th>
+              ) : null}
             </tr>
           </thead>
           <tbody>
@@ -647,6 +651,10 @@ export const StudentRequestDetailPage: FC = () => {
                       )
                     }
                   })}
+                  {subRequest?.status === 'Принято' ||
+                  subRequest?.status === 'Победитель' ? (
+                    <td>{r.points}</td>
+                  ) : null}
                 </tr>
               )
             })}
