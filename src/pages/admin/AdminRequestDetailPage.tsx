@@ -370,14 +370,14 @@ export const AdminRequestDetailPage: FC = () => {
                       setStatus(
                         request?.id!,
                         subRequest?.id!,
-                        'Отправленно на доработку'
+                        'Отправлено на доработку'
                       )
 
                       const i = M.Modal.getInstance(modalRef.current!)
                       i.open()
 
                       M.toast({
-                        html: '<span>Вы успешно выставили статус <strong>Отправленно на доработку</strong> !</span>',
+                        html: '<span>Вы успешно выставили статус <strong>Отправлено на доработку</strong> !</span>',
                         classes: 'light-blue darken-1',
                       })
                     } catch (e) {
@@ -388,7 +388,7 @@ export const AdminRequestDetailPage: FC = () => {
                     }
                   }}
                 >
-                  Отправленно на доработку
+                  Отправлено на доработку
                 </button>
               </a>
             </li>

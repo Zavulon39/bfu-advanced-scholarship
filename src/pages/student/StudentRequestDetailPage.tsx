@@ -102,12 +102,13 @@ export const StudentRequestDetailPage: FC = () => {
             html: `<span>Название не должно быть пустым!</span>`,
             classes: 'red darken-4',
           })
+        console.log(body.data[7].trim() === 'Документ')
+
         if (body.data[7].trim() === 'Документ')
-          if (body.data[0].trim() === '')
-            return M.toast({
-              html: `<span>Документ должен быть прикреплён!</span>`,
-              classes: 'red darken-4',
-            })
+          return M.toast({
+            html: `<span>Документ должен быть прикреплён!</span>`,
+            classes: 'red darken-4',
+          })
       }
 
       await $api.post('/api/requests/set-student-point/', {
@@ -227,6 +228,15 @@ export const StudentRequestDetailPage: FC = () => {
                       event: React.ChangeEvent<HTMLInputElement>
                     ) => {
                       try {
+                        if (
+                          !(
+                            subRequest?.status === 'Черновик' ||
+                            subRequest?.status === 'Отправлено на доработку'
+                          )
+                        ) {
+                          return
+                        }
+
                         const fd = new FormData()
                         const file = event.target.files![0]
 
@@ -247,10 +257,10 @@ export const StudentRequestDetailPage: FC = () => {
                           })
                         })
                       } catch (e) {
-                        M.toast({
-                          html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-                          classes: 'red darken-4',
-                        })
+                        // M.toast({
+                        //   html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+                        //   classes: 'red darken-4',
+                        // })
                       }
                     }}
                   />
@@ -286,13 +296,16 @@ export const StudentRequestDetailPage: FC = () => {
         ) : null}
         <h3 className='mt-4'>
           Достижения
-          <a
-            className='btn-floating btn-large waves-effect waves-light red btn-small light-blue darken-1'
-            style={{ float: 'right' }}
-            onClick={() => addRow(request?.id!, subRequest!.id)}
-          >
-            <i className='material-icons'>add</i>
-          </a>
+          {subRequest?.status === 'Черновик' ||
+          subRequest?.status === 'Отправлено на доработку' ? (
+            <a
+              className='btn-floating btn-large waves-effect waves-light red btn-small light-blue darken-1'
+              style={{ float: 'right' }}
+              onClick={() => addRow(request?.id!, subRequest!.id)}
+            >
+              <i className='material-icons'>add</i>
+            </a>
+          ) : null}
         </h3>
         <table className='responsive-table'>
           <thead>
@@ -612,7 +625,7 @@ export const StudentRequestDetailPage: FC = () => {
         </table>
 
         {subRequest?.status === 'Черновик' ||
-        subRequest?.status === 'Отправленно на доработку' ? (
+        subRequest?.status === 'Отправлено на доработку' ? (
           <div
             style={{
               float: 'right',

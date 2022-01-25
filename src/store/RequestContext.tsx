@@ -2,12 +2,7 @@ import React, { createContext, ReactElement, useReducer } from 'react'
 import $api from '../http'
 import { Role } from '../types/auth'
 import { IAction } from '../types/companies'
-import {
-  IRequestState,
-  IRequest,
-  IComment,
-  ISubRequest,
-} from '../types/request'
+import { IRequestState, IRequest, ISubRequest } from '../types/request'
 
 const initialState: IRequestState = {
   requests: [],
@@ -235,7 +230,7 @@ export const RequestProvider = ({ children }: IProps) => {
         'Черновик',
         'Принято',
         'Удалено',
-        'Отправленно на доработку',
+        'Отправлено на доработку',
       ]
 
       dispatch({
