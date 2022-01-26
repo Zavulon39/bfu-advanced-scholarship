@@ -126,7 +126,7 @@ export const StudentSubRequestDetailPage: FC = () => {
           onClick={createClickHandler}
         >
           <i className='material-icons left'>save</i>
-          Расширить заявку
+          Добавить заявку
         </button>
       </div>
     </>

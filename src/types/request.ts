@@ -36,6 +36,12 @@ const setStudentData = (
   value: string
 ) => {}
 const addRow = (id: number, subRId: number) => {}
+const removeRow = (
+  id: number,
+  subRId: number,
+  bId: number,
+  isNew: boolean
+) => {}
 const addNotification = (text: string) => {}
 const removeNotification = (id: number) => {}
 const setLinkToGradebook = (id: number, subRId: number, link: string) => {}
@@ -50,6 +56,7 @@ interface ITableBodyRow {
   data: string[]
   points: number
   isNew: boolean
+  id: number
 }
 
 export interface ISubRequest {
@@ -136,4 +143,5 @@ export interface IRequestState {
   setLinkToGradebook: typeof setLinkToGradebook
   setPercent: typeof setPercent
   extendSubRequests: typeof extendSubRequests
+  removeRow: typeof removeRow
 }

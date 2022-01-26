@@ -107,7 +107,7 @@ export const AdminRequestDetailPage: FC = () => {
       )
       setMessage('')
       M.toast({
-        html: 'Вы успешно оставили коментарий!',
+        html: 'Вы успешно оставили комментарий!',
         classes: 'light-blue darken-1',
       })
     } catch (e) {
@@ -353,7 +353,7 @@ export const AdminRequestDetailPage: FC = () => {
           onClick={sendHandler}
         >
           <i className='material-icons left'>send</i>
-          Отправить коментарий
+          Отправить комментарий
         </button>
       </div>
       {!(
@@ -501,7 +501,7 @@ export const AdminRequestDetailPage: FC = () => {
             }}
           >
             <i className='material-icons left'>send</i>
-            Отправить коментарий
+            Отправить комментарий
           </button>
           <div style={{ height: 20 }} />
         </div>

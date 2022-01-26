@@ -21,6 +21,7 @@ export const StudentRequestDetailPage: FC = () => {
     addRow,
     setLinkToGradebook,
     setStatus,
+    removeRow,
   } = useContext(RequestContext)
   const { fio, avatarUrl, role, id } = useContext(AuthContext)
   const request = requests.find(r => r.id === Number(id1))
@@ -87,7 +88,7 @@ export const StudentRequestDetailPage: FC = () => {
       )
       setMessage('')
       M.toast({
-        html: 'Вы успешно оставили коментарий!',
+        html: 'Вы успешно оставили комментарий!',
         classes: 'light-blue darken-1',
       })
     } catch (e) {
@@ -328,17 +329,18 @@ export const StudentRequestDetailPage: FC = () => {
           {subRequest?.status === 'Черновик' ||
           subRequest?.status === 'Отправлено на доработку' ? (
             <a
-              className='btn-floating btn-large waves-effect waves-light red btn-small light-blue darken-1'
+              className='waves-effect waves-light btn light-blue darken-1'
               style={{ float: 'right' }}
               onClick={() => addRow(request?.id!, subRequest!.id)}
             >
-              <i className='material-icons'>add</i>
+              <i className='material-icons left'>add</i>Добавить достижение
             </a>
           ) : null}
         </h3>
         <table className='responsive-table'>
           <thead>
             <tr>
+              <th>#</th>
               {subRequest?.tables.header.map((h, hIdx) => (
                 <th key={hIdx}>{h}</th>
               ))}
@@ -352,6 +354,16 @@ export const StudentRequestDetailPage: FC = () => {
             {subRequest?.tables.body.map((r, rIdx) => {
               return (
                 <tr key={rIdx}>
+                  <td>
+                    <a
+                      className='btn-floating btn-large waves-effect waves-light red darken-3 btn-small'
+                      onClick={() =>
+                        removeRow(request!.id, subRequest!.id, r.id, r.isNew)
+                      }
+                    >
+                      <i className='material-icons'>close</i>
+                    </a>
+                  </td>
                   {r.data.map((b, bIdx) => {
                     try {
                       if (!(bIdx === 7)) throw Error()
@@ -724,7 +736,7 @@ export const StudentRequestDetailPage: FC = () => {
           onClick={sendHandler}
         >
           <i className='material-icons left'>send</i>
-          Отправить коментарий
+          Отправить комментарий
         </button>
       </div>
       <div style={{ height: 100 }}></div>

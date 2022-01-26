@@ -25,6 +25,7 @@ const initialState: IRequestState = {
   setLinkToGradebook: () => {},
   setPercent: () => {},
   extendSubRequests: () => {},
+  removeRow: () => {},
 }
 
 interface IProps {
@@ -156,7 +157,22 @@ const reducer = (
                 data,
                 points: 0,
                 isNew: true,
+                id: Date.now(),
               })
+          }
+
+          return req
+        }),
+      }
+    case 'REMOVE_ROW':
+      return {
+        ...state,
+        requests: state.requests.map(req => {
+          if (req.id === payload.id) {
+            req.subRequests.find(sr => sr.id === payload.subRId)!.tables.body =
+              req.subRequests
+                .find(sr => sr.id === payload.subRId)!
+                .tables.body.filter(b => b.id !== payload.bId)
           }
 
           return req
@@ -490,6 +506,27 @@ export const RequestProvider = ({ children }: IProps) => {
       },
     })
   }
+  const removeRow = async (
+    id: number,
+    subRId: number,
+    bId: number,
+    isNew: boolean
+  ) => {
+    if (!isNew)
+      await $api.post('/api/requests/remove-data/', {
+        id,
+        bodyId: bId,
+      })
+
+    dispatch({
+      type: 'REMOVE_ROW',
+      payload: {
+        id,
+        subRId,
+        bId,
+      },
+    })
+  }
 
   return (
     <RequestContext.Provider
@@ -508,6 +545,7 @@ export const RequestProvider = ({ children }: IProps) => {
         setLinkToGradebook,
         setPercent,
         extendSubRequests,
+        removeRow,
       }}
     >
       {children}
