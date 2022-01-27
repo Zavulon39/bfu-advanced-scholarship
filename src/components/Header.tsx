@@ -14,8 +14,10 @@ export const AdminHeader: FC = () => {
   const navbar = useRef(null)
   const tooltipRef1 = useRef(null)
   const tooltipRef2 = useRef(null)
-  const [title, setTitle] = useState('Государственная академическая стипендия')
-  const { fio, avatarUrl, role, login } = useContext(AuthContext)
+  const [title, setTitle] = useState(
+    'Повышенная государственная академическая стипендия'
+  )
+  const { fio, avatarUrl } = useContext(AuthContext)
 
   const logout = () => {
     localStorage.removeItem('access')
@@ -158,7 +160,7 @@ export const StudentHeader: FC = () => {
   const [title, setTitle] = useState(
     'Повышенная государственная академическая стипендия'
   )
-  const { fio, avatarUrl, role, login } = useContext(AuthContext)
+  const { fio, avatarUrl } = useContext(AuthContext)
 
   const logout = () => {
     localStorage.removeItem('access')

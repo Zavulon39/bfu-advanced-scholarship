@@ -108,13 +108,20 @@ export const StudentRequestDetailPage: FC = () => {
             html: `<span>Название не должно быть пустым!</span>`,
             classes: 'red darken-4',
           })
-        console.log(body.data[7].trim() === 'Документ')
-
         if (body.data[7].trim() === 'Документ')
           return M.toast({
             html: `<span>Документ должен быть прикреплён!</span>`,
             classes: 'red darken-4',
           })
+      }
+      if (
+        subRequest?.nomination === 'Учебная деятельность' &&
+        subRequest.linkToGradebook.trim() === ''
+      ) {
+        return M.toast({
+          html: `<span>Зачётный документ должен быть прикреплён!</span>`,
+          classes: 'red darken-4',
+        })
       }
 
       await $api.post('/api/requests/set-student-point/', {
@@ -244,8 +251,8 @@ export const StudentRequestDetailPage: FC = () => {
           <>
             <h3 className='mt-4'>Оценки</h3>
             <div>
-              <small>Процент "{subRequest?.percent}"</small>
-              <br />
+              {/* <small>Процент "{subRequest?.percent}"</small>
+              <br /> */}
               <small>Балл: "{subRequest?.point}"</small>
               <div className='file-field input-field'>
                 <div className='waves-effect waves-light btn light-blue darken-1'>

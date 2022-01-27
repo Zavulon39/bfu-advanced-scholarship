@@ -179,7 +179,7 @@ export const AdminRequestDetailPage: FC = () => {
           <>
             <h3 className='mt-4'>Оценки</h3>
             <div>
-              <div className='input-field'>
+              {/* <div className='input-field'>
                 <input
                   type='text'
                   id='percent'
@@ -200,7 +200,7 @@ export const AdminRequestDetailPage: FC = () => {
                   style={{ maxWidth: 'fit-content' }}
                 />
                 <label htmlFor='point'>Процент</label>
-              </div>
+              </div> */}
               <div className='input-field'>
                 <input
                   type='text'
