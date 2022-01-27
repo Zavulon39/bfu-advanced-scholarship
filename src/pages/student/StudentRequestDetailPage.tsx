@@ -340,30 +340,37 @@ export const StudentRequestDetailPage: FC = () => {
         <table className='responsive-table'>
           <thead>
             <tr>
-              <th>#</th>
+              {subRequest?.status === 'Черновик' ||
+              subRequest?.status === 'Отправлено на доработку' ? (
+                <th>#</th>
+              ) : null}
               {subRequest?.tables.header.map((h, hIdx) => (
                 <th key={hIdx}>{h}</th>
               ))}
-              {subRequest?.status === 'Принято' ||
+              {/* {subRequest?.status === 'Принято' ||
               subRequest?.status === 'Победитель' ? (
                 <th>Баллы</th>
-              ) : null}
+              ) : null} */}
             </tr>
           </thead>
           <tbody>
             {subRequest?.tables.body.map((r, rIdx) => {
               return (
                 <tr key={rIdx}>
-                  <td>
-                    <a
-                      className='btn-floating btn-large waves-effect waves-light red darken-3 btn-small'
-                      onClick={() =>
-                        removeRow(request!.id, subRequest!.id, r.id, r.isNew)
-                      }
-                    >
-                      <i className='material-icons'>close</i>
-                    </a>
-                  </td>
+                  {subRequest?.status === 'Черновик' ||
+                  subRequest?.status === 'Отправлено на доработку' ? (
+                    <td>
+                      <a
+                        className='btn-floating btn-large waves-effect waves-light red darken-3 btn-small'
+                        onClick={() =>
+                          removeRow(request!.id, subRequest!.id, r.id, r.isNew)
+                        }
+                      >
+                        <i className='material-icons'>close</i>
+                      </a>
+                    </td>
+                  ) : null}
+
                   {r.data.map((b, bIdx) => {
                     try {
                       if (!(bIdx === 7)) throw Error()
@@ -645,7 +652,7 @@ export const StudentRequestDetailPage: FC = () => {
                         <td key={bIdx}>
                           <input
                             type='text'
-                            style={{ maxWidth: 'fit-content' }}
+                            style={{ maxWidth: 'max-content' }}
                             value={b}
                             onChange={(
                               event: React.ChangeEvent<HTMLInputElement>
@@ -663,10 +670,10 @@ export const StudentRequestDetailPage: FC = () => {
                       )
                     }
                   })}
-                  {subRequest?.status === 'Принято' ||
+                  {/* {subRequest?.status === 'Принято' ||
                   subRequest?.status === 'Победитель' ? (
                     <td>{r.points}</td>
-                  ) : null}
+                  ) : null} */}
                 </tr>
               )
             })}

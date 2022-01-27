@@ -247,6 +247,7 @@ export const RequestProvider = ({ children }: IProps) => {
         'Принято',
         'Удалено',
         'Отправлено на доработку',
+        'На рассмотрении',
       ]
 
       dispatch({

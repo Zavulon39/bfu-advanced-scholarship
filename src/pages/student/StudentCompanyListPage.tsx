@@ -29,7 +29,8 @@ export const StudentCompanyListPage: FC = () => {
   const modalCreateClickHandler = () => {
     // @ts-ignore
     const p = planRef.current!.value
-    const n = getSelectValues(nominationRef.current!).join(' | ')
+    // @ts-ignore
+    const n = nominationRef.current!.value
     addRequest(
       companyData.companyId,
       id,
@@ -123,7 +124,7 @@ export const StudentCompanyListPage: FC = () => {
             <label>Учебный план</label>
           </div>
           <div className='input-field'>
-            <select multiple ref={nominationRef}>
+            <select ref={nominationRef}>
               {nominations.map(n => (
                 <option value={n} key={n}>
                   {n}
