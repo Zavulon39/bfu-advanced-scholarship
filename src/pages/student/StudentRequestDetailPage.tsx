@@ -315,11 +315,14 @@ export const StudentRequestDetailPage: FC = () => {
                   />
                 </div>
                 <a
-                  href={subRequest.linkToGradebook}
-                  target='_blank'
                   className='tooltipped'
                   data-position='top'
                   data-tooltip-img={subRequest.linkToGradebook}
+                  href={
+                    subRequest.linkToGradebook === 'Документ'
+                      ? 'javascript:void(0)'
+                      : subRequest.linkToGradebook
+                  }
                   style={{ width: 'fit-content' }}
                 >
                   Текущий документ
@@ -458,8 +461,7 @@ export const StudentRequestDetailPage: FC = () => {
                               </div>
                             </div>
                             <a
-                              href={b}
-                              target='_blank'
+                              href={b === 'Документ' ? 'javascript:void(0)' : b}
                               className='tooltipped'
                               data-position='top'
                               data-tooltip-img={b}

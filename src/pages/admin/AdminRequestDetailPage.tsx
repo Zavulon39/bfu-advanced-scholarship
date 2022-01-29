@@ -226,8 +226,11 @@ export const AdminRequestDetailPage: FC = () => {
             </div>
             <a
               className='waves-effect waves-light btn light-blue darken-1 tooltipped'
-              href={subRequest.linkToGradebook}
-              target='_blank'
+              href={
+                subRequest.linkToGradebook === 'Документ'
+                  ? 'javascript:void(0)'
+                  : subRequest.linkToGradebook
+              }
               data-position='top'
               data-tooltip-img={subRequest.linkToGradebook}
             >
@@ -272,8 +275,7 @@ export const AdminRequestDetailPage: FC = () => {
                         <td key={bIdx}>
                           <a
                             className='waves-effect waves-light btn light-blue darken-1 tooltipped'
-                            href={b}
-                            target='_blank'
+                            href={b === 'Документ' ? 'javascript:void(0)' : b}
                             data-position='top'
                             data-tooltip-img={b}
                           >
