@@ -414,10 +414,12 @@ export const StudentRequestDetailPage: FC = () => {
                                       if (
                                         event.target.files![0].size > 10485760
                                       ) {
-                                        return M.toast({
+                                        M.toast({
                                           html: `<span>Файл должен быть до 10 МБ!</span>`,
                                           classes: 'red darken-4',
                                         })
+
+                                        return
                                       }
 
                                       const fd = new FormData()
