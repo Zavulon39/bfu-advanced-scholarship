@@ -84,6 +84,14 @@ small {
   object-fit: contain;
 }
 
+.my-center {
+  width: 100%;
+  height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @media screen and (max-width: 800px) {
   .btn-container {
     float: right;

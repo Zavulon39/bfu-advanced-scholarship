@@ -52,6 +52,29 @@ export const StudentCompanyListPage: FC = () => {
     M.FormSelect.init(planRef.current!)
   }, [companies, requests])
 
+  if (!requests.length) {
+    return (
+      <>
+        <StudentHeader />
+        <div className='my-center'>
+          <div className='preloader-wrapper big active'>
+            <div className='spinner-layer spinner-blue-only'>
+              <div className='circle-clipper left'>
+                <div className='circle'></div>
+              </div>
+              <div className='gap-patch'>
+                <div className='circle'></div>
+              </div>
+              <div className='circle-clipper right'>
+                <div className='circle'></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  }
+
   return (
     <>
       <StudentHeader />

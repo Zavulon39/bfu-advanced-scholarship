@@ -137,27 +137,12 @@ const reducer = (
         ...state,
         requests: state.requests.map(req => {
           if (req.id === payload.id) {
-            const sr = req.subRequests.find(sr => sr.id === payload.subRId)
-            const data = [...sr!.tables.header]
-            const dict = state.tables.find(t => t.name === sr?.nomination)!
-
-            data[0] = ''
-            data[5] = _(new Date())
-            data[6] = ''
-
-            data[1] = dict.progress[0].name
-            data[2] = dict.progress[0].viewprogress[0].name
-            data[3] = dict.progress[0].viewprogress[0].statusprogress[0].name
-            data[4] =
-              dict.progress[0].viewprogress[0].statusprogress[0].levelprogress[0]
-
             req.subRequests
               .find(sr => sr.id === payload.subRId)!
               .tables.body.push({
-                data,
+                data: payload.data,
                 points: 0,
-                isNew: true,
-                id: Date.now(),
+                id: payload.dataId,
               })
           }
 
@@ -444,14 +429,36 @@ export const RequestProvider = ({ children }: IProps) => {
       },
     })
   }
-  const addRow = (id: number, subRId: number) =>
+  const addRow = async (id: number, subRId: number) => {
+    const req = state.requests.find(r => r.id === id)!
+    const sr = req.subRequests.find(sr => sr.id === subRId)
+    const data = [...sr!.tables.header]
+    const dict = state.tables.find(t => t.name === sr?.nomination)!
+
+    data[0] = ''
+    data[5] = _(new Date())
+    data[6] = ''
+    data[1] = dict.progress[0].name
+    data[2] = dict.progress[0].viewprogress[0].name
+    data[3] = dict.progress[0].viewprogress[0].statusprogress[0].name
+    data[4] =
+      dict.progress[0].viewprogress[0].statusprogress[0].levelprogress[0]
+
+    const resp = await $api.post('/api/requests/add-row/', {
+      id: id,
+      data,
+    })
+
     dispatch({
       type: 'ADD_ROW',
       payload: {
         id,
         subRId,
+        data,
+        dataId: resp.data.id,
       },
     })
+  }
   const addNotification = async (text: string) => {
     // fetch
     // get id from fetch
@@ -507,17 +514,11 @@ export const RequestProvider = ({ children }: IProps) => {
       },
     })
   }
-  const removeRow = async (
-    id: number,
-    subRId: number,
-    bId: number,
-    isNew: boolean
-  ) => {
-    if (!isNew)
-      await $api.post('/api/requests/remove-data/', {
-        id,
-        bodyId: bId,
-      })
+  const removeRow = async (id: number, subRId: number, bId: number) => {
+    await $api.post('/api/requests/remove-data/', {
+      id,
+      bodyId: bId,
+    })
 
     dispatch({
       type: 'REMOVE_ROW',

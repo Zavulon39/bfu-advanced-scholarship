@@ -373,7 +373,7 @@ export const StudentRequestDetailPage: FC = () => {
                       <a
                         className='btn-floating btn-large waves-effect waves-light red darken-3 btn-small'
                         onClick={() =>
-                          removeRow(request!.id, subRequest!.id, r.id, r.isNew)
+                          removeRow(request!.id, subRequest!.id, r.id)
                         }
                       >
                         <i className='material-icons'>close</i>
