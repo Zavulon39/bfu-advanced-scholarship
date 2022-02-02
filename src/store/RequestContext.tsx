@@ -445,7 +445,7 @@ export const RequestProvider = ({ children }: IProps) => {
       dict.progress[0].viewprogress[0].statusprogress[0].levelprogress[0]
 
     const resp = await $api.post('/api/requests/add-row/', {
-      id: id,
+      id: subRId,
       data,
     })
 
@@ -516,7 +516,7 @@ export const RequestProvider = ({ children }: IProps) => {
   }
   const removeRow = async (id: number, subRId: number, bId: number) => {
     await $api.post('/api/requests/remove-data/', {
-      id,
+      id: subRId,
       bodyId: bId,
     })
 
