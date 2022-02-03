@@ -72,6 +72,13 @@ export const AdminRequestListPage: FC = () => {
     // @ts-ignore
     select3.current!.value = -1
 
+    document.cookie =
+      encodeURIComponent('companySelect') + '=' + encodeURIComponent(-1)
+    document.cookie =
+      encodeURIComponent('nominationSelect') + '=' + encodeURIComponent(-1)
+    document.cookie =
+      encodeURIComponent('statusSelect') + '=' + encodeURIComponent(-1)
+
     M.FormSelect.init(select1.current!)
     M.FormSelect.init(select2.current!)
     M.FormSelect.init(select3.current!)
