@@ -129,11 +129,23 @@ export const AdminRequestListPage: FC = () => {
             <label htmlFor='fio'>ФИО</label>
           </div>
           <div className='col s3 input-field'>
-            <select ref={select1}>
+            <select
+              ref={select1}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                document.cookie =
+                  encodeURIComponent('companySelect') +
+                  '=' +
+                  encodeURIComponent(event.target.value)
+              }}
+            >
               <option value={-1}>Все кампании</option>
               {companies.map(c => {
                 return (
-                  <option value={c.id} key={c.id}>
+                  <option
+                    value={c.id}
+                    key={c.id}
+                    selected={getCookie('companySelect') === c.id.toString()}
+                  >
                     {c.name}
                   </option>
                 )
@@ -142,11 +154,23 @@ export const AdminRequestListPage: FC = () => {
             <label>Кампания</label>
           </div>
           <div className='col s3 input-field'>
-            <select ref={select2}>
+            <select
+              ref={select2}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                document.cookie =
+                  encodeURIComponent('nominationSelect') +
+                  '=' +
+                  encodeURIComponent(event.target.value)
+              }}
+            >
               <option value={-1}>Все номинации</option>
               {nominations.map(n => {
                 return (
-                  <option value={n} key={n}>
+                  <option
+                    value={n}
+                    key={n}
+                    selected={getCookie('nominationSelect') === n}
+                  >
                     {n}
                   </option>
                 )
@@ -155,11 +179,23 @@ export const AdminRequestListPage: FC = () => {
             <label>Номинация</label>
           </div>
           <div className='col s3 input-field'>
-            <select ref={select3}>
+            <select
+              ref={select3}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                document.cookie =
+                  encodeURIComponent('statusSelect') +
+                  '=' +
+                  encodeURIComponent(event.target.value)
+              }}
+            >
               <option value={-1}>Все статусы</option>
               {statuses.map(s => {
                 return (
-                  <option value={s} key={s}>
+                  <option
+                    value={s}
+                    key={s}
+                    selected={getCookie('statusSelect') === s}
+                  >
                     {s}
                   </option>
                 )
@@ -230,5 +266,14 @@ export const AdminRequestListPage: FC = () => {
         </table>
       </div>
     </>
+  )
+}
+
+function getCookie(name: string): string {
+  return decodeURIComponent(
+    document.cookie
+      .split('; ')
+      .find(e => e.split('=')[0] === name)
+      ?.split('=')[1]!
   )
 }
