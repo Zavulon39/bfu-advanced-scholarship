@@ -25,6 +25,8 @@ export const AdminRequestListPage: FC = () => {
     M.FormSelect.init(select2.current!)
     M.FormSelect.init(select3.current!)
     setQs(requests)
+
+    findClickHandler()
   }, [requests.length])
 
   const findClickHandler = (clearFio = false) => {
