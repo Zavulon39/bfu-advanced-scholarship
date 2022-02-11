@@ -123,6 +123,10 @@ export interface IRequestState {
       }>
     }>
   }>
+  bigBoys: {
+    id: number
+    fio: string
+  }[]
 
   fetchRequests: typeof fetchRequests
   setPoints: typeof setPoints

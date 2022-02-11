@@ -11,6 +11,7 @@ const initialState: IRequestState = {
   companies: [],
   notifications: [],
   tables: [],
+  bigBoys: [],
 
   fetchRequests: () => {},
   setPoints: () => {},
@@ -226,6 +227,9 @@ export const RequestProvider = ({ children }: IProps) => {
       resp = await $api.get('/api/table/get/')
       const tables = resp.data
 
+      resp = await $api.get('/api/bb/')
+      const bigBoys = resp.data
+
       const statuses = [
         'Победитель',
         'Черновик',
@@ -265,6 +269,7 @@ export const RequestProvider = ({ children }: IProps) => {
           })),
           notifications,
           tables,
+          bigBoys,
         },
       })
     } catch (e) {

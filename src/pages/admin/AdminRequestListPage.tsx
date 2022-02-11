@@ -1,12 +1,13 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, UNSAFE_LocationContext } from 'react-router-dom'
 import { AdminHeader } from '../../components/Header'
 import { RequestContext } from '../../store/RequestContext'
 import M from 'materialize-css'
 import { useFormater } from '../../hooks/useFormater'
+import $api from '../../http'
 
 export const AdminRequestListPage: FC = () => {
-  const { requests, nominations, statuses, companies, fetchRequests } =
+  const { requests, nominations, statuses, companies, bigBoys, fetchRequests } =
     useContext(RequestContext)
 
   const [qs, setQs] = useState(requests)
@@ -14,6 +15,9 @@ export const AdminRequestListPage: FC = () => {
   const select1 = useRef(null)
   const select2 = useRef(null)
   const select3 = useRef(null)
+  const nominationRef = useRef(null)
+  const companyRef = useRef(null)
+  const faceRef = useRef(null)
   const _ = useFormater()
 
   useEffect(() => {
@@ -25,6 +29,13 @@ export const AdminRequestListPage: FC = () => {
     M.FormSelect.init(select2.current!)
     M.FormSelect.init(select3.current!)
     setQs(requests)
+
+    const elems = document.querySelectorAll('.modal')
+    M.Modal.init(elems)
+
+    M.FormSelect.init(nominationRef.current!)
+    M.FormSelect.init(companyRef.current!)
+    M.FormSelect.init(faceRef.current!)
 
     findClickHandler()
   }, [requests.length])
@@ -90,6 +101,20 @@ export const AdminRequestListPage: FC = () => {
     findClickHandler(true)
   }
 
+  const sendWordFile = async () => {
+    const resp = await $api.post('/api/statistic/', {
+      compaing_id: M.FormSelect.getInstance(
+        companyRef.current!
+      ).getSelectedValues()[0],
+      typeMiracle_id: M.FormSelect.getInstance(
+        nominationRef.current!
+      ).getSelectedValues()[0],
+      big_boys: M.FormSelect.getInstance(faceRef.current!).getSelectedValues(),
+    })
+
+    window.location.replace(resp.data.url)
+  }
+
   if (!requests.length) {
     return (
       <>
@@ -125,6 +150,14 @@ export const AdminRequestListPage: FC = () => {
           </small>
         </h1>
         <a href='/api/get-csv/'>Скачать заявки в CSV</a>
+        <br />
+        <a
+          href='javascript:void()'
+          data-target='word'
+          className='modal-trigger'
+        >
+          Скачать заявки в Word
+        </a>
         <div className='row'>
           <div className='input-field col s3'>
             <input
@@ -273,6 +306,48 @@ export const AdminRequestListPage: FC = () => {
             })}
           </tbody>
         </table>
+      </div>
+
+      <div id='word' className='modal'>
+        <div className='modal-content'>
+          <h4>Скачать заявки в Word</h4>
+          <div className='input-field' style={{ marginTop: 16 }}>
+            <select ref={companyRef}>
+              {companies.map(c => (
+                <option value={c.id} key={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+            <label>Кампания</label>
+          </div>
+          <div className='input-field'>
+            <select ref={nominationRef}>
+              {nominations.map(n => (
+                <option value={n} key={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+            <label>Номинация</label>
+          </div>
+          <div className='input-field'>
+            <select ref={faceRef} multiple>
+              {bigBoys.map(n => (
+                <option value={n.id} key={n.id}>
+                  {n.fio}
+                </option>
+              ))}
+            </select>
+            <label>Должностные лица</label>
+          </div>
+          <button
+            className='waves-effect waves-light btn light-blue darken-2'
+            onClick={sendWordFile}
+          >
+            <i className='material-icons right'>send</i>отправить
+          </button>
+        </div>
       </div>
     </>
   )

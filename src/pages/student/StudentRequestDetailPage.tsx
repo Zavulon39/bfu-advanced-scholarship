@@ -253,7 +253,7 @@ export const StudentRequestDetailPage: FC = () => {
             <div>
               {/* <small>Процент "{subRequest?.percent}"</small>
               <br /> */}
-              <small>Балл: "{subRequest?.point}"</small>
+              {/* <small>Балл: "{subRequest?.point}"</small> */}
               <div className='file-field input-field'>
                 <div className='waves-effect waves-light btn light-blue darken-1'>
                   <span>
