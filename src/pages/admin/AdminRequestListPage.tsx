@@ -103,12 +103,10 @@ export const AdminRequestListPage: FC = () => {
 
   const sendWordFile = async () => {
     const resp = await $api.post('/api/statistic/', {
-      compaing_id: M.FormSelect.getInstance(
-        companyRef.current!
-      ).getSelectedValues()[0],
-      typeMiracle_id: M.FormSelect.getInstance(
-        nominationRef.current!
-      ).getSelectedValues()[0],
+      // @ts-ignore
+      compaing_id: companyRef.current!.value,
+      // @ts-ignore
+      typeMiracle_id: nominationRef.current!.value,
       big_boys: M.FormSelect.getInstance(faceRef.current!).getSelectedValues(),
     })
 
@@ -334,7 +332,7 @@ export const AdminRequestListPage: FC = () => {
           <div className='input-field'>
             <select ref={faceRef} multiple>
               {bigBoys.map(n => (
-                <option value={n.id} key={n.id}>
+                <option value={n.fio} key={n.id}>
                   {n.fio}
                 </option>
               ))}
