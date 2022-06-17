@@ -2,12 +2,14 @@ import React, { FC, useContext, useEffect, useRef, useState } from 'react'
 import { AdminHeader } from '../../components/Header'
 import { RequestContext } from '../../store/RequestContext'
 import M from 'materialize-css'
+import { Loader } from '../../components/Loader'
 
 export const NotificationListPage: FC = () => {
   const { notifications, fetchRequests, removeNotification, addNotification } =
     useContext(RequestContext)
   const [message, setMessage] = useState('')
   const messageRef = useRef(null)
+  const [loading, setLoading] = useState(true)
 
   const sendHandler = () => {
     try {
@@ -43,33 +45,15 @@ export const NotificationListPage: FC = () => {
 
   useEffect(() => {
     if (!notifications.length) fetchRequests()
+    setLoading(false)
   }, [])
 
   useEffect(() => {
     M.CharacterCounter.init(messageRef.current!)
   }, [notifications.length])
 
-  if (!notifications.length) {
-    return (
-      <>
-        <AdminHeader />
-        <div className='my-center'>
-          <div className='preloader-wrapper big active'>
-            <div className='spinner-layer spinner-blue-only'>
-              <div className='circle-clipper left'>
-                <div className='circle'></div>
-              </div>
-              <div className='gap-patch'>
-                <div className='circle'></div>
-              </div>
-              <div className='circle-clipper right'>
-                <div className='circle'></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    )
+  if (loading) {
+    return <Loader header={<AdminHeader />} />
   }
 
   return (

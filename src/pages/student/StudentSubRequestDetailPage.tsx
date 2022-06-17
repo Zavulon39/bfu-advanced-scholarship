@@ -5,6 +5,7 @@ import { RequestContext } from '../../store/RequestContext'
 import { AuthContext } from '../../store/AuthContext'
 import $api from '../../http'
 import { ISubRequest } from '../../types/request'
+import { Loader } from '../../components/Loader'
 
 export const StudentSubRequestDetailPage: FC = () => {
   const params = useParams()
@@ -59,26 +60,7 @@ export const StudentSubRequestDetailPage: FC = () => {
   }
 
   if (!requests.length) {
-    return (
-      <>
-        <StudentHeader />
-        <div className='my-center'>
-          <div className='preloader-wrapper big active'>
-            <div className='spinner-layer spinner-blue-only'>
-              <div className='circle-clipper left'>
-                <div className='circle'></div>
-              </div>
-              <div className='gap-patch'>
-                <div className='circle'></div>
-              </div>
-              <div className='circle-clipper right'>
-                <div className='circle'></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    )
+    return <Loader header={<StudentHeader />} />
   }
 
   return (
@@ -97,8 +79,21 @@ export const StudentSubRequestDetailPage: FC = () => {
           </thead>
           <tbody>
             {request?.subRequests.map(sr => {
+              const className = []
+              if (sr.status === 'На рассмотрении') {
+                className.push('grey lighten-2')
+              } else if (sr.status === 'Отправлено на доработку') {
+                className.push('red lighten-2')
+              } else if (sr.status === 'Принято') {
+                className.push('blue lighten-2')
+              } else if (sr.status === 'Победитель') {
+                className.push('green lighten-2')
+              } else {
+                className.push('')
+              }
+
               return (
-                <tr key={sr.id}>
+                <tr key={sr.id} className={className[0]}>
                   <td>{sr.nomination}</td>
                   <td>{sr.status}</td>
                   <td>{sr.institute}</td>

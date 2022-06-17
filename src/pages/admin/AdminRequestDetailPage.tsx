@@ -6,6 +6,7 @@ import M from 'materialize-css'
 import { AuthContext } from '../../store/AuthContext'
 import { useFormater } from '../../hooks/useFormater'
 import $api from '../../http'
+import { Loader } from '../../components/Loader'
 
 export const AdminRequestDetailPage: FC = () => {
   const { id1, id2 } = useParams()
@@ -119,26 +120,7 @@ export const AdminRequestDetailPage: FC = () => {
   }
 
   if (!requests.length) {
-    return (
-      <>
-        <AdminHeader />
-        <div className='my-center'>
-          <div className='preloader-wrapper big active'>
-            <div className='spinner-layer spinner-blue-only'>
-              <div className='circle-clipper left'>
-                <div className='circle'></div>
-              </div>
-              <div className='gap-patch'>
-                <div className='circle'></div>
-              </div>
-              <div className='circle-clipper right'>
-                <div className='circle'></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    )
+    return <Loader header={<AdminHeader />} />
   }
 
   return (

@@ -6,6 +6,7 @@ import { AuthContext } from '../../store/AuthContext'
 import M from 'materialize-css'
 import { useFormater } from '../../hooks/useFormater'
 import $api from '../../http'
+import { Loader } from '../../components/Loader'
 
 export const StudentRequestDetailPage: FC = () => {
   const { id1, id2 } = useParams()
@@ -44,15 +45,18 @@ export const StudentRequestDetailPage: FC = () => {
     M.CharacterCounter.init(messageRef.current!)
   }, [requests.length])
   useEffect(() => {
-    document.querySelectorAll('.tooltipped').forEach(el => {
+    document.querySelectorAll('.tooltipped.img').forEach(el => {
       const url = el.getAttribute('data-tooltip-img')
       M.Tooltip.init(el, {
         html: `<img src="${url}" class="tooltip-img" />`,
       })
     })
 
-    const elems = document.querySelectorAll('select')
-    M.FormSelect.init(elems)
+    const tooltippedElems = document.querySelectorAll('.tooltipped.link')!
+    M.Tooltip.init(tooltippedElems)
+
+    const selectElems = document.querySelectorAll('select')
+    M.FormSelect.init(selectElems)
   }, [requests])
 
   useEffect(() => {
@@ -108,21 +112,21 @@ export const StudentRequestDetailPage: FC = () => {
             html: `<span>Название не должно быть пустым!</span>`,
             classes: 'red darken-4',
           })
-        if (body.data[7].trim() === 'Документ')
-          return M.toast({
-            html: `<span>Документ должен быть прикреплён!</span>`,
-            classes: 'red darken-4',
-          })
+        // if (body.data[7].trim() === 'Документ')
+        //   return M.toast({
+        //     html: `<span>Документ должен быть прикреплён!</span>`,
+        //     classes: 'red darken-4',
+        //   })
       }
-      if (
-        subRequest?.nomination === 'Учебная деятельность' &&
-        subRequest.linkToGradebook.trim() === ''
-      ) {
-        return M.toast({
-          html: `<span>Зачётный документ должен быть прикреплён!</span>`,
-          classes: 'red darken-4',
-        })
-      }
+      // if (
+      //   subRequest?.nomination === 'Учебная деятельность' &&
+      //   subRequest.linkToGradebook.trim() === ''
+      // ) {
+      //   return M.toast({
+      //     html: `<span>Зачётный документ должен быть прикреплён!</span>`,
+      //     classes: 'red darken-4',
+      //   })
+      // }
 
       await $api.post('/api/requests/set-student-point/', {
         id: subRequest?.id,
@@ -161,13 +165,12 @@ export const StudentRequestDetailPage: FC = () => {
             html: `<span>Название не должно быть пустым!</span>`,
             classes: 'red darken-4',
           })
-        console.log(body.data[7].trim() === 'Документ')
 
-        if (body.data[7].trim() === 'Документ')
-          return M.toast({
-            html: `<span>Документ должен быть прикреплён!</span>`,
-            classes: 'red darken-4',
-          })
+        // if (body.data[7].trim() === 'Документ')
+        //   return M.toast({
+        //     html: `<span>Документ должен быть прикреплён!</span>`,
+        //     classes: 'red darken-4',
+        //   })
       }
 
       setStatus(request!.id, subRequest!.id, 'На рассмотрении')
@@ -191,6 +194,10 @@ export const StudentRequestDetailPage: FC = () => {
       //   classes: 'red darken-4',
       // })
     }
+  }
+
+  if (!requests.length) {
+    return <Loader header={<StudentHeader />} />
   }
 
   return (
@@ -315,7 +322,7 @@ export const StudentRequestDetailPage: FC = () => {
                   />
                 </div>
                 <a
-                  className='tooltipped'
+                  className='tooltipped img'
                   data-position='top'
                   data-tooltip-img={subRequest.linkToGradebook}
                   href={
@@ -370,14 +377,17 @@ export const StudentRequestDetailPage: FC = () => {
                   {subRequest?.status === 'Черновик' ||
                   subRequest?.status === 'Отправлено на доработку' ? (
                     <td>
-                      <a
-                        className='btn-floating btn-large waves-effect waves-light red darken-3 btn-small'
+                      {/* <a
+                        className='btn-floating btn-large waves-effect waves-light red darken-3 btn-small tooltipped link'
+                        data-position='top'
+                        data-tooltip='Вы не сможете восстановить это достижение!'
                         onClick={() =>
                           removeRow(request!.id, subRequest!.id, r.id)
                         }
                       >
                         <i className='material-icons'>close</i>
-                      </a>
+                      </a> */}
+                      {rIdx + 1}
                     </td>
                   ) : null}
 
@@ -441,7 +451,7 @@ export const StudentRequestDetailPage: FC = () => {
                                       )
 
                                       document
-                                        .querySelectorAll('.tooltipped')
+                                        .querySelectorAll('.tooltipped.img')
                                         .forEach(el => {
                                           const url =
                                             el.getAttribute('data-tooltip-img')
@@ -473,7 +483,7 @@ export const StudentRequestDetailPage: FC = () => {
                             </div>
                             <a
                               href={b === 'Документ' ? 'javascript:void(0)' : b}
-                              className='tooltipped'
+                              className='tooltipped img'
                               data-position='top'
                               data-tooltip-img={b}
                               style={{ width: 'fit-content' }}
@@ -507,7 +517,11 @@ export const StudentRequestDetailPage: FC = () => {
                               }}
                             >
                               {dict.map(p => (
-                                <option value={p.name} selected={p.name === b}>
+                                <option
+                                  value={p.name}
+                                  selected={p.name === b}
+                                  key={p.name}
+                                >
                                   {p.name}
                                 </option>
                               ))}
@@ -553,6 +567,7 @@ export const StudentRequestDetailPage: FC = () => {
                                   <option
                                     value={v.name}
                                     selected={v.name === b}
+                                    key={v.name}
                                   >
                                     {v.name}
                                   </option>
@@ -609,6 +624,7 @@ export const StudentRequestDetailPage: FC = () => {
                                   <option
                                     value={s.name}
                                     selected={s.name === b}
+                                    key={s.name}
                                   >
                                     {s.name}
                                   </option>
@@ -647,7 +663,7 @@ export const StudentRequestDetailPage: FC = () => {
                                     subRequest.tables.body[rIdx].data[3]
                                 )
                                 ?.levelprogress.map(l => (
-                                  <option value={l} selected={l === b}>
+                                  <option value={l} selected={l === b} key={l}>
                                     {l}
                                   </option>
                                 ))}
@@ -706,7 +722,7 @@ export const StudentRequestDetailPage: FC = () => {
             style={{
               float: 'right',
               display: 'flex',
-              flexDirection: 'row',
+              flexDirection: 'column',
               marginTop: 36,
             }}
           >
@@ -727,9 +743,10 @@ export const StudentRequestDetailPage: FC = () => {
                 Отправить изменения
               </button>
             </div>
+            <small>* сохраните изменения перед отправкой</small>
           </div>
         ) : null}
-        <h3 className='mt-4'>Комментарии</h3>
+        <h3 style={{ marginTop: 80 }}>Комментарии</h3>
         <div>
           {subRequest?.comments.map((c, idx) => {
             return (

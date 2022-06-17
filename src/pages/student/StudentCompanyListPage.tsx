@@ -6,6 +6,7 @@ import { RequestContext } from '../../store/RequestContext'
 import M from 'materialize-css'
 import { Link } from 'react-router-dom'
 import { useFormater } from '../../hooks/useFormater'
+import { Loader } from '../../components/Loader'
 
 export const StudentCompanyListPage: FC = () => {
   const { companies, fetchCompanies } = useContext(CompanyContext)
@@ -20,6 +21,7 @@ export const StudentCompanyListPage: FC = () => {
   const nominationRef = useRef(null)
   const planRef = useRef(null)
   const _ = useFormater()
+  const [loading, setLoading] = useState(true)
 
   const createClickHandler = (id: number, name: string) => {
     setCompanyData(prev => ({ companyId: id, company: name }))
@@ -40,11 +42,16 @@ export const StudentCompanyListPage: FC = () => {
       fio,
       p
     )
+    M.toast({
+      html: `<span>Заявка была успешна создана!</span>`,
+      classes: 'light-blue darken-1',
+    })
   }
 
   useEffect(() => {
     if (!companies.length) fetchCompanies()
     if (!requests.length) fetchRequests()
+    setLoading(false)
   }, [])
   useEffect(() => {
     M.Modal.init(createModalRef.current!)
@@ -52,27 +59,8 @@ export const StudentCompanyListPage: FC = () => {
     M.FormSelect.init(planRef.current!)
   }, [companies, requests])
 
-  if (!requests.length) {
-    return (
-      <>
-        <StudentHeader />
-        <div className='my-center'>
-          <div className='preloader-wrapper big active'>
-            <div className='spinner-layer spinner-blue-only'>
-              <div className='circle-clipper left'>
-                <div className='circle'></div>
-              </div>
-              <div className='gap-patch'>
-                <div className='circle'></div>
-              </div>
-              <div className='circle-clipper right'>
-                <div className='circle'></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    )
+  if (loading) {
+    return <Loader header={<StudentHeader />} />
   }
 
   return (

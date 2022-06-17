@@ -3,6 +3,7 @@ import { AdminHeader } from '../../components/Header'
 import { CompanyContext } from '../../store/CompanyContext'
 import M from 'materialize-css'
 import { useFormater } from '../../hooks/useFormater'
+import { Loader } from '../../components/Loader'
 
 export const AdminCompanyListPage: FC = () => {
   const {
@@ -40,6 +41,7 @@ export const AdminCompanyListPage: FC = () => {
   const endEditDatePickerRef = useRef(null)
   const inputRef1 = useRef(null)
   const _ = useFormater()
+  const [loading, setLoading] = useState(true)
 
   const createClickHandler = () => {
     const i = M.Modal.getInstance(createModalRef.current!)
@@ -132,6 +134,7 @@ export const AdminCompanyListPage: FC = () => {
 
   useEffect(() => {
     if (!companies.length) fetchCompanies()
+    setLoading(false)
   }, [])
 
   useEffect(() => {
@@ -175,27 +178,12 @@ export const AdminCompanyListPage: FC = () => {
           endDate: selectedDate,
         })),
     })
-  }, [companies.length])
+  }, [companies.length, loading])
 
-  if (!companies.length) {
+  if (loading) {
     return (
       <>
-        <AdminHeader />
-        <div className='my-center'>
-          <div className='preloader-wrapper big active'>
-            <div className='spinner-layer spinner-blue-only'>
-              <div className='circle-clipper left'>
-                <div className='circle'></div>
-              </div>
-              <div className='gap-patch'>
-                <div className='circle'></div>
-              </div>
-              <div className='circle-clipper right'>
-                <div className='circle'></div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Loader header={<AdminHeader />} />
       </>
     )
   }

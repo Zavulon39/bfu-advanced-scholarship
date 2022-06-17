@@ -1,10 +1,11 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react'
-import { Link, UNSAFE_LocationContext } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { AdminHeader } from '../../components/Header'
 import { RequestContext } from '../../store/RequestContext'
 import M from 'materialize-css'
 import { useFormater } from '../../hooks/useFormater'
 import $api from '../../http'
+import { Loader } from '../../components/Loader'
 
 export const AdminRequestListPage: FC = () => {
   const { requests, nominations, statuses, companies, bigBoys, fetchRequests } =
@@ -19,17 +20,13 @@ export const AdminRequestListPage: FC = () => {
   const companyRef = useRef(null)
   const faceRef = useRef(null)
   const _ = useFormater()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!requests.length) fetchRequests()
+    setLoading(false)
   }, [])
-
   useEffect(() => {
-    M.FormSelect.init(select1.current!)
-    M.FormSelect.init(select2.current!)
-    M.FormSelect.init(select3.current!)
-    setQs(requests)
-
     const elems = document.querySelectorAll('.modal')
     M.Modal.init(elems)
 
@@ -37,7 +34,14 @@ export const AdminRequestListPage: FC = () => {
     M.FormSelect.init(companyRef.current!)
     M.FormSelect.init(faceRef.current!)
 
-    findClickHandler()
+    setQs(requests)
+
+    setTimeout(() => {
+      const selects = document.querySelectorAll('select')
+      M.FormSelect.init(selects)
+
+      findClickHandler()
+    }, 100)
   }, [requests.length])
 
   const findClickHandler = (clearFio = false) => {
@@ -57,19 +61,20 @@ export const AdminRequestListPage: FC = () => {
               // @ts-ignore
               select1.current.value != -1
                 ? // @ts-ignore
-                  r.companyId == select1.current.value!
+                  getSelectValues(select1.current).indexOf(r.companyId) + 1
                 : true
+
             const nomination_cond =
               // @ts-ignore
               select2.current.value! != -1
                 ? // @ts-ignore
-                  sr.nomination == select2.current.value!
+                  getSelectValues(select2.current).indexOf(sr.nomination) + 1
                 : true
             const status_cond =
               // @ts-ignore
               select3.current.value! != -1
                 ? // @ts-ignore
-                  sr.status == select3.current.value!
+                  getSelectValues(select3.current).indexOf(sr.status) + 1
                 : true
 
             return company_cond && nomination_cond && status_cond
@@ -92,10 +97,6 @@ export const AdminRequestListPage: FC = () => {
     document.cookie =
       encodeURIComponent('statusSelect') + '=' + encodeURIComponent(-1)
 
-    M.FormSelect.init(select1.current!)
-    M.FormSelect.init(select2.current!)
-    M.FormSelect.init(select3.current!)
-
     setFio('')
 
     findClickHandler(true)
@@ -113,27 +114,8 @@ export const AdminRequestListPage: FC = () => {
     window.location.replace(resp.data.url)
   }
 
-  if (!requests.length) {
-    return (
-      <>
-        <AdminHeader />
-        <div className='my-center'>
-          <div className='preloader-wrapper big active'>
-            <div className='spinner-layer spinner-blue-only'>
-              <div className='circle-clipper left'>
-                <div className='circle'></div>
-              </div>
-              <div className='gap-patch'>
-                <div className='circle'></div>
-              </div>
-              <div className='circle-clipper right'>
-                <div className='circle'></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    )
+  if (loading) {
+    return <Loader header={<AdminHeader />} />
   }
 
   return (
@@ -171,20 +153,35 @@ export const AdminRequestListPage: FC = () => {
           <div className='col s3 input-field'>
             <select
               ref={select1}
+              multiple
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 document.cookie =
                   encodeURIComponent('companySelect') +
                   '=' +
-                  encodeURIComponent(event.target.value)
+                  encodeURIComponent(getSelectValues(event.target).join(';'))
               }}
             >
-              <option value={-1}>Все кампании</option>
+              <option
+                value={-1}
+                selected={
+                  getCookie('companySelect') === '-1' ||
+                  getCookie('companySelect') === '' ||
+                  getCookie('companySelect') === 'undefined'
+                }
+              >
+                Все кампании
+              </option>
               {companies.map(c => {
                 return (
                   <option
                     value={c.id}
                     key={c.id}
-                    selected={getCookie('companySelect') === c.id.toString()}
+                    selected={
+                      !!(
+                        getCookie('companySelect').split(';').indexOf(c.name) +
+                        1
+                      )
+                    }
                   >
                     {c.name}
                   </option>
@@ -196,20 +193,34 @@ export const AdminRequestListPage: FC = () => {
           <div className='col s3 input-field'>
             <select
               ref={select2}
+              multiple
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 document.cookie =
                   encodeURIComponent('nominationSelect') +
                   '=' +
-                  encodeURIComponent(event.target.value)
+                  encodeURIComponent(getSelectValues(event.target).join(';'))
               }}
             >
-              <option value={-1}>Все номинации</option>
+              <option
+                value={-1}
+                selected={
+                  getCookie('nominationSelect') === '-1' ||
+                  getCookie('nominationSelect') === '' ||
+                  getCookie('nominationSelect') === 'undefined'
+                }
+              >
+                Все номинации
+              </option>
               {nominations.map(n => {
                 return (
                   <option
                     value={n}
                     key={n}
-                    selected={getCookie('nominationSelect') === n}
+                    selected={
+                      !!(
+                        getCookie('nominationSelect').split(';').indexOf(n) + 1
+                      )
+                    }
                   >
                     {n}
                   </option>
@@ -221,20 +232,32 @@ export const AdminRequestListPage: FC = () => {
           <div className='col s3 input-field'>
             <select
               ref={select3}
+              multiple
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 document.cookie =
                   encodeURIComponent('statusSelect') +
                   '=' +
-                  encodeURIComponent(event.target.value)
+                  encodeURIComponent(getSelectValues(event.target).join(';'))
               }}
             >
-              <option value={-1}>Все статусы</option>
+              <option
+                value={-1}
+                selected={
+                  getCookie('statusSelect') === '-1' ||
+                  getCookie('statusSelect') === '' ||
+                  getCookie('statusSelect') === 'undefined'
+                }
+              >
+                Все статусы
+              </option>
               {statuses.map(s => {
                 return (
                   <option
                     value={s}
                     key={s}
-                    selected={getCookie('statusSelect') === s}
+                    selected={
+                      !!(getCookie('statusSelect').split(';').indexOf(s) + 1)
+                    }
                   >
                     {s}
                   </option>
@@ -358,4 +381,19 @@ function getCookie(name: string): string {
       .find(e => e.split('=')[0] === name)
       ?.split('=')[1]!
   )
+}
+
+function getSelectValues(select: HTMLSelectElement) {
+  var result = []
+  var options = select && select.options
+  var opt
+
+  for (var i = 0, iLen = options.length; i < iLen; i++) {
+    opt = options[i]
+
+    if (opt.selected) {
+      result.push(opt.value || opt.text)
+    }
+  }
+  return result
 }
