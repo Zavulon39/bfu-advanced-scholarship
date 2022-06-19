@@ -17,6 +17,7 @@ function App() {
             login(
               resp.data['id'],
               resp.data['fio'],
+              resp.data['email'],
               resp.data['avatarUrl'],
               'student',
               resp.data['learningPlans']
@@ -31,6 +32,7 @@ function App() {
             login(
               resp.data['id'],
               resp.data['fio'],
+              resp.data['email'],
               resp.data['avatarUrl'],
               'admin',
               []

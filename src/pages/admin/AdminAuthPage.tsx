@@ -24,7 +24,14 @@ export const AdminAuthPage: FC = () => {
       localStorage.setItem('role', 'admin')
       localStorage.setItem('id', `${resp.data['id']}`)
 
-      login(resp.data['id'], authData.fio, resp.data['avatarUrl'], 'admin', [])
+      login(
+        resp.data['id'],
+        authData.fio,
+        resp.data['email'],
+        resp.data['avatarUrl'],
+        'admin',
+        []
+      )
     } catch (e) {
       // M.toast({
       //   html: `<span>Что-то пошло не так: <b>${e}</b></span>`,

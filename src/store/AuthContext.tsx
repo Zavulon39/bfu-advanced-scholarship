@@ -1,16 +1,19 @@
 import React, { createContext, ReactElement, useReducer } from 'react'
+import $api from '../http'
 import { IAuthState, Role } from '../types/auth'
 import { IAction } from '../types/companies'
 
 const initialState: IAuthState = {
   id: 0,
   fio: '',
+  email: '',
   avatarUrl:
     'https://avatars.mds.yandex.net/get-ott/374297/2a000001616b87458162c9216ccd5144e94d/678x380',
   role: 'anonymous',
   learningPlans: [],
 
   login: () => {},
+  saveStudentEmail: () => {},
 }
 
 interface IProps {
@@ -23,6 +26,11 @@ const reducer = (state = initialState, action: IAction): IAuthState => {
       return {
         ...state,
         ...action.payload,
+      }
+    case 'SAVE_STUDENT_EMAIL':
+      return {
+        ...state,
+        email: action.payload,
       }
     default:
       return state
@@ -37,6 +45,7 @@ export const AuthProvider = ({ children }: IProps) => {
   const login = (
     id: number,
     fio: string,
+    email: string,
     avatarUrl: string,
     role: Role,
     learningPlans: string[]
@@ -46,10 +55,22 @@ export const AuthProvider = ({ children }: IProps) => {
       payload: {
         id,
         fio,
+        email,
         avatarUrl,
         role,
         learningPlans,
       },
+    })
+  }
+  const saveStudentEmail = (email: string) => {
+    $api.post('/api/auth/save-student-email/', {
+      id: state.id,
+      email,
+    })
+
+    dispatch({
+      type: 'SAVE_STUDENT_EMAIL',
+      payload: email,
     })
   }
 
@@ -58,6 +79,7 @@ export const AuthProvider = ({ children }: IProps) => {
       value={{
         ...state,
         login,
+        saveStudentEmail,
       }}
     >
       {children}

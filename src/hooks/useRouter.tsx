@@ -6,6 +6,7 @@ import { AdminRequestDetailPage } from '../pages/admin/AdminRequestDetailPage'
 import { AdminRequestListPage } from '../pages/admin/AdminRequestListPage'
 import { NotificationListPage } from '../pages/admin/NotificationListPage'
 import { StudentAuthPage } from '../pages/student/StudentAuthPage'
+import { StudentChangeEmailPage } from '../pages/student/StudentChangeEmailPage'
 import { StudentCompanyListPage } from '../pages/student/StudentCompanyListPage'
 import { StudentRequestDetailPage } from '../pages/student/StudentRequestDetailPage'
 import { StudentSubRequestDetailPage } from '../pages/student/StudentSubRequestDetailPage'
@@ -45,6 +46,7 @@ export const useRouter = () => {
             path='/requests/:id/'
             element={<StudentSubRequestDetailPage />}
           />
+          <Route path='/change-email/' element={<StudentChangeEmailPage />} />
           <Route path='*' element={<Navigate to='/companies/' />} />
         </Routes>
       </BrowserRouter>

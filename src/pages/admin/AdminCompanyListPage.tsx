@@ -198,7 +198,7 @@ export const AdminCompanyListPage: FC = () => {
           onClick={createClickHandler}
         >
           <i className='material-icons left'>add</i>
-          Добавить компанию
+          Добавить кампанию
         </button>
         <table className='mt-4 striped'>
           <thead>
@@ -240,7 +240,7 @@ export const AdminCompanyListPage: FC = () => {
       {/* create modal */}
       <div ref={createModalRef} className='modal'>
         <div className='modal-content'>
-          <h4>Добавить компанию</h4>
+          <h4>Добавить кампанию</h4>
           <div className='input-field' style={{ marginTop: 16 }}>
             <input
               id='name'
@@ -269,7 +269,7 @@ export const AdminCompanyListPage: FC = () => {
             onClick={modalCreateClickHandler}
           >
             <i className='material-icons left'>save</i>
-            Добавить компанию
+            Добавить кампанию
           </button>
         </div>
       </div>
@@ -278,7 +278,7 @@ export const AdminCompanyListPage: FC = () => {
       <div ref={editModalRef} className='modal'>
         <div className='modal-content'>
           <h4>
-            Изменить компанию <strong>"{editData.name}"</strong>
+            Изменить кампанию <strong>"{editData.name}"</strong>
           </h4>
           <div className='input-field' style={{ marginTop: 16 }}>
             <input

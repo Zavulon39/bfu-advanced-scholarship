@@ -19,6 +19,7 @@ export const AdminRequestListPage: FC = () => {
   const nominationRef = useRef(null)
   const companyRef = useRef(null)
   const faceRef = useRef(null)
+  const criterionRef = useRef(null)
   const _ = useFormater()
   const [loading, setLoading] = useState(true)
 
@@ -33,6 +34,7 @@ export const AdminRequestListPage: FC = () => {
     M.FormSelect.init(nominationRef.current!)
     M.FormSelect.init(companyRef.current!)
     M.FormSelect.init(faceRef.current!)
+    M.FormSelect.init(criterionRef.current!)
 
     setQs(requests)
 
@@ -113,6 +115,13 @@ export const AdminRequestListPage: FC = () => {
 
     window.location.replace(resp.data.url)
   }
+  const sendCSVFile = async () => {
+    const resp = await $api.post('/api/get-csv/', {
+      criterions: getSelectValues(criterionRef.current!),
+    })
+
+    window.location.replace(resp.data.url)
+  }
 
   if (loading) {
     return <Loader header={<AdminHeader />} />
@@ -129,7 +138,14 @@ export const AdminRequestListPage: FC = () => {
             записи(ей)
           </small>
         </h1>
-        <a href='/api/get-csv/'>Скачать заявки в CSV</a>
+        <a
+          // href='/api/get-csv/'
+          href='javascript:void()'
+          data-target='csv'
+          className='modal-trigger'
+        >
+          Скачать заявки в CSV
+        </a>
         <br />
         <a
           href='javascript:void()'
@@ -366,7 +382,28 @@ export const AdminRequestListPage: FC = () => {
             className='waves-effect waves-light btn light-blue darken-2'
             onClick={sendWordFile}
           >
-            <i className='material-icons right'>send</i>отправить
+            <i className='material-icons right'>save</i>Скачать
+          </button>
+        </div>
+      </div>
+
+      <div id='csv' className='modal'>
+        <div className='modal-content'>
+          <h4>Скачать заявки в CSV</h4>
+          <div className='input-field'>
+            <select ref={criterionRef} multiple>
+              <option value='compaing.name'>Кампания</option>
+              <option value='typeMiracle.name'>Тип повышенной стипендии</option>
+              <option value='learningPlan'>План обучения</option>
+              <option value='last_status'>Текущий статус</option>
+            </select>
+            <label>Критерии сортировки</label>
+          </div>
+          <button
+            className='waves-effect waves-light btn light-blue darken-2'
+            onClick={sendCSVFile}
+          >
+            <i className='material-icons right'>save</i>Скачать
           </button>
         </div>
       </div>

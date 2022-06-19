@@ -28,6 +28,7 @@ export const StudentAuthPage: FC = () => {
       login(
         resp.data['id'],
         resp.data['fio'],
+        resp.data['email'],
         resp.data['avatarUrl'],
         'student',
         resp.data['learningPlans']

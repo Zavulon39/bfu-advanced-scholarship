@@ -17,7 +17,7 @@ export const AdminHeader: FC = () => {
   const [title, setTitle] = useState(
     'Повышенная государственная академическая стипендия'
   )
-  const { fio, avatarUrl } = useContext(AuthContext)
+  const { fio, avatarUrl, id } = useContext(AuthContext)
 
   const logout = () => {
     localStorage.removeItem('access')
@@ -36,10 +36,10 @@ export const AdminHeader: FC = () => {
 
   useLayoutEffect(() => {
     function updateSize() {
-      if (window.innerWidth < 1280)
+      if (window.innerWidth < 1700)
         setTitle('Государственная академическая стипендия')
-      if (window.innerWidth < 1050) setTitle('Академическая стипендия')
-      if (window.innerWidth < 800) setTitle('ПГАС')
+      if (window.innerWidth < 1500) setTitle('Академическая стипендия')
+      if (window.innerWidth < 1260) setTitle('ПГАС')
     }
     window.addEventListener('resize', updateSize)
     updateSize()
@@ -61,10 +61,15 @@ export const AdminHeader: FC = () => {
               <NavLink to='/admin/notifications/'>Объявления</NavLink>
             </li>
             <li>
-              <NavLink to='/admin/companies/'>Список компаний</NavLink>
+              <NavLink to='/admin/companies/'>Список кампаний</NavLink>
             </li>
             <li>
               <NavLink to='/admin/requests/'>Список заявок</NavLink>
+            </li>
+            <li>
+              <a href={`/api/auth/redirect-to-admin-panel/${id}/`}>
+                Редактировать номинации
+              </a>
             </li>
             <li>
               <a
@@ -143,10 +148,15 @@ export const AdminHeader: FC = () => {
           <NavLink to='/admin/notifications/'>Объявления</NavLink>
         </li>
         <li>
-          <NavLink to='/admin/companies/'>Список компаний</NavLink>
+          <NavLink to='/admin/companies/'>Список кампаний</NavLink>
         </li>
         <li>
           <NavLink to='/admin/requests/'>Список заявок</NavLink>
+        </li>
+        <li>
+          <a href={`/api/auth/redirect-to-admin-panel/${id}/`}>
+            Редактировать номинации
+          </a>
         </li>
       </ul>
     </>
@@ -179,10 +189,10 @@ export const StudentHeader: FC = () => {
 
   useLayoutEffect(() => {
     function updateSize() {
-      if (window.innerWidth < 1280)
+      if (window.innerWidth < 1700)
         setTitle('Государственная академическая стипендия')
-      if (window.innerWidth < 1050) setTitle('Академическая стипендия')
-      if (window.innerWidth < 800) setTitle('ПГАС')
+      if (window.innerWidth < 1500) setTitle('Академическая стипендия')
+      if (window.innerWidth < 1260) setTitle('ПГАС')
     }
     window.addEventListener('resize', updateSize)
     updateSize()
@@ -201,7 +211,10 @@ export const StudentHeader: FC = () => {
           </a>
           <ul className='right hide-on-med-and-down'>
             <li>
-              <NavLink to='/companies/'>Список компаний</NavLink>
+              <NavLink to='/companies/'>Список кампаний</NavLink>
+            </li>
+            <li>
+              <NavLink to='/change-email/'>Изменить Email</NavLink>
             </li>
             <li>
               <a
@@ -277,7 +290,10 @@ export const StudentHeader: FC = () => {
           </a>
         </li>
         <li>
-          <NavLink to='/companies/'>Список компаний</NavLink>
+          <NavLink to='/companies/'>Список кампаний</NavLink>
+        </li>
+        <li>
+          <NavLink to='/change-email/'>Изменить Email</NavLink>
         </li>
       </ul>
     </>
