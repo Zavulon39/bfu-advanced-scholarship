@@ -44,8 +44,10 @@ export const NotificationListPage: FC = () => {
   }
 
   useEffect(() => {
-    if (!notifications.length) fetchRequests()
-    setLoading(false)
+    if (!notifications.length) {
+      // @ts-ignore
+      fetchRequests().then(() => setLoading(false))
+    } else setLoading(false)
   }, [])
 
   useEffect(() => {

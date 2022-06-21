@@ -13,19 +13,36 @@ export const AdminRequestListPage: FC = () => {
 
   const [qs, setQs] = useState(requests)
   const [fio, setFio] = useState('')
-  const select1 = useRef(null)
-  const select2 = useRef(null)
-  const select3 = useRef(null)
+  const select1 = useRef<HTMLSelectElement | null>(null)
+  const select2 = useRef<HTMLSelectElement | null>(null)
+  const select3 = useRef<HTMLSelectElement | null>(null)
+  const select4 = useRef<HTMLSelectElement | null>(null)
+
   const nominationRef = useRef(null)
   const companyRef = useRef(null)
   const faceRef = useRef(null)
   const criterionRef = useRef(null)
+  const _directions = requests.map(r => r.subRequests.map(sr => sr.direction))
+  const directions = new Set()
+
+  for (const list of _directions) {
+    for (const d of list) {
+      directions.add(d)
+    }
+  }
+
+  console.log(directions)
+
   const _ = useFormater()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!requests.length) fetchRequests()
-    setLoading(false)
+    if (!requests.length) {
+      // @ts-ignore
+      fetchRequests().then(() => setLoading(false))
+    } else {
+      setLoading(false)
+    }
   }, [])
   useEffect(() => {
     const elems = document.querySelectorAll('.modal')
@@ -57,29 +74,31 @@ export const AdminRequestListPage: FC = () => {
         .map(r => ({
           ...r,
           subRequests: r.subRequests.filter(sr => {
-            // @ts-ignore
-
             const company_cond =
-              // @ts-ignore
-              select1.current.value != -1
-                ? // @ts-ignore
-                  getSelectValues(select1.current).indexOf(r.companyId) + 1
+              select1.current!.value !== '-1'
+                ? getSelectValues(select1.current!).indexOf(
+                    r.companyId.toString()
+                  ) + 1
                 : true
 
             const nomination_cond =
-              // @ts-ignore
-              select2.current.value! != -1
-                ? // @ts-ignore
-                  getSelectValues(select2.current).indexOf(sr.nomination) + 1
-                : true
-            const status_cond =
-              // @ts-ignore
-              select3.current.value! != -1
-                ? // @ts-ignore
-                  getSelectValues(select3.current).indexOf(sr.status) + 1
+              select2.current!.value !== '-1'
+                ? getSelectValues(select2.current!).indexOf(sr.nomination) + 1
                 : true
 
-            return company_cond && nomination_cond && status_cond
+            const status_cond =
+              select3.current!.value !== '-1'
+                ? getSelectValues(select3.current!).indexOf(sr.status) + 1
+                : true
+
+            const direction_cond =
+              select4.current!.value !== '-1'
+                ? getSelectValues(select4.current!).indexOf(sr.direction) + 1
+                : true
+
+            return (
+              company_cond && nomination_cond && status_cond && direction_cond
+            )
           }),
         }))
     )
@@ -91,6 +110,8 @@ export const AdminRequestListPage: FC = () => {
     select2.current!.value = -1
     // @ts-ignore
     select3.current!.value = -1
+    // @ts-ignore
+    select4.current!.value = -1
 
     document.cookie =
       encodeURIComponent('companySelect') + '=' + encodeURIComponent(-1)
@@ -98,6 +119,8 @@ export const AdminRequestListPage: FC = () => {
       encodeURIComponent('nominationSelect') + '=' + encodeURIComponent(-1)
     document.cookie =
       encodeURIComponent('statusSelect') + '=' + encodeURIComponent(-1)
+    document.cookie =
+      encodeURIComponent('directionSelect') + '=' + encodeURIComponent(-1)
 
     setFio('')
 
@@ -155,7 +178,7 @@ export const AdminRequestListPage: FC = () => {
           Скачать заявки в Word
         </a>
         <div className='row'>
-          <div className='input-field col s3'>
+          <div className='input-field col s4'>
             <input
               id='fio'
               type='text'
@@ -166,7 +189,7 @@ export const AdminRequestListPage: FC = () => {
             />
             <label htmlFor='fio'>ФИО</label>
           </div>
-          <div className='col s3 input-field'>
+          <div className='col s2 input-field'>
             <select
               ref={select1}
               multiple
@@ -194,8 +217,9 @@ export const AdminRequestListPage: FC = () => {
                     key={c.id}
                     selected={
                       !!(
-                        getCookie('companySelect').split(';').indexOf(c.name) +
-                        1
+                        getCookie('companySelect')
+                          .split(';')
+                          .indexOf(c.id.toString()) + 1
                       )
                     }
                   >
@@ -206,7 +230,7 @@ export const AdminRequestListPage: FC = () => {
             </select>
             <label>Кампания</label>
           </div>
-          <div className='col s3 input-field'>
+          <div className='col s2 input-field'>
             <select
               ref={select2}
               multiple
@@ -245,7 +269,7 @@ export const AdminRequestListPage: FC = () => {
             </select>
             <label>Номинация</label>
           </div>
-          <div className='col s3 input-field'>
+          <div className='col s2 input-field'>
             <select
               ref={select3}
               multiple
@@ -281,6 +305,43 @@ export const AdminRequestListPage: FC = () => {
               })}
             </select>
             <label>Статус</label>
+          </div>
+          <div className='col s2 input-field'>
+            <select
+              ref={select4}
+              multiple
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                document.cookie =
+                  encodeURIComponent('directionSelect') +
+                  '=' +
+                  encodeURIComponent(getSelectValues(event.target).join(';'))
+              }}
+            >
+              <option
+                value={-1}
+                selected={
+                  getCookie('directionSelect') === '-1' ||
+                  getCookie('directionSelect') === '' ||
+                  getCookie('directionSelect') === 'undefined'
+                }
+              >
+                Все направления
+              </option>
+              {Array.from(directions.values()).map((d: any) => {
+                return (
+                  <option
+                    value={d}
+                    key={d}
+                    selected={
+                      !!(getCookie('directionSelect').split(';').indexOf(d) + 1)
+                    }
+                  >
+                    {d}
+                  </option>
+                )
+              })}
+            </select>
+            <label>Направление</label>
           </div>
 
           <div

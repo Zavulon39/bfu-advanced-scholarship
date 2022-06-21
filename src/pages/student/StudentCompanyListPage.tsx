@@ -49,9 +49,14 @@ export const StudentCompanyListPage: FC = () => {
   }
 
   useEffect(() => {
-    if (!companies.length) fetchCompanies()
-    if (!requests.length) fetchRequests()
-    setLoading(false)
+    if (!companies.length) {
+      // @ts-ignore
+      fetchCompanies().then(() => setLoading(false))
+    }
+    if (!requests.length) {
+      // @ts-ignore
+      fetchRequests().then(() => setLoading(false))
+    } else setLoading(false)
   }, [])
   useEffect(() => {
     M.Modal.init(createModalRef.current!)

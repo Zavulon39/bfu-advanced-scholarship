@@ -133,8 +133,12 @@ export const AdminCompanyListPage: FC = () => {
   }
 
   useEffect(() => {
-    if (!companies.length) fetchCompanies()
-    setLoading(false)
+    if (!companies.length) {
+      // @ts-ignore
+      fetchCompanies().then(() => setLoading(false))
+    } else {
+      setLoading(false)
+    }
   }, [])
 
   useEffect(() => {
