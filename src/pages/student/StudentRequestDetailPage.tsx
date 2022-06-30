@@ -377,7 +377,7 @@ export const StudentRequestDetailPage: FC = () => {
                   {subRequest?.status === 'Черновик' ||
                   subRequest?.status === 'Отправлено на доработку' ? (
                     <td>
-                      {/* <a
+                      <a
                         className='btn-floating btn-large waves-effect waves-light red darken-3 btn-small tooltipped link'
                         data-position='top'
                         data-tooltip='Вы не сможете восстановить это достижение!'
@@ -386,8 +386,7 @@ export const StudentRequestDetailPage: FC = () => {
                         }
                       >
                         <i className='material-icons'>close</i>
-                      </a> */}
-                      {rIdx + 1}
+                      </a>
                     </td>
                   ) : null}
 
