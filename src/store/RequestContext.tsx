@@ -208,12 +208,19 @@ export const RequestContext = createContext(initialState)
 export const RequestProvider = ({ children }: IProps) => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  const fetchRequests = async () => {
+  const fetchRequests = async (studentId?: number) => {
     try {
       // fetch
+      let resp
 
-      let resp = await $api.get('/api/requests/get/')
+      if (studentId) {
+        resp = await $api.get('/api/requests/get/?student_id=' + studentId)
+      } else {
+        resp = await $api.get('/api/requests/get/')
+      }
+
       const requests: IRequest[] = resp.data
+      console.log(requests)
 
       resp = await $api.get('/api/companies/get/')
       const companies = resp.data

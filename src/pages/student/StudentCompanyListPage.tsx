@@ -55,7 +55,7 @@ export const StudentCompanyListPage: FC = () => {
     }
     if (!requests.length) {
       // @ts-ignore
-      fetchRequests().then(() => setLoading(false))
+      fetchRequests(id).then(() => setLoading(false))
     } else setLoading(false)
   }, [])
   useEffect(() => {

@@ -7,7 +7,7 @@ const setPoints = (
   points: number
 ) => {}
 const setStatus = (id: number, subRId: number, status: string) => {}
-const fetchRequests = () => {}
+const fetchRequests = (studentId?: number) => {}
 const setExamPoints = (id: number, subRId: number, points: number) => {}
 const setPercent = (id: number, subRId: number, percent: number) => {}
 const addComment = (

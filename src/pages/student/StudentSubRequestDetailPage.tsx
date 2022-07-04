@@ -20,7 +20,7 @@ export const StudentSubRequestDetailPage: FC = () => {
   useEffect(() => {
     if (requests.filter(r => r.studentId === id).length === 0)
       navigate('/companies/')
-    if (!requests.length) fetchRequests()
+    if (!requests.length) fetchRequests(id)
   }, [])
   useEffect(() => {
     M.FormSelect.init(nominationRef.current!)
