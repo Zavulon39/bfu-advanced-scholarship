@@ -7,6 +7,7 @@ import M from 'materialize-css'
 import { useFormater } from '../../hooks/useFormater'
 import $api from '../../http'
 import { Loader } from '../../components/Loader'
+import { CompanyContext } from '../../store/CompanyContext'
 
 export const StudentRequestDetailPage: FC = () => {
   const { id1, id2 } = useParams()
@@ -24,11 +25,13 @@ export const StudentRequestDetailPage: FC = () => {
     setStatus,
     removeRow,
   } = useContext(RequestContext)
+  const { companies, fetchCompanies } = useContext(CompanyContext)
   const { fio, avatarUrl, role, id } = useContext(AuthContext)
   const request = requests.find(r => r.id === Number(id1))
   const subRequest = requests
     .find(r => r.id === Number(id1))
     ?.subRequests.find(sb => sb.id === Number(id2))
+  const company = companies.find(c => c.id === request?.companyId)
   const [message, setMessage] = useState('')
   const _ = useFormater()
   const navigate = useNavigate()
@@ -38,6 +41,7 @@ export const StudentRequestDetailPage: FC = () => {
     if (requests.filter(r => r.studentId === id).length === 0)
       navigate('/companies/')
     if (!requests.length) fetchRequests(id)
+    if (!companies.length) fetchCompanies()
   }, [])
   useEffect(() => {
     // @ts-ignore
@@ -258,9 +262,17 @@ export const StudentRequestDetailPage: FC = () => {
           <>
             <h3 className='mt-4'>Оценки</h3>
             <div>
-              {/* <small>Процент "{subRequest?.percent}"</small>
-              <br /> */}
-              {/* <small>Балл: "{subRequest?.point}"</small> */}
+              {company?.showStudentPoints ? (
+                <>
+                  <small style={{ fontSize: 16 }}>
+                    Процент "{subRequest?.percent}"
+                  </small>
+                  <br />
+                  <small style={{ fontSize: 16 }}>
+                    Балл: "{subRequest?.point}"
+                  </small>
+                </>
+              ) : null}
               <div className='file-field input-field'>
                 <div className='waves-effect waves-light btn light-blue darken-1'>
                   <span>
@@ -364,10 +376,7 @@ export const StudentRequestDetailPage: FC = () => {
               {subRequest?.tables.header.map((h, hIdx) => (
                 <th key={hIdx}>{h}</th>
               ))}
-              {/* {subRequest?.status === 'Принято' ||
-              subRequest?.status === 'Победитель' ? (
-                <th>Баллы</th>
-              ) : null} */}
+              {company?.showStudentPoints ? <th>Баллы</th> : null}
             </tr>
           </thead>
           <tbody>
@@ -705,10 +714,11 @@ export const StudentRequestDetailPage: FC = () => {
                       )
                     }
                   })}
-                  {/* {subRequest?.status === 'Принято' ||
-                  subRequest?.status === 'Победитель' ? (
-                    <td>{r.points}</td>
-                  ) : null} */}
+                  {company?.showStudentPoints ? (
+                    <td style={{ textAlign: 'center' }}>
+                      <span style={{ fontWeight: 600 }}>{r.points}</span>
+                    </td>
+                  ) : null}
                 </tr>
               )
             })}

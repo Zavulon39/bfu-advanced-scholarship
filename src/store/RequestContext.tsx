@@ -220,7 +220,6 @@ export const RequestProvider = ({ children }: IProps) => {
       }
 
       const requests: IRequest[] = resp.data
-      console.log(requests)
 
       resp = await $api.get('/api/companies/get/')
       const companies = resp.data

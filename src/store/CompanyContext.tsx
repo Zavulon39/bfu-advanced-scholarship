@@ -8,6 +8,7 @@ const initialState: ICompanyState = {
   deleteCompany: () => {},
   createCompany: () => {},
   editCompany: () => {},
+  checkShowStudentPoints: () => {},
 }
 
 interface IProps {
@@ -28,6 +29,7 @@ const reducer = (state = initialState, action: IAction): ICompanyState => {
             name: action.payload.name,
             startDate: action.payload.startDate,
             endDate: action.payload.endDate,
+            showStudentPoints: true,
           },
         ],
       }
@@ -48,6 +50,17 @@ const reducer = (state = initialState, action: IAction): ICompanyState => {
         ...state,
         companies: state.companies.filter(c => c.id !== action.payload),
       }
+    case 'CHECK':
+      return {
+        ...state,
+        companies: state.companies.map(c => {
+          if (c.id === action.payload) {
+            c.showStudentPoints = !c.showStudentPoints
+          }
+
+          return c
+        }),
+      }
     default:
       return state
   }
@@ -64,7 +77,7 @@ export const CompanyProvider = ({ children }: IProps) => {
 
       const resp = await $api.get('/api/companies/get/')
 
-      const payload: ICompany[] = resp.data
+      const payload: any[] = resp.data
 
       dispatch({
         type: 'SET_COMPANIES',
@@ -72,6 +85,7 @@ export const CompanyProvider = ({ children }: IProps) => {
           ...p,
           startDate: new Date(p.startDate),
           endDate: new Date(p.endDate),
+          showStudentPoints: p.show_student_points,
         })),
       })
     } catch (e) {
@@ -102,6 +116,16 @@ export const CompanyProvider = ({ children }: IProps) => {
 
     dispatch({
       type: 'DELETE_COMPANY',
+      payload: id,
+    })
+  }
+  const checkShowStudentPoints = async (id: number) => {
+    // fetch
+
+    await $api.post('/api/companies/check-show-student-points/', { id })
+
+    dispatch({
+      type: 'CHECK',
       payload: id,
     })
   }
@@ -165,6 +189,7 @@ export const CompanyProvider = ({ children }: IProps) => {
         createCompany,
         deleteCompany,
         editCompany,
+        checkShowStudentPoints,
       }}
     >
       {children}

@@ -7,12 +7,14 @@ const editCompany = (
   startDate: Date,
   endDate: Date
 ) => {}
+const checkShowStudentPoints = (id: number) => {}
 
 export interface ICompany {
   id: number
   name: string
   startDate: Date
   endDate: Date
+  showStudentPoints: boolean
 }
 
 export interface ICompanyState {
@@ -21,6 +23,7 @@ export interface ICompanyState {
   deleteCompany: typeof deleteCompany
   createCompany: typeof createCompany
   editCompany: typeof editCompany
+  checkShowStudentPoints: typeof checkShowStudentPoints
 }
 
 export interface IAction {

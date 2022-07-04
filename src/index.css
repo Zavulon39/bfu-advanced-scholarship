@@ -109,3 +109,8 @@ small {
 ul.dropdown-content.select-dropdown {
   width: unset !important;
 }
+
+[type='checkbox']:checked + span:not(.lever):before {
+  border-right: 2px solid #1565c0;
+  border-bottom: 2px solid #1565c0;
+}

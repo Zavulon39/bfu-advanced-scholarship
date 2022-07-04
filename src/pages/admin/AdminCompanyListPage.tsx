@@ -12,6 +12,7 @@ export const AdminCompanyListPage: FC = () => {
     deleteCompany,
     createCompany,
     editCompany,
+    checkShowStudentPoints,
   } = useContext(CompanyContext)
   const [createData, setCreateData] = useState<{
     name: null | string
@@ -210,6 +211,7 @@ export const AdminCompanyListPage: FC = () => {
               <th>Название</th>
               <th>Дата начала</th>
               <th>Дата окончания</th>
+              <th>Студентам видны баллы</th>
             </tr>
           </thead>
           <tbody>
@@ -219,6 +221,18 @@ export const AdminCompanyListPage: FC = () => {
                   <td>{c.name}</td>
                   <td>{_(c.startDate)}</td>
                   <td>{_(c.endDate)}</td>
+                  <td>
+                    <p>
+                      <label>
+                        <input
+                          type='checkbox'
+                          checked={c.showStudentPoints}
+                          onClick={() => checkShowStudentPoints(c.id)}
+                        />
+                        <span></span>
+                      </label>
+                    </p>
+                  </td>
                   <td>
                     <button
                       className='btn-floating waves-effect waves-light light-blue darken-1'
