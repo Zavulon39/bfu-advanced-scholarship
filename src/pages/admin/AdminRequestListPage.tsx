@@ -142,7 +142,7 @@ export const AdminRequestListPage: FC = () => {
   }
   const sendCSVFile = async () => {
     const resp = await $api.post('/api/get-csv/', {
-      criterions: getSelectValues(criterionRef.current!),
+      requests: qs.map(r => r.subRequests.map(sr => sr.id)),
     })
 
     window.location.replace(resp.data.url)
@@ -168,8 +168,8 @@ export const AdminRequestListPage: FC = () => {
           style={{ display: 'flex', flexDirection: 'row' }}
         >
           <button
-            data-target='csv'
-            className='waves-effect waves-light btn light-blue darken-2 modal-trigger'
+            onClick={sendCSVFile}
+            className='waves-effect waves-light btn light-blue darken-2'
           >
             <i className='material-icons left'>cloud_download</i>
             Скачать заявки в CSV
@@ -449,27 +449,6 @@ export const AdminRequestListPage: FC = () => {
           <button
             className='waves-effect waves-light btn light-blue darken-2'
             onClick={sendWordFile}
-          >
-            <i className='material-icons right'>save</i>Скачать
-          </button>
-        </div>
-      </div>
-
-      <div id='csv' className='modal'>
-        <div className='modal-content'>
-          <h4>Скачать заявки в CSV</h4>
-          <div className='input-field'>
-            <select ref={criterionRef} multiple>
-              <option value='compaing'>Кампания</option>
-              <option value='typeMiracle'>Тип повышенной стипендии</option>
-              <option value='learningPlan'>План обучения</option>
-              <option value='last_status'>Текущий статус</option>
-            </select>
-            <label>Критерии сортировки</label>
-          </div>
-          <button
-            className='waves-effect waves-light btn light-blue darken-2'
-            onClick={sendCSVFile}
           >
             <i className='material-icons right'>save</i>Скачать
           </button>
