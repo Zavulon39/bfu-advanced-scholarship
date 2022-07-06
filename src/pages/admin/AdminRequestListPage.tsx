@@ -31,8 +31,6 @@ export const AdminRequestListPage: FC = () => {
     }
   }
 
-  console.log(directions)
-
   const _ = useFormater()
   const [loading, setLoading] = useState(true)
 
@@ -161,23 +159,28 @@ export const AdminRequestListPage: FC = () => {
             записи(ей)
           </small>
         </h1>
-        <a
-          // href='/api/get-csv/'
-          href='javascript:void()'
-          data-target='csv'
-          className='modal-trigger'
-        >
-          Скачать заявки в CSV
-        </a>
-        <br />
-        <a
-          href='javascript:void()'
-          data-target='word'
-          className='modal-trigger'
-        >
-          Скачать заявки в Word
-        </a>
-        <div className='row'>
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <a
+            // href='/api/get-csv/'
+            href='javascript:void()'
+            data-target='csv'
+            className='waves-effect waves-light btn light-blue darken-2 modal-trigger'
+          >
+            <i className='material-icons left'>cloud_download</i>
+            Скачать заявки в CSV
+          </a>
+          <br />
+          <a
+            style={{ marginLeft: 12 }}
+            href='javascript:void()'
+            data-target='word'
+            className='waves-effect waves-light btn light-blue darken-2 modal-trigger'
+          >
+            <i className='material-icons left'>cloud_download</i>
+            Скачать заявки в Word
+          </a>
+        </div>
+        <div className='row mt-4'>
           <div className='input-field col s4'>
             <input
               id='fio'
