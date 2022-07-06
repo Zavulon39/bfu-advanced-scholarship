@@ -45,6 +45,10 @@ export const AdminRequestListPage: FC = () => {
   useEffect(() => {
     const elems = document.querySelectorAll('.modal')
     M.Modal.init(elems)
+  })
+  useEffect(() => {
+    const elems = document.querySelectorAll('.modal')
+    M.Modal.init(elems)
 
     M.FormSelect.init(nominationRef.current!)
     M.FormSelect.init(companyRef.current!)
@@ -159,26 +163,26 @@ export const AdminRequestListPage: FC = () => {
             записи(ей)
           </small>
         </h1>
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
-          <a
-            // href='/api/get-csv/'
-            href='javascript:void()'
+        <div
+          className='btn-container'
+          style={{ display: 'flex', flexDirection: 'row' }}
+        >
+          <button
             data-target='csv'
             className='waves-effect waves-light btn light-blue darken-2 modal-trigger'
           >
             <i className='material-icons left'>cloud_download</i>
             Скачать заявки в CSV
-          </a>
+          </button>
           <br />
-          <a
-            style={{ marginLeft: 12 }}
-            href='javascript:void()'
+          <button
             data-target='word'
             className='waves-effect waves-light btn light-blue darken-2 modal-trigger'
+            style={{ marginLeft: 12 }}
           >
             <i className='material-icons left'>cloud_download</i>
             Скачать заявки в Word
-          </a>
+          </button>
         </div>
         <div className='row mt-4'>
           <div className='input-field col s4'>
@@ -456,8 +460,8 @@ export const AdminRequestListPage: FC = () => {
           <h4>Скачать заявки в CSV</h4>
           <div className='input-field'>
             <select ref={criterionRef} multiple>
-              <option value='compaing.name'>Кампания</option>
-              <option value='typeMiracle.name'>Тип повышенной стипендии</option>
+              <option value='compaing'>Кампания</option>
+              <option value='typeMiracle'>Тип повышенной стипендии</option>
               <option value='learningPlan'>План обучения</option>
               <option value='last_status'>Текущий статус</option>
             </select>
