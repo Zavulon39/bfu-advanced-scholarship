@@ -211,7 +211,7 @@ export const AdminCompanyListPage: FC = () => {
               <th>Название</th>
               <th>Дата начала</th>
               <th>Дата окончания</th>
-              <th>Студентам видны баллы</th>
+              {/* <th>Студентам видны баллы</th> */}
             </tr>
           </thead>
           <tbody>
@@ -221,7 +221,7 @@ export const AdminCompanyListPage: FC = () => {
                   <td>{c.name}</td>
                   <td>{_(c.startDate)}</td>
                   <td>{_(c.endDate)}</td>
-                  <td>
+                  {/* <td>
                     <p>
                       <label>
                         <input
@@ -232,7 +232,7 @@ export const AdminCompanyListPage: FC = () => {
                         <span></span>
                       </label>
                     </p>
-                  </td>
+                  </td> */}
                   <td>
                     <button
                       className='btn-floating waves-effect waves-light light-blue darken-1'
