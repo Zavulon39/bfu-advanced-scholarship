@@ -71,7 +71,7 @@ export const AdminCompanyListPage: FC = () => {
   }
   const deleteClickHandler = (id: number, name: string) => {
     try {
-      deleteCompany(id)
+      if (window.confirm('Вы точно хотите удалить кампанию?')) deleteCompany(id)
       M.toast({
         html: `<span>Кампания <b>${name}</b> была успешна удалена!</span>`,
         classes: 'light-blue darken-1',

@@ -390,9 +390,14 @@ export const StudentRequestDetailPage: FC = () => {
                         className='btn-floating btn-large waves-effect waves-light red darken-3 btn-small tooltipped link'
                         data-position='top'
                         data-tooltip='Вы не сможете восстановить это достижение!'
-                        onClick={() =>
-                          removeRow(request!.id, subRequest!.id, r.id)
-                        }
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              'Вы точно хотите удалить достижение?'
+                            )
+                          )
+                            removeRow(request!.id, subRequest!.id, r.id)
+                        }}
                       >
                         <i className='material-icons'>close</i>
                       </a>
