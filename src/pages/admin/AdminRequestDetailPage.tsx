@@ -231,6 +231,7 @@ export const AdminRequestDetailPage: FC = () => {
             </div>
             <a
               className='waves-effect waves-light btn light-blue darken-1 tooltipped'
+              target='_blank'
               href={
                 subRequest.linkToGradebook === 'Документ'
                   ? 'javascript:void(0)'
@@ -280,6 +281,7 @@ export const AdminRequestDetailPage: FC = () => {
                         <td key={bIdx}>
                           <a
                             className='waves-effect waves-light btn light-blue darken-1 tooltipped'
+                            target='_blank'
                             href={b === 'Документ' ? 'javascript:void(0)' : b}
                             data-position='top'
                             data-tooltip-img={b}

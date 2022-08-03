@@ -36,6 +36,7 @@ export const StudentRequestDetailPage: FC = () => {
   const _ = useFormater()
   const navigate = useNavigate()
   const dict = tables.find(t => t.name === subRequest?.nomination)?.progress!
+  const [canSave, setCanSave] = useState(true)
 
   useEffect(() => {
     if (requests.filter(r => r.studentId === id).length === 0)
@@ -273,83 +274,114 @@ export const StudentRequestDetailPage: FC = () => {
                   </small>
                 </>
               ) : null}
-              <div className='file-field input-field'>
-                <div className='waves-effect waves-light btn light-blue darken-1'>
-                  <span>
-                    <i className='material-icons'>insert_drive_file</i>
-                  </span>
-                  <input
-                    type='file'
-                    onChange={async (
-                      event: React.ChangeEvent<HTMLInputElement>
-                    ) => {
-                      try {
-                        if (
-                          !(
-                            subRequest?.status === 'Черновик' ||
-                            subRequest?.status === 'Отправлено на доработку'
-                          )
-                        ) {
-                          return
+              {subRequest.status === 'Черновик' ||
+              subRequest.status === 'Отправлено на доработку' ? (
+                <>
+                  <div className='file-field input-field'>
+                    <div className='waves-effect waves-light btn light-blue darken-1'>
+                      <span>
+                        <i className='material-icons'>insert_drive_file</i>
+                      </span>
+                      <input
+                        type='file'
+                        onChange={async (
+                          event: React.ChangeEvent<HTMLInputElement>
+                        ) => {
+                          try {
+                            if (
+                              !(
+                                subRequest?.status === 'Черновик' ||
+                                subRequest?.status === 'Отправлено на доработку'
+                              )
+                            ) {
+                              return
+                            }
+                            setCanSave(false)
+
+                            const fd = new FormData()
+                            const file = event.target.files![0]
+
+                            fd.append('image', file, file.name)
+
+                            const resp = await $api.post('/api/set-image/', fd)
+
+                            setLinkToGradebook(
+                              request!.id,
+                              subRequest.id,
+                              resp.data.url
+                            )
+
+                            document
+                              .querySelectorAll('.tooltipped')
+                              .forEach(el => {
+                                const url = el.getAttribute('data-tooltip-img')
+                                M.Tooltip.init(el, {
+                                  html: `<img src="${url}" class="tooltip-img" />`,
+                                })
+                              })
+
+                            setCanSave(true)
+                          } catch (e) {
+                            // M.toast({
+                            //   html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+                            //   classes: 'red darken-4',
+                            // })
+                            setCanSave(true)
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className='file-path-wrapper'>
+                      <input
+                        className='file-path validate'
+                        style={{ maxWidth: 'fit-content' }}
+                        type='text'
+                        value={
+                          subRequest.linkToGradebook.split('/')[
+                            subRequest.linkToGradebook.split('/').length - 1
+                          ]
                         }
-
-                        const fd = new FormData()
-                        const file = event.target.files![0]
-
-                        fd.append('image', file, file.name)
-
-                        const resp = await $api.post('/api/set-image/', fd)
-
-                        setLinkToGradebook(
-                          request!.id,
-                          subRequest.id,
-                          resp.data.url
-                        )
-
-                        document.querySelectorAll('.tooltipped').forEach(el => {
-                          const url = el.getAttribute('data-tooltip-img')
-                          M.Tooltip.init(el, {
-                            html: `<img src="${url}" class="tooltip-img" />`,
-                          })
-                        })
-                      } catch (e) {
-                        // M.toast({
-                        //   html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-                        //   classes: 'red darken-4',
-                        // })
+                      />
+                    </div>
+                    <a
+                      target='_blank'
+                      className='tooltipped img'
+                      data-position='top'
+                      data-tooltip-img={subRequest.linkToGradebook}
+                      href={
+                        subRequest.linkToGradebook === 'Документ'
+                          ? 'javascript:void(0)'
+                          : subRequest.linkToGradebook
                       }
-                    }}
-                  />
-                </div>
-                <div className='file-path-wrapper'>
-                  <input
-                    className='file-path validate'
-                    style={{ maxWidth: 'fit-content' }}
-                    type='text'
-                    value={
-                      subRequest.linkToGradebook.split('/')[
-                        subRequest.linkToGradebook.split('/').length - 1
-                      ]
+                      style={{ width: 'fit-content' }}
+                    >
+                      Текущий документ
+                    </a>
+                  </div>
+                  <small>
+                    * прикрепите копию зачетной книжки или справку об
+                    успеваемости
+                  </small>
+                </>
+              ) : (
+                <>
+                  <br />
+                  <a
+                    className='waves-effect waves-light btn light-blue darken-1 tooltipped img'
+                    target='_blank'
+                    href={
+                      subRequest.linkToGradebook === 'Документ'
+                        ? 'javascript:void(0)'
+                        : subRequest.linkToGradebook
                     }
-                  />
-                </div>
-                <a
-                  className='tooltipped img'
-                  data-position='top'
-                  data-tooltip-img={subRequest.linkToGradebook}
-                  href={
-                    subRequest.linkToGradebook === 'Документ'
-                      ? 'javascript:void(0)'
-                      : subRequest.linkToGradebook
-                  }
-                  style={{ width: 'fit-content' }}
-                >
-                  Текущий документ
-                </a>
-              </div>
-              <small>
-                * прикрепите копию зачетной книжки или справку об успеваемости
-              </small>
+                    style={{ marginTop: 8 }}
+                    data-position='top'
+                    data-tooltip-img={subRequest.linkToGradebook}
+                  >
+                    <i className='material-icons'>insert_drive_file</i>
+                  </a>
+                </>
+              )}
             </div>
           </>
         ) : null}
@@ -408,102 +440,130 @@ export const StudentRequestDetailPage: FC = () => {
                     try {
                       if (!(bIdx === 7)) throw Error()
 
-                      return (
-                        <td key={bIdx}>
-                          <div
-                            style={{
-                              display: 'flex',
-                              flexDirection: 'column',
-                            }}
-                          >
-                            <div className='file-field input-field'>
-                              <div className='waves-effect waves-light btn light-blue darken-1'>
-                                <span>
-                                  <i className='material-icons'>
-                                    insert_drive_file
-                                  </i>
-                                </span>
-                                <input
-                                  type='file'
-                                  onChange={async (
-                                    event: React.ChangeEvent<HTMLInputElement>
-                                  ) => {
-                                    try {
-                                      /*
+                      if (
+                        subRequest.status === 'Черновик' ||
+                        subRequest.status === 'Отправлено на доработку'
+                      )
+                        return (
+                          <td key={bIdx}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                              }}
+                            >
+                              <div className='file-field input-field'>
+                                <div className='waves-effect waves-light btn light-blue darken-1'>
+                                  <span>
+                                    <i className='material-icons'>
+                                      insert_drive_file
+                                    </i>
+                                  </span>
+                                  <input
+                                    type='file'
+                                    onChange={async (
+                                      event: React.ChangeEvent<HTMLInputElement>
+                                    ) => {
+                                      try {
+                                        /*
                                         send file to server and get path url from response
                                         then set this url to data
                                       */
 
-                                      if (
-                                        event.target.files![0].size > 10485760
-                                      ) {
-                                        M.toast({
-                                          html: `<span>Файл должен быть до 10 МБ!</span>`,
-                                          classes: 'red darken-4',
-                                        })
-
-                                        return
-                                      }
-
-                                      const fd = new FormData()
-                                      const file = event.target.files![0]
-
-                                      fd.append('image', file, file.name)
-
-                                      const resp = await $api.post(
-                                        '/api/set-image/',
-                                        fd
-                                      )
-
-                                      setStudentData(
-                                        request!.id,
-                                        subRequest.id,
-                                        rIdx,
-                                        bIdx,
-                                        resp.data.url
-                                      )
-
-                                      document
-                                        .querySelectorAll('.tooltipped.img')
-                                        .forEach(el => {
-                                          const url =
-                                            el.getAttribute('data-tooltip-img')
-                                          M.Tooltip.init(el, {
-                                            html: `<img src="${url}" class="tooltip-img" />`,
+                                        if (
+                                          event.target.files![0].size > 10485760
+                                        ) {
+                                          M.toast({
+                                            html: `<span>Файл должен быть до 10 МБ!</span>`,
+                                            classes: 'red darken-4',
                                           })
-                                        })
-                                    } catch (e) {
-                                      M.toast({
-                                        html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
-                                        classes: 'red darken-4',
-                                      })
+
+                                          return
+                                        }
+                                        setCanSave(false)
+
+                                        const fd = new FormData()
+                                        const file = event.target.files![0]
+
+                                        fd.append('image', file, file.name)
+
+                                        const resp = await $api.post(
+                                          '/api/set-image/',
+                                          fd
+                                        )
+
+                                        setStudentData(
+                                          request!.id,
+                                          subRequest.id,
+                                          rIdx,
+                                          bIdx,
+                                          resp.data.url
+                                        )
+
+                                        document
+                                          .querySelectorAll('.tooltipped.img')
+                                          .forEach(el => {
+                                            const url =
+                                              el.getAttribute(
+                                                'data-tooltip-img'
+                                              )
+                                            M.Tooltip.init(el, {
+                                              html: `<img src="${url}" class="tooltip-img" />`,
+                                            })
+                                          })
+
+                                        setCanSave(true)
+                                      } catch (e) {
+                                        // M.toast({
+                                        //   html: `<span>Что-то пошло не так: <b>${e}</b></span>`,
+                                        //   classes: 'red darken-4',
+                                        // })
+
+                                        setCanSave(true)
+                                      }
+                                    }}
+                                  />
+                                </div>
+                                <div className='file-path-wrapper'>
+                                  <input
+                                    className='file-path validate'
+                                    style={{ maxWidth: 'fit-content' }}
+                                    type='text'
+                                    value={
+                                      b
+                                        ? b.split('/')[b.split('/').length - 1]
+                                        : ''
                                     }
-                                  }}
-                                />
+                                  />
+                                </div>
                               </div>
-                              <div className='file-path-wrapper'>
-                                <input
-                                  className='file-path validate'
-                                  style={{ maxWidth: 'fit-content' }}
-                                  type='text'
-                                  value={
-                                    b
-                                      ? b.split('/')[b.split('/').length - 1]
-                                      : ''
-                                  }
-                                />
-                              </div>
+                              <a
+                                target='_blank'
+                                href={
+                                  b === 'Документ' ? 'javascript:void(0)' : b
+                                }
+                                className='tooltipped img'
+                                data-position='top'
+                                data-tooltip-img={b}
+                                style={{ width: 'fit-content' }}
+                              >
+                                Текущий документ
+                              </a>
                             </div>
-                            <a
-                              href={b === 'Документ' ? 'javascript:void(0)' : b}
-                              className='tooltipped img'
-                              data-position='top'
-                              data-tooltip-img={b}
-                              style={{ width: 'fit-content' }}
-                            >
-                              Текущий документ
-                            </a>
-                          </div>
+                          </td>
+                        )
+
+                      return (
+                        <td key={bIdx}>
+                          <a
+                            className='waves-effect waves-light btn light-blue darken-1 tooltipped img'
+                            target='_blank'
+                            href={b === 'Документ' ? 'javascript:void(0)' : b}
+                            data-position='top'
+                            data-tooltip-img={b}
+                          >
+                            <i className='material-icons'>insert_drive_file</i>
+                          </a>
                         </td>
                       )
                     } catch (e) {
@@ -744,6 +804,7 @@ export const StudentRequestDetailPage: FC = () => {
               <button
                 className='btn light-blue darken-2 waves-effect waves-light'
                 onClick={reqSaveHandler}
+                disabled={!canSave}
               >
                 <i className='material-icons left'>save</i>
                 Сохранить изменения
@@ -752,6 +813,7 @@ export const StudentRequestDetailPage: FC = () => {
                 className='btn light-blue darken-2 waves-effect waves-light'
                 style={{ marginLeft: 12 }}
                 onClick={reqSendHandler}
+                disabled={!canSave}
               >
                 <i className='material-icons left'>send</i>
                 Отправить изменения
